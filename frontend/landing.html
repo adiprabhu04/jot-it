@@ -8,21 +8,20 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><path d='M18 8 C17 8 15 9 15 11 L14 78 C14 80 16 82 18 82 L68 83 C70 83 72 81 72 79 L73 28 L52 7 Z' fill='%231A1D3A' stroke='%235B6EF5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M52 7 L51 27 L73 28' fill='%23111130' stroke='%235B6EF5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/><path d='M24 38 C26 36 29 35 32 37 C35 39 34 43 37 42 C40 41 39 37 43 36 C46 35 48 37 49 39' stroke='%23818CF8' stroke-width='2.5' stroke-linecap='round' fill='none'/><circle cx='78' cy='72' r='14' fill='%235B6EF5'/><path d='M78 64 L79.5 69.5 L85 71 L79.5 72.5 L78 78 L76.5 72.5 L71 71 L76.5 69.5 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg: #F9F9FC;
-            --dark: #1A1C1E;
+            --bg: #0A0A0F;
+            --bg-2: #111118;
             --accent: #5B6EF5;
             --accent-hover: #4a5de0;
             --teal: #136964;
-            --teal-light: #e6f2f1;
-            --text: #1A1C1E;
-            --text-muted: #6B7280;
-            --border: #E5E7EB;
-            --card-bg: #FFFFFF;
+            --text: #F0F0F8;
+            --text-muted: #8888A0;
+            --border: #252530;
+            --card-bg: #13131A;
             --serif: 'Newsreader', Georgia, serif;
             --sans: 'Inter', system-ui, sans-serif;
         }
@@ -42,16 +41,17 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 999;
-            background: rgba(249, 249, 252, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: transparent;
             border-bottom: 1px solid transparent;
-            transition: border-color 0.3s, padding 0.3s;
+            transition: background 0.4s, border-color 0.4s, padding 0.3s, backdrop-filter 0.4s;
             padding: 20px 0;
         }
         nav.scrolled {
             padding: 12px 0;
-            border-bottom: 1px solid #E0E0EA;
+            background: rgba(10,10,15,0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
         }
         .nav-inner {
             max-width: 1160px;
@@ -78,17 +78,18 @@
         .nav-links a {
             font-size: 14px;
             font-weight: 500;
-            color: #1A1C1E;
+            color: rgba(240,240,248,0.6);
             text-decoration: none;
             transition: color 0.2s;
         }
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover,
+        .nav-links a.active { color: white; }
         .btn-nav {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             background: var(--accent);
-            color: white;
+            color: white !important;
             font-family: var(--sans);
             font-size: 14px;
             font-weight: 600;
@@ -115,7 +116,7 @@
             padding: 80px 64px 80px 80px;
         }
         .hero-right {
-            background: var(--dark);
+            background: var(--bg-2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,20 +124,186 @@
             position: relative;
             overflow: hidden;
         }
-        .hero-right::before {
-            content: '';
+
+        /* Animated orbs */
+        .orb {
             position: absolute;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(91,110,245,0.15) 0%, transparent 70%);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
         }
+        .orb-1 {
+            width: 380px; height: 380px;
+            background: radial-gradient(circle, rgba(91,110,245,0.22) 0%, transparent 70%);
+            top: 5%; left: 15%;
+            animation: orb-move-1 10s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(19,105,100,0.18) 0%, transparent 70%);
+            bottom: 10%; right: 8%;
+            animation: orb-move-2 13s ease-in-out infinite 2s;
+        }
+        .orb-3 {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(129,140,248,0.12) 0%, transparent 70%);
+            top: 60%; left: 5%;
+            animation: orb-move-3 9s ease-in-out infinite 1s;
+        }
+        @keyframes orb-move-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%  { transform: translate(40px, -30px) scale(1.08); }
+            66%  { transform: translate(-20px, 20px) scale(0.95); }
+        }
+        @keyframes orb-move-2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-35px, -25px) scale(1.05); }
+        }
+        @keyframes orb-move-3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(25px, -15px); }
+        }
+
+        /* Floating UI elements */
+        .hero-float {
+            position: absolute;
+            z-index: 3;
+        }
+        .hero-float-conf {
+            top: 12%; right: 6%;
+            animation: float 3.2s ease-in-out infinite;
+        }
+        .hero-float-cat {
+            top: 38%; left: 4%;
+            animation: float 3.8s ease-in-out infinite 0.8s;
+        }
+        .hero-float-toast {
+            bottom: 16%; right: 5%;
+            animation: float 4.2s ease-in-out infinite 1.5s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-8px); }
+        }
+        .float-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 13px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            white-space: nowrap;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+        .float-pill.conf {
+            background: rgba(16,185,129,0.12);
+            color: #34D399;
+            border: 1px solid rgba(16,185,129,0.25);
+        }
+        .float-pill.cat {
+            background: rgba(91,110,245,0.12);
+            color: #818CF8;
+            border: 1px solid rgba(91,110,245,0.25);
+        }
+        .float-pill.toast {
+            background: rgba(26,26,38,0.92);
+            color: rgba(240,240,248,0.88);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .float-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+        }
+
+        /* Note card mockup */
+        .note-mockup-wrap { position: relative; z-index: 2; }
+        .note-card-mockup {
+            width: 340px;
+            background: #1A1A26;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.07);
+            padding: 28px;
+            box-shadow:
+                0 40px 80px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(91,110,245,0.1),
+                0 0 60px rgba(91,110,245,0.07);
+        }
+        .note-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .note-cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(91,110,245,0.13);
+            color: #818CF8;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+            border: 1px solid rgba(91,110,245,0.22);
+        }
+        .note-pin-icon { color: rgba(255,255,255,0.28); font-size: 14px; }
+        .note-card-title-mock {
+            font-family: var(--serif);
+            font-size: 18px;
+            font-weight: 700;
+            color: #F0F0F8;
+            letter-spacing: -0.3px;
+            margin-bottom: 10px;
+        }
+        .note-card-body {
+            font-size: 13px;
+            color: rgba(255,255,255,0.42);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .note-ai-summary {
+            background: rgba(91,110,245,0.07);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 10px 12px;
+            margin-bottom: 16px;
+        }
+        .note-ai-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+        }
+        .note-ai-text {
+            font-size: 12px;
+            color: rgba(240,240,248,0.68);
+            line-height: 1.5;
+        }
+        .note-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .note-tag {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Hero text */
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: var(--teal-light);
-            color: var(--teal);
+            background: rgba(91,110,245,0.1);
+            color: #818CF8;
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 1.2px;
@@ -144,11 +311,12 @@
             padding: 6px 14px;
             border-radius: 100px;
             margin-bottom: 28px;
+            border: 1px solid rgba(91,110,245,0.22);
         }
         .hero-badge::before {
             content: '';
             width: 6px; height: 6px;
-            background: var(--teal);
+            background: var(--accent);
             border-radius: 50%;
         }
         .hero-heading {
@@ -160,23 +328,34 @@
             color: var(--text);
             margin-bottom: 24px;
         }
-        .hero-heading em {
-            font-style: italic;
-            color: var(--accent);
-        }
+        .hero-heading em { font-style: italic; color: var(--accent); }
         .hero-sub {
             font-size: 17px;
             color: var(--text-muted);
             line-height: 1.7;
             max-width: 440px;
+            margin-bottom: 10px;
+        }
+        .typing-line {
+            font-size: 17px;
+            color: var(--text-muted);
             margin-bottom: 40px;
+            min-height: 28px;
         }
-        .hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
+        .typing-text { color: var(--accent); font-weight: 600; }
+        .typing-cursor {
+            display: inline-block;
+            width: 2px; height: 18px;
+            background: var(--accent);
+            margin-left: 2px;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
         }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
         .btn-primary {
             display: inline-flex;
             align-items: center;
@@ -192,18 +371,18 @@
             border: none;
             cursor: pointer;
             transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 4px 20px rgba(91,110,245,0.35);
+            box-shadow: 0 4px 20px rgba(91,110,245,0.38);
         }
         .btn-primary:hover {
             background: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(91,110,245,0.45);
+            box-shadow: 0 8px 28px rgba(91,110,245,0.52);
         }
         .btn-ghost {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--text);
+            color: rgba(240,240,248,0.65);
             font-family: var(--sans);
             font-size: 15px;
             font-weight: 500;
@@ -214,113 +393,51 @@
             padding: 14px 4px;
             transition: color 0.2s;
         }
-        .btn-ghost:hover { color: var(--accent); }
+        .btn-ghost:hover { color: white; }
         .play-icon {
             width: 36px; height: 36px;
-            background: var(--dark);
+            background: rgba(255,255,255,0.07);
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .play-icon svg { margin-left: 2px; }
 
-        /* App mockup */
-        .phone-mockup {
-            width: 300px;
-            background: #111318;
-            border-radius: 32px;
-            border: 2px solid rgba(255,255,255,0.1);
-            padding: 20px 16px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
-            position: relative;
-            z-index: 1;
-        }
-        .phone-status {
+        /* ── STATS BAR ───────────────────────────────────────── */
+        .stats-bar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 4px 14px;
-        }
-        .phone-status-time {
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.6);
-        }
-        .mock-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .mock-title {
-            font-family: var(--serif);
-            font-size: 20px;
-            font-weight: 700;
-            color: #F0F0F5;
-            letter-spacing: -0.5px;
-        }
-        .mock-avatar {
-            width: 30px; height: 30px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: white;
+            gap: 64px;
+            padding: 48px 32px;
+            background: var(--bg-2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
-        .mock-card {
-            background: #1E2028;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255,255,255,0.06);
+        .stat { text-align: center; }
+        .stat-value-row { display: flex; align-items: baseline; justify-content: center; gap: 2px; }
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+            font-family: var(--sans);
+            line-height: 1;
         }
-        .mock-card-title {
+        .stat-suffix { font-size: 32px; font-weight: 800; color: var(--accent); line-height: 1; }
+        .stat-label {
+            display: block;
             font-size: 13px;
-            font-weight: 600;
-            color: #F0F0F5;
-            margin-bottom: 6px;
-        }
-        .mock-card-text {
-            font-size: 11px;
-            color: rgba(255,255,255,0.45);
-            line-height: 1.5;
-        }
-        .mock-card-tag {
-            display: inline-block;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
             margin-top: 8px;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 100px;
-            background: rgba(91,110,245,0.2);
-            color: #818CF8;
         }
-        .mock-card.teal-card .mock-card-tag {
-            background: rgba(19,105,100,0.25);
-            color: #5EADA8;
-        }
-        .mock-fab {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 44px; height: 44px;
-            background: var(--accent);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 16px rgba(91,110,245,0.5);
-        }
-        .mock-fab svg { color: white; }
 
         /* ── FEATURES ────────────────────────────────────────── */
         .features {
-            padding: 60px 32px 120px;
+            padding: 80px 32px 100px;
             max-width: 1160px;
             margin: 0 auto;
         }
@@ -347,7 +464,6 @@
         .bento {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto;
             gap: 16px;
         }
         .bento-card {
@@ -357,26 +473,21 @@
             cursor: default;
         }
         .bento-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 48px rgba(0,0,0,0.12);
+            transform: scale(1.02);
+            box-shadow: 0 0 0 1px var(--accent), 0 24px 48px rgba(0,0,0,0.3);
         }
-        .bento-card.card-indigo {
-            background: var(--accent);
-            color: white;
-            grid-row: span 1;
+        .bento-card:hover .bento-icon svg {
+            animation: icon-bounce 0.5s ease;
         }
-        .bento-card.card-dark {
-            background: var(--dark);
-            color: white;
+        @keyframes icon-bounce {
+            0%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            70% { transform: translateY(-2px); }
         }
-        .bento-card.card-light {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-        }
-        .bento-card.card-teal {
-            background: var(--teal);
-            color: white;
-        }
+        .bento-card.card-indigo { background: var(--accent); color: white; }
+        .bento-card.card-dark { background: #1A1D2E; color: white; border: 1px solid var(--border); }
+        .bento-card.card-light { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); }
+        .bento-card.card-teal { background: var(--teal); color: white; }
         .bento-icon {
             width: 48px; height: 48px;
             border-radius: 14px;
@@ -387,9 +498,9 @@
             font-size: 22px;
         }
         .card-indigo .bento-icon { background: rgba(255,255,255,0.15); }
-        .card-dark .bento-icon { background: rgba(255,255,255,0.08); }
-        .card-light .bento-icon { background: var(--bg); }
-        .card-teal .bento-icon { background: rgba(255,255,255,0.15); }
+        .card-dark   .bento-icon { background: rgba(255,255,255,0.08); }
+        .card-light  .bento-icon { background: rgba(91,110,245,0.1); }
+        .card-teal   .bento-icon { background: rgba(255,255,255,0.15); }
         .bento-title {
             font-family: var(--serif);
             font-size: 24px;
@@ -398,16 +509,8 @@
             margin-bottom: 10px;
             line-height: 1.2;
         }
-        .card-light .bento-title { color: var(--text); }
-        .bento-desc {
-            font-size: 14px;
-            line-height: 1.7;
-            opacity: 0.8;
-        }
+        .bento-desc { font-size: 14px; line-height: 1.7; opacity: 0.8; }
         .card-light .bento-desc { color: var(--text-muted); opacity: 1; }
-        .bento-card.card-light .bento-title { color: var(--text); }
-
-        /* small cards row */
         .bento-small-row {
             grid-column: span 2;
             display: grid;
@@ -415,44 +518,126 @@
             gap: 16px;
         }
 
-        /* ── QUOTE ───────────────────────────────────────────── */
-        .quote-section {
-            background: var(--teal);
+        /* ── HOW IT WORKS ────────────────────────────────────── */
+        .how-it-works {
+            background: var(--bg-2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
             padding: 100px 32px;
-            text-align: center;
         }
-        .quote-mark {
-            font-family: var(--serif);
-            font-size: 80px;
-            line-height: 0.5;
-            color: rgba(255,255,255,0.25);
-            margin-bottom: 32px;
-            display: block;
+        .how-inner { max-width: 1100px; margin: 0 auto; }
+        .steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            position: relative;
+            margin-top: 64px;
         }
-        .quote-text {
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 31px;
+            left: calc(16.66% + 16px);
+            right: calc(16.66% + 16px);
+            height: 1px;
+            background: linear-gradient(90deg, rgba(91,110,245,0.6) 0%, rgba(91,110,245,0.2) 50%, rgba(91,110,245,0.6) 100%);
+            pointer-events: none;
+        }
+        .step { text-align: center; padding: 0 32px; }
+        .step-number {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .step-icon-wrap {
+            width: 64px; height: 64px;
+            border-radius: 18px;
+            background: rgba(91,110,245,0.1);
+            border: 1px solid rgba(91,110,245,0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .step-title {
             font-family: var(--serif);
-            font-size: clamp(22px, 3vw, 34px);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+        .step-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+        /* ── TESTIMONIALS ────────────────────────────────────── */
+        .testimonials-section {
+            padding: 100px 32px;
+            background: var(--bg);
+        }
+        .testimonials-inner { max-width: 1100px; margin: 0 auto; }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-top: 64px;
+        }
+        .testimonial-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .testimonial-card:nth-child(2) { border-left-color: #2DA89E; }
+        .testimonial-card:nth-child(3) { border-left-color: #818CF8; }
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+        }
+        .testimonial-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            background: rgba(91,110,245,0.1);
+        }
+        .testimonial-card:nth-child(2) .testimonial-icon { background: rgba(19,105,100,0.12); }
+        .testimonial-card:nth-child(3) .testimonial-icon { background: rgba(129,140,248,0.1); }
+        .testimonial-role {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .testimonial-card:nth-child(2) .testimonial-role { color: #2DA89E; }
+        .testimonial-card:nth-child(3) .testimonial-role { color: #818CF8; }
+        .testimonial-text {
+            font-family: var(--serif);
+            font-size: 16px;
             font-style: italic;
-            color: white;
-            max-width: 720px;
-            margin: 0 auto 24px;
-            line-height: 1.4;
-            letter-spacing: -0.5px;
-        }
-        .quote-attr {
-            font-size: 14px;
-            color: rgba(255,255,255,0.6);
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            color: rgba(240,240,248,0.82);
+            line-height: 1.65;
         }
 
         /* ── CTA ─────────────────────────────────────────────── */
         .cta-section {
-            background: var(--dark);
+            background: var(--bg-2);
             padding: 140px 32px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border-top: 1px solid var(--border);
         }
         .cta-section::before {
             content: '';
@@ -472,16 +657,15 @@
             line-height: 1.05;
             margin-bottom: 16px;
             position: relative;
+            z-index: 1;
         }
-        .cta-heading em {
-            font-style: italic;
-            color: var(--accent);
-        }
+        .cta-heading em { font-style: italic; color: var(--accent); }
         .cta-sub {
             font-size: 16px;
-            color: rgba(255,255,255,0.45);
+            color: var(--text-muted);
             margin-bottom: 48px;
             position: relative;
+            z-index: 1;
         }
         .btn-cta-large {
             display: inline-flex;
@@ -500,6 +684,7 @@
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 32px rgba(91,110,245,0.4);
             position: relative;
+            z-index: 1;
         }
         .btn-cta-large:hover {
             background: var(--accent-hover);
@@ -509,37 +694,30 @@
 
         /* ── FOOTER ──────────────────────────────────────────── */
         footer {
-            background: var(--dark);
-            border-top: 1px solid rgba(255,255,255,0.07);
-            padding: 40px 32px;
+            background: #07070E;
+            border-top: 1px solid var(--border);
+            padding: 56px 32px 40px;
         }
-        .footer-inner {
-            max-width: 1160px;
-            margin: 0 auto;
+        .footer-inner { max-width: 1160px; margin: 0 auto; }
+        .footer-top {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 32px;
+            margin-bottom: 40px;
         }
         .footer-brand {
             font-family: var(--serif);
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 700;
             color: white;
             text-decoration: none;
         }
         .footer-brand span { color: var(--accent); }
-        .footer-tagline {
-            font-size: 13px;
-            color: rgba(255,255,255,0.35);
-            margin-top: 4px;
-        }
-        .footer-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
+        .footer-tagline { font-size: 13px; color: rgba(255,255,255,0.32); margin-top: 6px; margin-bottom: 8px; }
+        .footer-built { font-size: 12px; color: rgba(255,255,255,0.2); }
+        .footer-links { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .footer-links a {
             font-size: 13px;
             font-weight: 500;
@@ -547,53 +725,87 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: color 0.2s;
+            gap: 7px;
+            padding: 9px 14px;
+            border-radius: 9px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
         }
-        .footer-links a:hover { color: white; }
+        .footer-links a:hover {
+            color: white;
+            border-color: rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.04);
+        }
+        .tech-stack {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+        .tech-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.22);
+            margin-right: 4px;
+        }
+        .tech-badge {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
 
         /* ── SCROLL ANIMATIONS ───────────────────────────────── */
         .fade-up {
             opacity: 0;
-            transition: opacity 0.6s ease;
+            transform: translateY(40px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .fade-up.visible {
-            opacity: 1;
-        }
-        .fade-up.delay-1 { transition-delay: 0.1s; }
-        .fade-up.delay-2 { transition-delay: 0.2s; }
-        .fade-up.delay-3 { transition-delay: 0.3s; }
-        .fade-up.delay-4 { transition-delay: 0.4s; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .fade-up.delay-1 { transition-delay: 100ms; }
+        .fade-up.delay-2 { transition-delay: 200ms; }
+        .fade-up.delay-3 { transition-delay: 300ms; }
+        .fade-up.delay-4 { transition-delay: 400ms; }
 
         /* ── MOBILE ──────────────────────────────────────────── */
         @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                min-height: auto;
-            }
-            .hero-left {
-                padding: 80px 32px 60px;
-            }
-            .hero-right {
-                padding: 60px 32px;
-                min-height: 420px;
-            }
-            .bento {
-                grid-template-columns: 1fr;
-            }
-            .bento-small-row {
-                grid-column: span 1;
-            }
+            .hero { grid-template-columns: 1fr; min-height: auto; }
+            .hero-left { padding: 80px 32px 60px; }
+            .hero-right { padding: 60px 32px; min-height: 480px; }
+            .bento { grid-template-columns: 1fr; }
+            .bento-small-row { grid-column: span 1; grid-template-columns: 1fr; }
+            .steps { grid-template-columns: 1fr; gap: 48px; }
+            .steps::before { display: none; }
+            .step { padding: 0; }
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .stats-bar { gap: 32px; }
             .nav-links a:not(.btn-nav) { display: none; }
         }
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
+            .stats-bar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
             .nav-inner { padding: 0 20px; }
             .hero-left { padding: 72px 24px 48px; }
             .hero-right { padding: 48px 24px; }
             .features { padding: 40px 20px 80px; }
             .bento-card { padding: 28px; }
-            .footer-inner { flex-direction: column; align-items: flex-start; }
-            .bento-small-row { grid-template-columns: 1fr; }
+            .how-it-works { padding: 60px 24px; }
+            .testimonials-section { padding: 60px 20px; }
+            .footer-top { flex-direction: column; }
+            .note-card-mockup { width: 285px; }
+            .hero-float { display: none; }
+            .cta-section { padding: 80px 24px; }
         }
     </style>
 </head>
@@ -605,6 +817,7 @@
         <a href="#" class="nav-brand">Jot It<span>.</span></a>
         <div class="nav-links">
             <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
             <a href="#about">About</a>
             <a href="index.html" class="btn-nav">Get Started →</a>
         </div>
@@ -620,8 +833,11 @@
                 The Art of<br><em>Digital Handwriting</em>
             </h1>
             <p class="hero-sub fade-up delay-2">
-                Experience the fluidity of paper with the power of intelligence. Draw, scan, and organize your thoughts with AI.
+                Experience the fluidity of paper with the power of intelligence.
             </p>
+            <div class="typing-line fade-up delay-2">
+                <span class="typing-text" id="typing-text"></span><span class="typing-cursor"></span>
+            </div>
             <div class="hero-actions fade-up delay-3">
                 <a href="index.html" class="btn-primary">
                     Start Writing Free
@@ -637,45 +853,72 @@
         </div>
     </div>
     <div class="hero-right">
-        <div class="phone-mockup fade-up delay-2">
-            <div class="phone-status">
-                <span class="phone-status-time">9:41</span>
-                <svg width="40" height="12" viewBox="0 0 40 12" fill="rgba(255,255,255,0.5)">
-                    <rect x="0" y="3" width="6" height="6" rx="1"/>
-                    <rect x="9" y="1" width="6" height="8" rx="1"/>
-                    <rect x="18" y="0" width="6" height="10" rx="1"/>
-                    <rect x="30" y="2" width="10" height="8" rx="3" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-                    <rect x="32" y="4" width="5" height="4" rx="1"/>
-                    <rect x="40" y="4" width="2" height="4" rx="1"/>
-                </svg>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <div class="hero-float hero-float-conf">
+            <div class="float-pill conf">
+                <div class="float-dot" style="background:#34D399"></div>
+                94% confidence
             </div>
-            <div class="mock-header">
-                <span class="mock-title">Notes</span>
-                <div class="mock-avatar">A</div>
-            </div>
-            <div class="mock-card">
-                <div class="mock-card-title">Q3 Strategy Meeting</div>
-                <div class="mock-card-text">Discussed roadmap priorities and resource allocation for the next quarter…</div>
-                <span class="mock-card-tag">#work</span>
-            </div>
-            <div class="mock-card teal-card">
-                <div class="mock-card-title">Product Ideas 💡</div>
-                <div class="mock-card-text">Dark mode improvements, handwriting scan for receipts, AI weekly digest…</div>
-                <span class="mock-card-tag">#ideas</span>
-            </div>
-            <div class="mock-card">
-                <div class="mock-card-title">Book Notes — Atomic Habits</div>
-                <div class="mock-card-text">1% better every day compounds. Identity-based habits over outcome…</div>
-                <span class="mock-card-tag">#personal</span>
-            </div>
-            <div class="mock-fab">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
+        </div>
+        <div class="hero-float hero-float-cat">
+            <div class="float-pill cat">📂 Work</div>
+        </div>
+        <div class="hero-float hero-float-toast">
+            <div class="float-pill toast">✓ Note saved!</div>
+        </div>
+
+        <div class="note-mockup-wrap fade-up delay-2">
+            <div class="note-card-mockup">
+                <div class="note-card-top">
+                    <div class="note-cat-badge">📁 Work</div>
+                    <span class="note-pin-icon">📌</span>
+                </div>
+                <div class="note-card-title-mock">Q3 Strategy Meeting</div>
+                <div class="note-card-body">Discussed roadmap priorities and resource allocation for next quarter. Mobile team cutting release branch — freeze non-critical merges after Thursday.</div>
+                <div class="note-ai-summary">
+                    <div class="note-ai-label">✦ AI Summary</div>
+                    <div class="note-ai-text">Q3 planning focused on mobile release cutoff and resource prioritization for the next quarter.</div>
+                </div>
+                <div class="note-tags">
+                    <span class="note-tag">#work</span>
+                    <span class="note-tag">#strategy</span>
+                    <span class="note-tag">#q3</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- ── STATS BAR ───────────────────────────────────────────── -->
+<div class="stats-bar fade-up">
+    <div class="stat">
+        <div class="stat-value-row">
+            <span class="stat-number" data-target="12">0</span><span class="stat-suffix">+</span>
+        </div>
+        <span class="stat-label">AI Features</span>
+    </div>
+    <div class="stat">
+        <div class="stat-value-row">
+            <span class="stat-number" data-target="95">0</span><span class="stat-suffix">%</span>
+        </div>
+        <span class="stat-label">OCR Accuracy</span>
+    </div>
+    <div class="stat">
+        <div class="stat-value-row">
+            <span class="stat-number" data-target="6">0</span>
+        </div>
+        <span class="stat-label">Note Templates</span>
+    </div>
+    <div class="stat">
+        <div class="stat-value-row">
+            <span class="stat-number" data-target="50">0</span><span class="stat-suffix">w</span>
+        </div>
+        <span class="stat-label">Word Suggestions</span>
+    </div>
+</div>
 
 <!-- ── FEATURES ───────────────────────────────────────────────── -->
 <section class="features" id="features">
@@ -683,7 +926,6 @@
     <h2 class="section-title fade-up delay-1">Designed for Every Thought</h2>
 
     <div class="bento">
-        <!-- Large card 1 -->
         <div class="bento-card card-indigo fade-up delay-1">
             <div class="bento-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -694,7 +936,6 @@
             <p class="bento-desc">Draw or upload handwriting. Azure Computer Vision converts it to text with per-word confidence scores.</p>
         </div>
 
-        <!-- Large card 2 -->
         <div class="bento-card card-dark fade-up delay-2">
             <div class="bento-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -705,7 +946,6 @@
             <p class="bento-desc">Every note gets an AI-generated summary on save. See the key insight at a glance without reading the full note.</p>
         </div>
 
-        <!-- Small cards row -->
         <div class="bento-small-row">
             <div class="bento-card card-light fade-up delay-2">
                 <div class="bento-icon">
@@ -729,13 +969,69 @@
     </div>
 </section>
 
-<!-- ── QUOTE ──────────────────────────────────────────────────── -->
-<section class="quote-section" id="about">
-    <span class="quote-mark fade-up">"</span>
-    <blockquote class="quote-text fade-up delay-1">
-        Jot It bridges the gap between the speed of digital and the depth of handwritten thought.
-    </blockquote>
-    <p class="quote-attr fade-up delay-2">— Built at Persistent Systems, 2026</p>
+<!-- ── HOW IT WORKS ────────────────────────────────────────── -->
+<section class="how-it-works" id="how-it-works">
+    <div class="how-inner">
+        <div class="section-label fade-up">Simple by design</div>
+        <h2 class="section-title fade-up delay-1">How Jot It Works</h2>
+        <div class="steps">
+            <div class="step fade-up delay-1">
+                <div class="step-number">01</div>
+                <div class="step-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B6EF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                    </svg>
+                </div>
+                <div class="step-title">Draw or Upload</div>
+                <p class="step-desc">Use the built-in canvas to draw freely with your finger or stylus, or upload a photo of your handwritten notes.</p>
+            </div>
+            <div class="step fade-up delay-2">
+                <div class="step-number">02</div>
+                <div class="step-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B6EF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </div>
+                <div class="step-title">AI Extracts Text</div>
+                <p class="step-desc">Azure Computer Vision processes your image, returning digitized text with per-word confidence scores in seconds.</p>
+            </div>
+            <div class="step fade-up delay-3">
+                <div class="step-number">03</div>
+                <div class="step-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B6EF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <div class="step-title">Save & Organize</div>
+                <p class="step-desc">Categorize with tags, pin important notes, set reminders, and export to PDF or CSV whenever you need.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── USE CASES ───────────────────────────────────────────── -->
+<section class="testimonials-section" id="about">
+    <div class="testimonials-inner">
+        <div class="section-label fade-up">Who uses Jot It</div>
+        <h2 class="section-title fade-up delay-1">Built for Real Workflows</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card fade-up delay-1">
+                <div class="testimonial-icon">🎓</div>
+                <div class="testimonial-role">Student</div>
+                <p class="testimonial-text">"I scan my handwritten lecture notes and Jot It converts them instantly. The AI summary saves me hours of review time."</p>
+            </div>
+            <div class="testimonial-card fade-up delay-2">
+                <div class="testimonial-icon">💼</div>
+                <div class="testimonial-role">Professional</div>
+                <p class="testimonial-text">"Meeting notes, action items, project plans — all organized with categories and reminder badges. Game changer."</p>
+            </div>
+            <div class="testimonial-card fade-up delay-3">
+                <div class="testimonial-icon">🎨</div>
+                <div class="testimonial-role">Creative</div>
+                <p class="testimonial-text">"Brainstorm ideas on canvas, get them digitized, tag with #hashtags and find them instantly. My second brain."</p>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- ── CTA ───────────────────────────────────────────────────── -->
@@ -753,43 +1049,129 @@
 <!-- ── FOOTER ─────────────────────────────────────────────────── -->
 <footer>
     <div class="footer-inner">
-        <div>
-            <a href="#" class="footer-brand">Jot It<span>.</span></a>
-            <p class="footer-tagline">AI-powered notes with handwriting recognition</p>
+        <div class="footer-top">
+            <div>
+                <a href="#" class="footer-brand">Jot It<span>.</span></a>
+                <p class="footer-tagline">AI-powered notes with handwriting recognition</p>
+                <p class="footer-built">Built during internship at Persistent Systems 2026</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/adiprabhu04/persistent-ai-ml-internship" target="_blank" rel="noopener">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                    GitHub Repo
+                </a>
+                <a href="https://www.linkedin.com/in/aditya-prabhudessai" target="_blank" rel="noopener">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                </a>
+            </div>
         </div>
-        <div class="footer-links">
-            <a href="https://github.com/adiprabhu04/persistent-ai-ml-internship" target="_blank" rel="noopener">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                GitHub
-            </a>
-            <a href="https://www.linkedin.com/in/aditya-prabhudessai" target="_blank" rel="noopener">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                LinkedIn
-            </a>
+        <div class="tech-stack">
+            <span class="tech-label">Built with</span>
+            <span class="tech-badge">ASP.NET</span>
+            <span class="tech-badge">Python</span>
+            <span class="tech-badge">Azure Vision</span>
+            <span class="tech-badge">PostgreSQL</span>
+            <span class="tech-badge">Netlify</span>
         </div>
     </div>
 </footer>
 
 <script>
-    // Nav shrink on scroll
+    // Nav bg on scroll
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
         nav.classList.toggle('scrolled', window.scrollY > 20);
     }, { passive: true });
 
-    // Intersection observer for fade-up animations
-    const observer = new IntersectionObserver((entries) => {
+    // Active nav link tracking
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(a => a.classList.remove('active'));
+                const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { threshold: 0.35, rootMargin: '-80px 0px -40% 0px' });
+    sections.forEach(s => sectionObserver.observe(s));
+
+    // Fade-up scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+                revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-up').forEach(el => revealObserver.observe(el));
 
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    // Count-up for stats
+    function animateCount(el) {
+        const target = parseInt(el.dataset.target);
+        let count = 0;
+        const step = target / (1200 / 16);
+        const timer = setInterval(() => {
+            count = Math.min(count + step, target);
+            el.textContent = Math.round(count);
+            if (count >= target) clearInterval(timer);
+        }, 16);
+    }
+    const statsBar = document.querySelector('.stats-bar');
+    if (statsBar) {
+        new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.stat-number').forEach(animateCount);
+                    entry.target._statDone = true;
+                }
+            });
+        }, { threshold: 0.3 }).observe(statsBar);
+    }
 
-    // Mark visited so index.html skips landing next time
+    // Typing animation
+    const phrases = ['Draw freely.', 'Scan instantly.', 'Organize smartly.', 'Think clearly.'];
+    let phraseIdx = 0, charIdx = 0, deleting = false;
+    const typingEl = document.getElementById('typing-text');
+    function type() {
+        if (!typingEl) return;
+        const phrase = phrases[phraseIdx];
+        if (!deleting) {
+            typingEl.textContent = phrase.substring(0, charIdx + 1);
+            charIdx++;
+            if (charIdx === phrase.length) {
+                deleting = true;
+                setTimeout(type, 1800);
+                return;
+            }
+        } else {
+            typingEl.textContent = phrase.substring(0, charIdx - 1);
+            charIdx--;
+            if (charIdx === 0) {
+                deleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+            }
+        }
+        setTimeout(type, deleting ? 45 : 80);
+    }
+    setTimeout(type, 600);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const id = a.getAttribute('href').slice(1);
+            if (!id) return;
+            const target = document.getElementById(id);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
     localStorage.setItem('visited', '1');
 </script>
 </body>
