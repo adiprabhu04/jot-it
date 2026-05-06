@@ -565,12 +565,15 @@
 
         /* ── CARD EXPORT ──────────────────────────────────────── */
         .card-export-menu { display: none; position: absolute;
-            bottom: 12px; right: 12px; gap: 4px; }
+            top: 10px; right: 10px; gap: 4px; z-index: 10;
+            background: var(--surface); border-radius: 8px; padding: 2px; }
         .note-card:hover .card-export-menu { display: flex; }
-        .card-export-btn { background: var(--surface-2); border: 1px solid var(--border);
-            color: var(--text-secondary); width: 28px; height: 28px; border-radius: 6px;
+        .note-card:hover .pin-btn { right: 72px; }
+        .card-export-btn { width: 26px; height: 26px; border-radius: 6px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            color: var(--text-secondary);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 11px; transition: all 0.2s; }
+            cursor: pointer; font-size: 10px; transition: all 0.15s; }
         .card-export-btn:hover { border-color: #5B6EF5; color: #5B6EF5; }
         .btn-modal-export { background: none; border: 1px solid var(--border);
             color: var(--text-secondary); padding: 8px 10px; border-radius: 8px;
@@ -802,7 +805,6 @@
             align-items: center;
             justify-content: center;
         }
-        .note-card:hover .note-card-delete { opacity: 1; }
         .note-card:hover .pin-btn { opacity: 1 !important; }
         .note-card .pin-btn.pinned { opacity: 1 !important; }
         .note-card-delete:hover { background: rgba(239,68,68,0.12); color: var(--error); }
@@ -827,6 +829,7 @@
         .note-card * { pointer-events: none; }
         .note-card .pin-btn,
         .note-card .note-card-delete,
+        .note-card .card-export-btn,
         .note-card .drag-handle { pointer-events: auto; }
         .note-card .drag-handle { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); opacity: 0; transition: opacity 0.2s; font-size: 12px; cursor: grab; width: auto; height: auto; background: none; border-radius: 0; margin: 0; }
         .note-card:hover .drag-handle { opacity: 1; }
