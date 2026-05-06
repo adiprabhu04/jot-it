@@ -569,13 +569,17 @@
             top: 10px; right: 10px; gap: 4px; z-index: 10;
             background: var(--surface); border-radius: 8px; padding: 2px; }
         .note-card:hover .card-export-menu { display: flex; }
-        .note-card:hover .pin-btn { right: 72px; }
+        .card-export-menu:has(.pin-btn.pinned) { display: flex; }
         .card-export-btn { width: 26px; height: 26px; border-radius: 6px;
             background: var(--surface-2); border: 1px solid var(--border);
             color: var(--text-secondary);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 10px; transition: all 0.15s; }
         .card-export-btn:hover { border-color: #5B6EF5; color: #5B6EF5; }
+        .card-export-menu .pin-btn { background: var(--surface-2); border: 1px solid var(--border); width: 26px; height: 26px; padding: 0; }
+        .card-export-menu .pin-btn.pinned { border-color: #5B6EF5; color: #5B6EF5; }
+        .card-delete-btn:hover { color: var(--error) !important; border-color: var(--error) !important; }
+        .modal-actions { display: flex; align-items: center; gap: 8px; }
         .btn-modal-export { background: none; border: 1px solid var(--border);
             color: var(--text-secondary); padding: 8px 10px; border-radius: 8px;
             cursor: pointer; transition: all 0.2s; }
@@ -2846,11 +2850,13 @@
                     <i class="fa-solid fa-camera"></i>
                 </button>
             </div>
-            <button id="save-note-btn" onclick="saveNote()" class="btn-save btn">Save</button>
-            <button onclick="exportNoteAsPDF(currentNoteId)" class="btn-modal-export btn" id="modal-export-pdf"
-                title="Export as PDF" style="display:none;"><i class="fa-solid fa-file-pdf"></i></button>
-            <button onclick="exportNoteAsCSV(currentNoteId)" class="btn-modal-export btn" id="modal-export-csv"
-                title="Export as CSV" style="display:none;"><i class="fa-solid fa-file-csv"></i></button>
+            <div class="modal-actions">
+                <button id="save-note-btn" onclick="saveNote()" class="btn-save btn">Save</button>
+                <button onclick="exportNoteAsPDF(currentNoteId)" class="btn-modal-export btn" id="modal-export-pdf"
+                    title="Export as PDF" style="display:none;"><i class="fa-solid fa-file-pdf"></i></button>
+                <button onclick="exportNoteAsCSV(currentNoteId)" class="btn-modal-export btn" id="modal-export-csv"
+                    title="Export as CSV" style="display:none;"><i class="fa-solid fa-file-csv"></i></button>
+            </div>
         </div>
         <div class="color-picker-row">
             <span class="color-picker-label">Color</span>
@@ -4075,8 +4081,8 @@ ${notesHTML}
 
             const catInfo = getCategoryInfo(note);
             const preview = note.summary ||
-                (note.content || '').replace(/<[^>]*>/g, '').slice(0, 80);
-            const previewText = preview.length > 120 ? preview.substring(0, 120) + '…' : preview;
+                (note.content || '').replace(/<[^>]*>/g, '').slice(0, 120);
+            const previewText = preview;
             const dateStr = relativeTime(note.updatedAt);
 
             if (note.color) {
@@ -4109,21 +4115,21 @@ ${notesHTML}
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">${reminderHtml}<span class="note-card-category ${catInfo.cls}">${catInfo.name}</span></div>
                 </div>
-                <button class="pin-btn btn${note.isPinned ? ' pinned' : ''}" onclick="togglePin(event, '${note.id}')" aria-label="${note.isPinned ? 'Unpin note' : 'Pin note'}" style="position:absolute;top:10px;right:38px;opacity:0;transition:opacity 0.2s;">
-                    <i class="fa-solid fa-thumbtack" style="font-size:13px;"></i>
-                </button>
-                <button class="note-card-delete btn" onclick="deleteNote(event, '${note.id}')" aria-label="Delete note">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                        <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                    </svg>
-                </button>
                 <div class="card-export-menu" id="export-${note.id}">
+                    <button class="card-export-btn pin-btn${note.isPinned ? ' pinned' : ''}" onclick="togglePin(event, '${note.id}')" aria-label="${note.isPinned ? 'Unpin note' : 'Pin note'}" title="${note.isPinned ? 'Unpin' : 'Pin'}">
+                        <i class="fa-solid fa-thumbtack"></i>
+                    </button>
                     <button class="card-export-btn" onclick="exportNoteAsPDF('${note.id}')" title="Export as PDF">
                         <i class="fa-solid fa-file-pdf"></i>
                     </button>
                     <button class="card-export-btn" onclick="exportNoteAsCSV('${note.id}')" title="Export as CSV">
                         <i class="fa-solid fa-file-csv"></i>
+                    </button>
+                    <button class="card-export-btn card-delete-btn" onclick="deleteNote(event, '${note.id}')" aria-label="Delete note" title="Delete">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                            <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                        </svg>
                     </button>
                 </div>`;
 
