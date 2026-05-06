@@ -109,71 +109,61 @@ async def summarize_text(request: dict):
         import re
         from collections import Counter
 
-        # Strip HTML tags
-        clean_text = re.sub(r'<[^>]+>', ' ', text)
-        clean_text = re.sub(r'\s+', ' ', clean_text).strip()
+        # Strip HTML
+        clean = re.sub(r'<[^>]+>', ' ', text)
+        clean = re.sub(r'\s+', ' ', clean).strip()
 
-        if len(clean_text) < 20:
+        if len(clean) < 20:
             return {"summary": ""}
 
-        # If text is short enough, return as is
-        if len(clean_text) <= 50:
-            return {"summary": clean_text}
-
-        # Split into sentences
-        sentences = re.split(r'(?<=[.!?])\s+', clean_text)
-        sentences = [s.strip() for s in sentences if len(s.strip()) > 10]
+        # Split sentences
+        sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', clean)
+                     if len(s.strip()) > 8]
 
         if not sentences:
-            return {"summary": clean_text[:120]}
+            words = clean.split()[:50]
+            return {"summary": ' '.join(words)}
 
-        if len(sentences) == 1:
-            return {"summary": sentences[0][:200].rsplit(' ', 1)[0]}
-        # Score sentences by word frequency (TF scoring)
-        # Remove common stop words
-        stop_words = {'the','a','an','and','or','but','in','on','at','to',
-                     'for','of','with','by','from','is','are','was','were',
-                     'be','been','have','has','had','do','does','did','will',
-                     'would','could','should','may','might','this','that',
-                     'these','those','it','its','we','i','you','he','she',
-                     'they','their','our','my','your','his','her'}
+        # Stop words
+        stop = {'the','a','an','and','or','but','in','on','at','to','for',
+                'of','with','by','from','is','are','was','were','be','been',
+                'have','has','had','do','does','did','will','would','could',
+                'should','may','might','this','that','these','those','it',
+                'its','we','i','you','he','she','they','their','our','my'}
 
-        # Get all words
-        all_words = re.findall(r'\b[a-z]+\b', clean_text.lower())
-        word_freq = Counter(w for w in all_words if w not in stop_words)
+        # Word frequency
+        all_words = re.findall(r'\b[a-z]+\b', clean.lower())
+        freq = Counter(w for w in all_words if w not in stop)
 
-        # Score each sentence
-        def score_sentence(sentence):
-            words = re.findall(r'\b[a-z]+\b', sentence.lower())
-            if not words:
-                return 0
-            return sum(word_freq.get(w, 0) for w in words if w not in stop_words) / len(words)
+        def score(s):
+            words = re.findall(r'\b[a-z]+\b', s.lower())
+            if not words: return 0
+            return sum(freq.get(w,0) for w in words if w not in stop)/len(words)
 
-        # Score sentences
-        scored = [(score_sentence(s), i, s) for i, s in enumerate(sentences)]
-        scored.sort(reverse=True)
+        # Sort by score
+        ranked = sorted(enumerate(sentences), key=lambda x: score(x[1]),
+                       reverse=True)
 
-        # Build summary up to 50 words
-        summary_words = []
-        summary_sentences = []
+        # Build summary — add whole sentences until 50 words
+        result = []
+        word_count = 0
 
-        for _, _, sentence in scored:
-            words = sentence.split()
-            if len(summary_words) + len(words) <= 50:
-                summary_words.extend(words)
-                summary_sentences.append(sentence)
-            if len(summary_words) >= 20:
+        for _, sentence in ranked:
+            w = len(sentence.split())
+            if word_count + w <= 50:
+                result.append(sentence)
+                word_count += w
+            if word_count >= 30:
                 break
 
-        # Join and clean — no ellipsis
-        summary_sentences_sorted = sorted(
-            summary_sentences,
-            key=lambda s: sentences.index(s)
-        )
-        summary = ' '.join(summary_sentences_sorted).strip()
-        if not summary:
-            summary = sentences[0][:200].rsplit(' ', 1)[0]
+        if not result:
+            result = [sentences[0]]
 
+        # Sort by original order
+        orig_order = {s: i for i, s in enumerate(sentences)}
+        result.sort(key=lambda s: orig_order.get(s, 0))
+
+        summary = ' '.join(result)
         return {"summary": summary}
 
     except Exception as e:
