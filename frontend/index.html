@@ -4696,13 +4696,19 @@ ${notesHTML}
         }
 
         const reminderInput = document.getElementById('note-reminder');
-        if (note && note.reminderAt) {
-            const d = new Date(note.reminderAt);
-            reminderInput.value = d.toISOString().slice(0, 16);
-            document.getElementById('reminder-clear').style.display = 'block';
-        } else {
-            reminderInput.value = '';
-            document.getElementById('reminder-clear').style.display = 'none';
+        if (reminderInput) {
+            if (note && note.reminderAt) {
+                const d = new Date(note.reminderAt);
+                const localISO = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+                    .toISOString().slice(0, 16);
+                reminderInput.value = localISO;
+                const clearBtn = document.getElementById('reminder-clear');
+                if (clearBtn) clearBtn.style.display = 'block';
+            } else {
+                reminderInput.value = '';
+                const clearBtn = document.getElementById('reminder-clear');
+                if (clearBtn) clearBtn.style.display = 'none';
+            }
         }
 
         const _modal = document.getElementById('note-modal');
@@ -4848,7 +4854,8 @@ ${notesHTML}
         const plainContent = content.replace(/<[^>]*>/g, ' ');
         const hashtagMatches = plainContent.match(/#[a-zA-Z0-9_]+/g) || [];
         const tags = [...new Set(hashtagMatches)].join(',');
-        const reminderVal = document.getElementById('note-reminder').value;
+        const reminderInput = document.getElementById('note-reminder');
+        const reminderVal = reminderInput ? reminderInput.value : '';
         const reminderAt = reminderVal ? new Date(reminderVal).toISOString() : null;
 
         const method = state.editingId ? 'PUT' : 'POST';
@@ -4875,34 +4882,42 @@ ${notesHTML}
     }
 
     async function checkReminders() {
-        if (!('Notification' in window)) return;
+        try {
+            if (!('Notification' in window)) return;
 
-        if (Notification.permission === 'default') {
-            await Notification.requestPermission();
-        }
-
-        if (Notification.permission !== 'granted') return;
-
-        const now = new Date();
-        const oneHourAgo = new Date(now - 60 * 60 * 1000);
-
-        (state.notes || []).forEach(n => {
-            if (!n.reminderAt) return;
-            const r = new Date(n.reminderAt);
-            if (r <= now && r > oneHourAgo) {
-                const notif = new Notification('Jot It Reminder 🔔', {
-                    body: n.title || 'You have a note due',
-                    icon: '/icon-192.png',
-                    badge: '/icon-192.png',
-                    tag: n.id,
-                    requireInteraction: true
-                });
-                notif.onclick = () => {
-                    window.focus();
-                    notif.close();
-                };
+            if (Notification.permission === 'default') {
+                const perm = await Notification.requestPermission();
+                if (perm !== 'granted') return;
             }
-        });
+
+            if (Notification.permission !== 'granted') return;
+
+            const now = new Date();
+            const notes = state.notes || [];
+
+            notes.forEach(note => {
+                if (!note.reminderAt) return;
+
+                const reminderTime = new Date(note.reminderAt);
+                const diffMs = now - reminderTime;
+
+                if (diffMs >= 0 && diffMs <= 65000) {
+                    const notifKey = 'notified_' + note.id + '_' + reminderTime.getTime();
+                    if (localStorage.getItem(notifKey)) return;
+
+                    localStorage.setItem(notifKey, '1');
+
+                    new Notification('Jot It Reminder', {
+                        body: note.title || 'You have a reminder',
+                        icon: '/icon-192.png',
+                        tag: note.id,
+                        requireInteraction: true
+                    });
+                }
+            });
+        } catch (e) {
+            console.log('Notification error:', e);
+        }
     }
 
     document.addEventListener('visibilitychange', () => {
