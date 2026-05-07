@@ -336,13 +336,16 @@
             padding-top: calc(12px + env(safe-area-inset-top));
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200; /* raised: user-menu dropdown must paint above content below header */
         }
 
         .header-title-group {
             display: flex;
             flex-direction: column;
             gap: 2px;
+            flex: 1;
+            min-width: 0; /* allows text to truncate rather than squeezing header-actions off screen */
+            overflow: hidden;
         }
 
         .app-title {
@@ -350,6 +353,9 @@
             font-weight: 700;
             color: var(--text);
             letter-spacing: -0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .app-title-logo { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
 
@@ -362,6 +368,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-shrink: 0; /* never shrink: avatar must remain visible regardless of title length */
         }
 
         .theme-toggle {
@@ -419,9 +426,12 @@
             flex-shrink: 0;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.15s;
+            touch-action: manipulation;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 2px 8px rgba(91, 110, 245, 0.35);
         }
-        .header-avatar:active { transform: scale(0.9); }
+        .header-avatar:hover { box-shadow: 0 4px 16px rgba(91, 110, 245, 0.5); transform: scale(1.05); }
+        .header-avatar:active { transform: scale(0.9); box-shadow: none; }
 
         /* ── AVATAR WRAPPER + USER MENU ──────────────────────── */
         .avatar-wrap {
@@ -434,13 +444,14 @@
             top: calc(100% + 8px);
             right: 0;
             width: 240px;
+            max-width: calc(100vw - 24px); /* prevent clipping on narrow viewports */
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-            z-index: 200;
+            z-index: 500; /* above all content within header stacking context */
             overflow: hidden;
             animation: slideDown 0.18s ease both;
         }
@@ -492,7 +503,8 @@
 
         .user-menu-item {
             width: 100%;
-            padding: 11px 16px;
+            padding: 12px 16px;
+            min-height: 44px; /* accessible touch target */
             background: none;
             border: none;
             display: flex;
@@ -2711,7 +2723,7 @@
         .app-header {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200;
             padding: 12px 14px !important;
             padding-top: max(12px, env(safe-area-inset-top)) !important;
         }
