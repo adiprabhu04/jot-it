@@ -553,6 +553,7 @@
             padding: 4px 4px 0;
         }
 
+        /* ── FILTER TABS ─────────────────────────────────────── */
         /* ── DASHBOARD BRAND ─────────────────────────────────── */
         .dashboard-brand { display: flex; align-items: center; gap: 10px;
             padding: 16px 20px 8px; }
@@ -584,7 +585,6 @@
             cursor: pointer; transition: all 0.2s; }
         .btn-modal-export:hover { border-color: #5B6EF5; color: #5B6EF5; }
 
-        /* ── FILTER TABS ─────────────────────────────────────── */
         .filter-tabs-wrap {
             flex-shrink: 0;
             overflow-x: auto;
@@ -2573,23 +2573,6 @@
             .btn-export { width: 100%; }
         }
 
-        .wake-overlay { position: fixed; inset: 0; background: #0A0A0F;
-            z-index: 99999; display: flex; align-items: center;
-            justify-content: center; }
-        .wake-content { text-align: center; }
-        .wake-logo { width: 72px; height: 72px; background: #5B6EF5;
-            border-radius: 20px; display: inline-flex; align-items: center;
-            justify-content: center; font-size: 30px; color: white;
-            margin-bottom: 16px; }
-        .wake-title { font-size: 28px; font-weight: 700; color: #F0F0F5;
-            letter-spacing: -1px; margin-bottom: 24px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .wake-spinner { width: 32px; height: 32px; border: 3px solid #252530;
-            border-top-color: #5B6EF5; border-radius: 50%;
-            animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-        .wake-msg { font-size: 15px; color: #F0F0F5; margin-bottom: 8px; }
-        .wake-sub { font-size: 13px; color: #8888A0; }
-
     </style>
 </head>
 <body>
@@ -2887,6 +2870,11 @@
                 <button class="color-swatch" data-color="#38BDF8" style="background:#38BDF8" title="Sky"></button>
                 <button class="color-swatch" data-color="#FB923C" style="background:#FB923C" title="Orange"></button>
             </div>
+        </div>
+        <div class="reminder-row">
+            <span class="reminder-label"><i class="fa-solid fa-bell"></i> Reminder</span>
+            <input type="datetime-local" id="note-reminder" class="reminder-input" onchange="document.getElementById('reminder-clear').style.display=this.value?'block':'none'">
+            <button onclick="clearReminder()" class="reminder-clear btn" id="reminder-clear" style="display:none"><i class="fa-solid fa-xmark"></i></button>
         </div>
     </div>
 </div>
@@ -3290,14 +3278,7 @@
 <span id="user-display"></span>
 
 <script>
-    // Redirect to landing if not logged in and first visit
-    if (!localStorage.getItem('token') && !localStorage.getItem('visited')) {
-        window.location.href = 'landing.html';
-    }
-    localStorage.setItem('visited', '1');
-
-    const API_URL = 'https://persistent-ai-ml-internship.onrender.com';
-    let _wakeTimer = null;
+    const API_URL = "https://persistent-ai-ml-internship.onrender.com";
 
     function initTheme() {
         const saved = localStorage.getItem('jotit-theme');
@@ -3903,14 +3884,8 @@ ${notesHTML}
 
     async function fetchNotes() {
         showSkeletonLoaders();
-        clearTimeout(_wakeTimer);
-        _wakeTimer = setTimeout(() => {
-            document.getElementById('wake-overlay').style.display = 'flex';
-        }, 2000);
         const grid = document.getElementById('notes-grid');
         const res = await api('/notes?page=1&pageSize=100');
-        clearTimeout(_wakeTimer);
-        document.getElementById('wake-overlay').style.display = 'none';
         if (res) {
             state.notes = applyCustomOrder(res.data || []);
             updateNoteCount(state.notes.length);
@@ -4340,84 +4315,65 @@ ${notesHTML}
         const _csvBtn = document.getElementById('modal-export-csv');
         if (_pdfBtn) _pdfBtn.style.display = note ? '' : 'none';
         if (_csvBtn) _csvBtn.style.display = note ? '' : 'none';
-
-        const titleLabel = document.getElementById('modal-title-label');
-        if (titleLabel) titleLabel.textContent = note ? 'Edit Note' : 'New Note';
-
-        const titleEl = document.getElementById('note-title');
-        if (titleEl) titleEl.value = note ? note.title : '';
-
+        document.getElementById('modal-title-label').textContent = note ? 'Edit Note' : 'New Note';
+        document.getElementById('note-title').value = note ? note.title : '';
         const richEditor = document.getElementById('note-content-editor');
         const hiddenArea = document.getElementById('note-content');
         const contentVal = note ? (note.content || '') : '';
-        if (richEditor) richEditor.innerHTML = contentVal;
-        if (hiddenArea) hiddenArea.value = contentVal;
+        richEditor.innerHTML = contentVal;
+        hiddenArea.value = contentVal;
 
         const pinBtn = document.getElementById('modal-pin-btn');
-        if (pinBtn) {
-            if (note) {
-                pinBtn.style.display = '';
-                pinBtn.classList.toggle('pinned', !!note.isPinned);
-            } else {
-                pinBtn.style.display = 'none';
-                pinBtn.classList.remove('pinned');
-            }
+        if (note) {
+            pinBtn.style.display = '';
+            pinBtn.classList.toggle('pinned', !!note.isPinned);
+        } else {
+            pinBtn.style.display = 'none';
+            pinBtn.classList.remove('pinned');
         }
 
         const templatesBtn = document.getElementById('templates-btn');
         if (templatesBtn) templatesBtn.style.display = note ? 'none' : '';
 
         const catSelect = document.getElementById('note-category');
-        if (catSelect) catSelect.value = (note && note.category) ? note.category : 'General';
+        catSelect.value = (note && note.category) ? note.category : 'General';
 
         selectedNoteColor = note ? (note.color || '') : '';
-        const swatches = document.querySelectorAll('.color-swatch');
-        if (swatches.length) {
-            swatches.forEach(s => {
-                s.classList.toggle('active', (s.dataset.color || '') === selectedNoteColor);
-            });
-        }
+        document.querySelectorAll('.color-swatch').forEach(s => {
+            s.classList.toggle('active', (s.dataset.color || '') === selectedNoteColor);
+        });
 
         const saveBtn = document.getElementById('save-note-btn');
-        if (saveBtn) { saveBtn.innerHTML = 'Save'; saveBtn.disabled = false; }
+        saveBtn.innerHTML = 'Save';
+        saveBtn.disabled = false;
 
         const scanImgContainer = document.getElementById('note-scan-image-container');
-        if (scanImgContainer) {
-            if (note && note.imageData) {
-                const scanImg = document.getElementById('note-scan-image-img');
-                if (scanImg) scanImg.src = note.imageData;
-                scanImgContainer.classList.remove('hidden');
-            } else {
-                scanImgContainer.classList.add('hidden');
-            }
+        if (note && note.imageData) {
+            document.getElementById('note-scan-image-img').src = note.imageData;
+            scanImgContainer.classList.remove('hidden');
+        } else {
+            scanImgContainer.classList.add('hidden');
         }
 
         const summarySection = document.getElementById('note-summary-section');
-        if (summarySection) {
-            if (note && note.summary) {
-                const summaryDisplay = document.getElementById('note-summary-display');
-                if (summaryDisplay) summaryDisplay.textContent = note.summary;
-                summarySection.style.display = 'block';
-            } else {
-                summarySection.style.display = 'none';
-            }
+        if (note && note.summary) {
+            document.getElementById('note-summary-display').textContent = note.summary;
+            summarySection.style.display = 'block';
+        } else {
+            summarySection.style.display = 'none';
         }
 
         const reminderInput = document.getElementById('note-reminder');
-        const reminderClear = document.getElementById('reminder-clear');
-        if (reminderInput) {
-            if (note && note.reminderAt) {
-                const d = new Date(note.reminderAt);
-                reminderInput.value = d.toISOString().slice(0, 16);
-                if (reminderClear) reminderClear.style.display = 'block';
-            } else {
-                reminderInput.value = '';
-                if (reminderClear) reminderClear.style.display = 'none';
-            }
+        if (note && note.reminderAt) {
+            const d = new Date(note.reminderAt);
+            reminderInput.value = d.toISOString().slice(0, 16);
+            document.getElementById('reminder-clear').style.display = 'block';
+        } else {
+            reminderInput.value = '';
+            document.getElementById('reminder-clear').style.display = 'none';
         }
 
         const _modal = document.getElementById('note-modal');
-        if (!_modal) return;
         _modal.classList.add('open');
         const _sheet = _modal.querySelector('.note-sheet');
         if (_sheet) {
@@ -4426,7 +4382,7 @@ ${notesHTML}
             _sheet.classList.add('opening');
             _sheet.addEventListener('animationend', () => _sheet.classList.remove('opening'), { once: true });
         }
-        setTimeout(() => { const t = document.getElementById('note-title'); if (t) t.focus(); }, 80);
+        setTimeout(() => document.getElementById('note-title').focus(), 80);
     }
 
     const TEMPLATES = [
@@ -5918,15 +5874,5 @@ ${notesHTML}
     <span>Settings</span>
   </button>
 </nav>
-
-<div id="wake-overlay" style="display:none" class="wake-overlay">
-  <div class="wake-content">
-    <div class="wake-logo"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 100 100" fill="none"><path d="M18 8 C17 8 15 9 15 11 L14 78 C14 80 16 82 18 82 L68 83 C70 83 72 81 72 79 L73 28 L52 7 Z" fill="#1A1D3A" stroke="#5B6EF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 7 L51 27 L73 28" fill="#111130" stroke="#5B6EF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 38 C26 36 29 35 32 37 C35 39 34 43 37 42 C40 41 39 37 43 36 C46 35 48 37 49 39" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M24 50 C27 48 30 49 33 51 C36 53 38 50 41 49" stroke="#818CF8" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/><path d="M24 61 L38 60" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.4"/><circle cx="78" cy="72" r="14" fill="#5B6EF5"/><path d="M78 64 L79.5 69.5 L85 71 L79.5 72.5 L78 78 L76.5 72.5 L71 71 L76.5 69.5 Z" fill="white"/></svg></div>
-    <h2 class="wake-title">Jot It<span style="color:#5B6EF5">.</span></h2>
-    <div class="wake-spinner"></div>
-    <p class="wake-msg">Waking up server...</p>
-    <p class="wake-sub">This may take 30–60 seconds on first load</p>
-  </div>
-</div>
 </body>
 </html>
