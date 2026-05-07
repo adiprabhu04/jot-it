@@ -1177,14 +1177,39 @@
           padding-bottom: 80px;
         }
         .about-content { max-width: 500px; margin: 0 auto; padding: 24px 20px; }
-        .about-back-btn {
-          display: flex; align-items: center; gap: 8px;
-          background: none; border: none; color: var(--text-secondary);
-          font-size: 14px; cursor: pointer; padding: 8px 0;
-          margin-bottom: 24px; transition: color 0.2s;
+        .about-nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            padding-top: env(safe-area-inset-top);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.2);
         }
-        .about-back-btn:hover { color: #5B6EF5; }
-        .about-back-btn i { font-size: 14px; }
+        .about-back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px 12px;
+            min-height: 44px;
+            border-radius: var(--radius);
+            transition: background 0.15s, color 0.15s;
+            touch-action: manipulation;
+        }
+        .about-back-btn:hover { background: var(--glass-border); color: var(--accent); }
+        .about-back-btn:active { transform: scale(0.96); }
+        .about-back-btn i { font-size: 13px; }
         .about-hero { text-align: center; padding: 40px 0 32px; }
         .about-logo-icon { width: 72px; height: 72px; background: #5B6EF5;
           border-radius: 20px; display: inline-flex; align-items: center;
@@ -6069,11 +6094,13 @@ ${notesHTML}
 </script>
 
 <div id="about-page" class="about-page" style="display:none">
-  <div class="about-content">
+  <nav class="about-nav">
     <button class="about-back-btn" onclick="showPage('home')">
       <i class="fa-solid fa-arrow-left"></i>
       Back to Notes
     </button>
+  </nav>
+  <div class="about-content">
     <div class="about-hero">
       <div class="about-logo">
         <div class="about-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 100 100" fill="none"><path d="M18 8 C17 8 15 9 15 11 L14 78 C14 80 16 82 18 82 L68 83 C70 83 72 81 72 79 L73 28 L52 7 Z" fill="#1A1D3A" stroke="#5B6EF5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 7 L51 27 L73 28" fill="#111130" stroke="#5B6EF5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 38 C26 36 29 35 32 37 C35 39 34 43 37 42 C40 41 39 37 43 36 C46 35 48 37 49 39" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M24 50 C27 48 30 49 33 51 C36 53 38 50 41 49" stroke="#818CF8" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/><path d="M24 61 L38 60" stroke="#818CF8" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.4"/><circle cx="78" cy="72" r="14" fill="#5B6EF5"/><path d="M78 64 L79.5 69.5 L85 71 L79.5 72.5 L78 78 L76.5 72.5 L71 71 L76.5 69.5 Z" fill="white"/></svg></div>
