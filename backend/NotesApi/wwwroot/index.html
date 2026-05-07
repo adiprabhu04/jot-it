@@ -282,13 +282,35 @@
             margin-top: 10px;
         }
 
-        .auth-theme-toggle { position: fixed; top: 16px; right: 16px;
-            background: var(--surface); border: 1px solid var(--border);
-            color: var(--text-secondary); width: 36px; height: 36px;
+        .auth-theme-toggle { display: none; }
+
+        .auth-nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid #252530;
+            z-index: 1000;
+        }
+        .auth-nav-brand { display: flex; align-items: center; gap: 10px; }
+        .auth-nav-logo { width: 28px; height: 28px; background: #5B6EF5;
+            border-radius: 7px; display: flex; align-items: center;
+            justify-content: center; color: white; font-size: 12px; }
+        .auth-nav-wordmark { font-size: 17px; font-weight: 700;
+            color: var(--text); letter-spacing: -0.3px; }
+        .auth-nav-theme { background: none; border: 1px solid #252530;
+            color: var(--text-secondary); width: 34px; height: 34px;
             border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; z-index: 100;
-            transition: all 0.2s; }
-        .auth-theme-toggle:hover { border-color: #5B6EF5; color: #5B6EF5; }
+            justify-content: center; cursor: pointer; transition: all 0.2s; }
+        .auth-nav-theme:hover { border-color: #5B6EF5; color: #5B6EF5; }
+        [data-theme="light"] .auth-nav {
+            background: rgba(245,245,250,0.85);
+            border-bottom-color: #E0E0EA; }
+
+        .auth-page, #auth-page { padding-top: 70px; }
 
         /* ── DASHBOARD LAYOUT ────────────────────────────────── */
         #dashboard-page {
@@ -2824,14 +2846,79 @@
             .template-card-name { font-size: 12px; }
         }
 
+        /* ── FIX 3: Mobile spacing tweaks ──────────────────────── */
+        @media (max-width: 639px) {
+            .note-card { padding: 16px; }
+            .search-bar-container { padding: 8px 14px; }
+            .auth-card {
+                margin: 0 16px;
+                padding: 24px 20px;
+            }
+            .settings-content { padding: 16px; }
+            .about-content { padding: 16px; }
+            .delete-modal, .confirm-modal {
+                margin: 0 16px;
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            .toast, .toast-container {
+                bottom: 72px !important;
+                left: 14px !important;
+                right: 14px !important;
+                max-width: none !important;
+            }
+            #note-title {
+                font-size: 18px;
+                padding: 8px 0;
+            }
+            .reminder-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .reminder-input {
+                width: 100%;
+                font-size: 16px;
+            }
+            .color-swatch {
+                width: 30px;
+                height: 30px;
+            }
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .hashtag-pills {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .word-suggestions {
+                position: sticky;
+                bottom: 0;
+                background: var(--surface);
+                margin: 0 -14px;
+                padding: 8px 14px;
+                border-top: 1px solid var(--border);
+            }
+        }
+
     </style>
 </head>
 <body>
 
 <!-- ── AUTH PAGE ──────────────────────────────────────────────── -->
-<button onclick="toggleTheme()" class="auth-theme-toggle" id="auth-theme-toggle">
-    <i class="fa-solid fa-moon"></i>
-</button>
+<button onclick="toggleTheme()" class="auth-theme-toggle" id="auth-theme-toggle" style="display:none"></button>
+
+<nav class="auth-nav">
+    <div class="auth-nav-brand">
+        <div class="auth-nav-logo">
+            <i class="fa-solid fa-pen-nib"></i>
+        </div>
+        <span class="auth-nav-wordmark">Jot It<span style="color:#5B6EF5">.</span></span>
+    </div>
+    <button onclick="toggleTheme()" class="auth-nav-theme">
+        <i class="fa-solid fa-moon" id="auth-nav-moon"></i>
+        <i class="fa-solid fa-sun" id="auth-nav-sun" style="display:none"></i>
+    </button>
+</nav>
 
 <div id="auth-page" class="page active">
     <div class="auth-card">
@@ -4783,23 +4870,38 @@ ${notesHTML}
 
     async function checkReminders() {
         if (!('Notification' in window)) return;
+
         if (Notification.permission === 'default') {
             await Notification.requestPermission();
         }
+
         if (Notification.permission !== 'granted') return;
+
         const now = new Date();
-        const due = state.notes.filter(n => {
-            if (!n.reminderAt) return false;
+        const oneHourAgo = new Date(now - 60 * 60 * 1000);
+
+        (state.notes || []).forEach(n => {
+            if (!n.reminderAt) return;
             const r = new Date(n.reminderAt);
-            return r <= now && r > new Date(now - 60 * 60 * 1000);
-        });
-        due.forEach(n => {
-            new Notification('Jot It Reminder', {
-                body: n.title || 'You have a note reminder',
-                icon: '/icon-192.png'
-            });
+            if (r <= now && r > oneHourAgo) {
+                const notif = new Notification('Jot It Reminder 🔔', {
+                    body: n.title || 'You have a note due',
+                    icon: '/icon-192.png',
+                    badge: '/icon-192.png',
+                    tag: n.id,
+                    requireInteraction: true
+                });
+                notif.onclick = () => {
+                    window.focus();
+                    notif.close();
+                };
+            }
         });
     }
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) checkReminders();
+    });
 
     function deleteNote(e, id) {
         e.stopPropagation();
