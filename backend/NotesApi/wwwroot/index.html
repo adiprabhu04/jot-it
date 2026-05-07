@@ -2436,18 +2436,6 @@
             animation: confettiFall linear forwards;
         }
 
-        /* ── TAB SLIDE INDICATOR ──────────────────────────────── */
-        .filter-tabs { position: relative; }
-        .tab-indicator {
-            position: absolute;
-            bottom: 0;
-            height: 2px;
-            background: #5B6EF5;
-            border-radius: 2px;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         /* ── CARD DELETE SWIPE ────────────────────────────────── */
         @keyframes cardDelete {
             0% { transform: translateX(0) scale(1); opacity: 1; max-height: 200px; }
@@ -2986,7 +2974,6 @@
                     onclick="filterCat('work', this)">Work</button>
             <button class="filter-tab nav-btn" role="tab" aria-selected="false" data-cat="ideas"
                     onclick="filterCat('ideas', this)">Ideas</button>
-            <div class="tab-indicator" id="tab-indicator"></div>
         </div>
     </div>
 
@@ -3713,7 +3700,6 @@
             initPullToRefresh();
             initFabLongPress();
             initMobileHints();
-            requestAnimationFrame(() => updateTabIndicator(document.querySelector('.filter-tab.active')));
         } else {
             showPage('auth-page');
         }
@@ -4193,15 +4179,6 @@ ${notesHTML}
         }
     }
 
-    function updateTabIndicator(activeTab) {
-        const indicator = document.getElementById('tab-indicator');
-        if (!indicator || !activeTab) return;
-        const rect = activeTab.getBoundingClientRect();
-        const containerRect = activeTab.parentElement.getBoundingClientRect();
-        indicator.style.left = (rect.left - containerRect.left) + 'px';
-        indicator.style.width = rect.width + 'px';
-    }
-
     function renderSkeletonLoaders(grid) {
         grid.innerHTML = Array(6).fill(0).map((_, i) => `
             <div class="skeleton-card" role="status" aria-label="Loading note" style="animation-delay:${i*0.04}s">
@@ -4512,7 +4489,6 @@ ${notesHTML}
         clearSearch();
         renderNotes();
         toggleSidebar();
-        updateTabIndicator(btn);
     }
 
     function filterNotes(q) {
