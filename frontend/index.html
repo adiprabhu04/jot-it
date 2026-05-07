@@ -576,15 +576,6 @@
         }
 
         /* ── FILTER TABS ─────────────────────────────────────── */
-        /* ── DASHBOARD BRAND ─────────────────────────────────── */
-        .dashboard-brand { display: flex; align-items: center; gap: 10px;
-            padding: 16px 20px 8px; }
-        .dashboard-logo-icon { width: 32px; height: 32px; background: #5B6EF5;
-            border-radius: 8px; display: flex; align-items: center;
-            justify-content: center; color: white; font-size: 14px; }
-        .dashboard-wordmark { font-size: 20px; font-weight: 700;
-            color: var(--text); letter-spacing: -0.5px; }
-        .dashboard-dot { color: #5B6EF5; }
 
         /* ── CARD EXPORT ──────────────────────────────────────── */
         .card-export-menu { display: none; position: absolute;
@@ -2607,24 +2598,24 @@
 
         /* Step 3 — Notes grid: mobile-first */
         .notes-grid {
-            display: grid !important;
-            grid-template-columns: 1fr !important;
-            gap: 12px !important;
-            padding: 12px 14px 100px !important;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 12px 14px 100px;
             width: 100%;
         }
         @media (min-width: 640px) {
             .notes-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 14px !important;
-                padding: 14px 16px 80px !important;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+                padding: 14px 16px 80px;
             }
         }
         @media (min-width: 1024px) {
             .notes-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 16px !important;
-                padding: 16px 20px 80px !important;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+                padding: 16px 20px 80px;
             }
         }
 
@@ -3037,14 +3028,6 @@
             </button>
         </div>
         <span id="search-count" class="search-count-label hidden"></span>
-    </div>
-
-    <!-- Dashboard brand -->
-    <div class="dashboard-brand">
-        <div class="dashboard-logo-icon">
-            <i class="fa-solid fa-pen-nib"></i>
-        </div>
-        <span class="dashboard-wordmark">Jot It<span class="dashboard-dot">.</span></span>
     </div>
 
     <!-- Filter tabs -->
