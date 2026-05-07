@@ -2595,16 +2595,19 @@
             padding: 12px 14px 100px;
             width: 100%;
         }
-        @media (min-width: 640px) {
+        @media (max-width: 639px) {
+            .notes-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (min-width: 640px) and (max-width: 1023px) {
             .notes-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr) !important;
                 gap: 14px;
                 padding: 14px 16px 80px;
             }
         }
         @media (min-width: 1024px) {
             .notes-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 16px;
                 padding: 16px 20px 80px;
             }
@@ -2957,7 +2960,7 @@
             </button>
             <div class="avatar-wrap">
             <div class="header-avatar" onclick="toggleUserMenu()" title="Account" aria-label="Open account menu" role="button" tabindex="0">
-                <span id="avatar-txt">U</span>
+                <span id="user-avatar">U</span>
             </div>
             <div id="user-menu" class="user-menu hidden">
                 <div class="user-menu-header">
@@ -3958,7 +3961,7 @@
     function updateUI() {
         document.getElementById('user-display').textContent = state.name || 'User';
         const initial = (state.name || 'U').charAt(0).toUpperCase();
-        document.getElementById('avatar-txt').textContent = initial;
+        document.getElementById('user-avatar').textContent = initial;
         document.getElementById('menu-avatar-txt').textContent = initial;
         document.getElementById('menu-name').textContent = state.name || 'User';
         document.getElementById('menu-email').textContent = state.email || '';
