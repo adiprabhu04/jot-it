@@ -2573,6 +2573,269 @@
             .btn-export { width: 100%; }
         }
 
+        /* ═══════════════════════════════════════════════════════
+           MOBILE-FIRST RESPONSIVE REDESIGN
+           ═══════════════════════════════════════════════════════ */
+
+        /* Step 2 — Global mobile resets */
+        html {
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        body {
+            overflow-x: hidden;
+            min-height: 100dvh;
+        }
+
+        /* Step 13 — Prevent horizontal scroll on containers */
+        .app-container, .main-content, .notes-container,
+        #dashboard-page, .notes-content {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Step 3 — Notes grid: mobile-first */
+        .notes-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            padding: 12px 14px 100px !important;
+            width: 100%;
+        }
+        @media (min-width: 640px) {
+            .notes-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 14px !important;
+                padding: 14px 16px 80px !important;
+            }
+        }
+        @media (min-width: 1024px) {
+            .notes-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 16px !important;
+                padding: 16px 20px 80px !important;
+            }
+        }
+
+        /* Step 4 — Note modal: bottom sheet on mobile */
+        @media (max-width: 639px) {
+            .note-sheet {
+                position: fixed !important;
+                bottom: 0 !important; left: 0 !important; right: 0 !important;
+                top: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                max-height: 92dvh !important;
+                border-radius: 20px 20px 0 0 !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .note-sheet {
+                width: 90% !important;
+                max-width: 600px !important;
+                max-height: 85dvh !important;
+                overflow-y: auto;
+                border-radius: 16px !important;
+            }
+            #note-modal { align-items: center !important; }
+        }
+
+        /* Step 5 — Sticky modal footer */
+        .sheet-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            z-index: 10;
+        }
+
+        /* Step 6 — Rich editor height */
+        @media (max-width: 639px) {
+            .rich-editor {
+                min-height: 120px !important;
+                max-height: 35dvh !important;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        @media (min-width: 640px) {
+            .rich-editor { max-height: 300px; }
+        }
+
+        /* Step 7 — Canvas scan: fluid */
+        @media (max-width: 639px) {
+            #drawing-canvas, .drawing-canvas {
+                width: 100% !important;
+                max-width: 100%;
+                height: 50dvh !important;
+                max-height: 320px;
+                touch-action: none;
+                display: block;
+            }
+        }
+        @media (min-width: 640px) {
+            #drawing-canvas, .drawing-canvas { height: 300px !important; }
+        }
+
+        /* Step 8 — Header: responsive padding */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 14px !important;
+            padding-top: max(12px, env(safe-area-inset-top)) !important;
+        }
+        @media (min-width: 640px) {
+            .app-header { padding: 14px 20px !important; }
+        }
+        @media (min-width: 1024px) {
+            .app-header { padding: 16px 24px !important; }
+        }
+
+        /* Step 9 — Filter tabs: horizontal scroll + snap */
+        .filter-tabs, .category-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 0 14px 4px;
+        }
+        .filter-tabs::-webkit-scrollbar,
+        .category-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn, .category-tab, .filter-tab {
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            white-space: nowrap;
+            min-height: 36px;
+            padding: 6px 14px;
+        }
+
+        /* Step 10 — Touch targets: 44×44 min on mobile */
+        .pin-btn, .card-export-btn, .rich-btn,
+        .feedback-btn, .mobile-nav-btn, .color-swatch {
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (min-width: 640px) {
+            .pin-btn, .card-export-btn, .rich-btn {
+                min-width: 32px;
+                min-height: 32px;
+            }
+        }
+
+        /* Step 11 — FAB: above bottom nav */
+        @media (max-width: 639px) {
+            .fab-btn, .nav-fab {
+                position: fixed;
+                bottom: calc(60px + env(safe-area-inset-bottom));
+                right: 20px;
+                z-index: 200;
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+            }
+        }
+        @media (min-width: 640px) {
+            .fab-btn { bottom: 24px; right: 24px; }
+        }
+
+        /* Step 12 — Mobile bottom nav: safe area height */
+        .mobile-bottom-nav {
+            height: calc(56px + env(safe-area-inset-bottom));
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Step 14 — Landscape mode */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .rich-editor { max-height: 25dvh !important; }
+            #drawing-canvas { height: 40dvh !important; }
+            .note-sheet { max-height: 95dvh !important; }
+            .app-header { padding: 8px 14px !important; }
+        }
+
+        /* Step 15 — Settings and about: full screen on mobile */
+        @media (max-width: 639px) {
+            .settings-modal, #settings-modal,
+            .about-page, #about-page {
+                position: fixed !important;
+                inset: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 0 !important;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Step 16 — Color picker: wrap on mobile */
+        @media (max-width: 639px) {
+            .color-picker-row { flex-wrap: wrap; gap: 8px; }
+            .color-swatches { gap: 8px; }
+            .color-swatch { width: 28px; height: 28px; }
+        }
+
+        /* Step 17 — Reminder: stacked on mobile */
+        @media (max-width: 639px) {
+            .reminder-row { flex-wrap: wrap; }
+            .reminder-input { width: 100%; font-size: 16px; }
+        }
+
+        /* Step 18 — Rich toolbar: horizontal scroll on mobile */
+        @media (max-width: 639px) {
+            .rich-toolbar {
+                gap: 2px !important;
+                padding: 6px 8px !important;
+                overflow-x: auto !important;
+                flex-wrap: nowrap !important;
+                scrollbar-width: none;
+            }
+            .rich-toolbar::-webkit-scrollbar { display: none; }
+            .rich-btn {
+                min-width: 36px;
+                min-height: 36px;
+                padding: 4px 6px !important;
+                font-size: 13px !important;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Step 19 — Scan modal: full screen on mobile */
+        @media (max-width: 639px) {
+            .scan-modal-card {
+                position: fixed !important;
+                inset: 0 !important;
+                border-radius: 0 !important;
+                overflow-y: auto;
+                padding: 12px !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                max-height: 100% !important;
+            }
+            #scan-modal { align-items: flex-start !important; }
+            .scan-tabs { margin-bottom: 12px; }
+        }
+
+        /* Step 20 — Template grid: 2 columns on mobile */
+        @media (max-width: 639px) {
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px;
+            }
+            .template-card { padding: 10px; }
+            .template-card-name { font-size: 12px; }
+        }
+
     </style>
 </head>
 <body>
