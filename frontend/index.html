@@ -3278,6 +3278,12 @@
 <span id="user-display"></span>
 
 <script>
+    // Landing page redirect logic
+    if (!localStorage.getItem('token') && !localStorage.getItem('jotit_visited')) {
+      window.location.href = 'landing.html';
+    }
+    localStorage.setItem('jotit_visited', '1');
+
     const API_URL = "https://persistent-ai-ml-internship.onrender.com";
 
     function initTheme() {
