@@ -112,6 +112,7 @@
             background: var(--bg);
             color: var(--text);
             height: 100vh;
+            height: 100dvh; /* progressive: adapts to visible viewport on iOS/Android */
             overflow: hidden;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
@@ -123,13 +124,14 @@
 
         body::before, body::after { display: none; }
 
-        .btn { cursor: pointer; border: none; background: none; font-family: inherit; transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn { cursor: pointer; border: none; background: none; font-family: inherit; transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; touch-action: manipulation; }
+        button, a, select { touch-action: manipulation; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .hidden { display: none !important; }
 
         /* ── PAGES ───────────────────────────────────────────── */
         .page { display: none; }
-        .page.active { display: flex; flex-direction: column; height: 100vh; }
+        .page.active { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
 
         /* ── AUTH PAGE ───────────────────────────────────────── */
         #auth-page {
@@ -592,6 +594,19 @@
         .card-export-menu .pin-btn { background: var(--surface-2); border: 1px solid var(--border); width: 26px; height: 26px; padding: 0; }
         .card-export-menu .pin-btn.pinned { border-color: #5B6EF5; color: #5B6EF5; }
         .card-delete-btn:hover { color: var(--error) !important; border-color: var(--error) !important; }
+
+        /* Touch devices have no hover state — always show card actions */
+        @media (hover: none) and (pointer: coarse) {
+            .card-export-menu { display: flex !important; }
+            .card-export-btn { width: 30px !important; height: 30px !important; }
+            /* Disable sticky :hover lift on touch — tap leaves card elevated until next tap */
+            .note-card:hover { transform: none !important; box-shadow: var(--shadow-sm) !important; }
+            .note-card:active { transform: scale(0.98) !important; }
+            .note-card .drag-handle { opacity: 0.3 !important; }
+            /* pan-y: browser handles vertical scroll natively; JS handles horizontal swipe */
+            .note-card { touch-action: pan-y; }
+        }
+
         .modal-actions { display: flex; align-items: center; gap: 8px; }
         .btn-modal-export { background: none; border: 1px solid var(--border);
             color: var(--text-secondary); padding: 8px 10px; border-radius: 8px;
@@ -651,8 +666,10 @@
         /* ── NOTES AREA ──────────────────────────────────────── */
         .notes-area {
             flex: 1;
+            min-height: 0; /* flex shrink: allows overflow-y scroll to work in column flex containers */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain; /* prevents scroll chaining to body on Android/iOS */
             padding: 4px 16px calc(var(--nav-h) + 16px + env(safe-area-inset-bottom));
         }
 
@@ -965,7 +982,7 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.45);
-            z-index: 100;
+            z-index: 1001; /* above mobile-bottom-nav (1000) so modals always overlay nav */
             display: none;
             align-items: flex-end;
             justify-content: center;
@@ -994,7 +1011,7 @@
             display: flex;
             flex-direction: column;
             animation: sheetUp 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
-            max-height: 92vh;
+            max-height: 92dvh; /* dvh adapts to visible viewport when address bar shows/hides */
             overflow: hidden;
             box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.4);
         }
@@ -1041,7 +1058,9 @@
 
         .sheet-body {
             flex: 1;
+            min-height: 0; /* required for overflow-y scroll inside flex column */
             overflow-y: auto;
+            overscroll-behavior-y: contain;
             padding: 0 16px 8px;
         }
 
@@ -1839,7 +1858,7 @@
         .quick-actions-sheet {
             position: fixed;
             inset: 0;
-            z-index: 300;
+            z-index: 1001; /* above bottom nav; never open simultaneously with note modal */
             display: flex;
             align-items: flex-end;
             opacity: 0;
@@ -2344,8 +2363,18 @@
             70%  { box-shadow: 0 0 0 16px rgba(91,110,245,0);   }
             100% { box-shadow: 0 0 0  0px rgba(91,110,245,0);   }
         }
-        .fab-btn, .nav-fab { animation: fabPulse 2s infinite; }
+        .fab-btn, .nav-fab { animation: fabPulse 2s infinite; will-change: box-shadow; }
         .nav-fab:hover, .fab-btn:hover { animation-play-state: paused; }
+
+        /* Respect reduced-motion preference — suppress decorative animations */
+        @media (prefers-reduced-motion: reduce) {
+            .note-card { animation: none !important; opacity: 1 !important; }
+            .fab-btn, .nav-fab, .mobile-bottom-nav .fab-center { animation: none !important; will-change: auto; }
+            .note-sheet { animation: none !important; }
+            .note-sheet.opening, .note-sheet.closing { animation: none !important; }
+            .modal-overlay.open { animation: none !important; }
+            .ptr-spinner { animation: none !important; }
+        }
 
         /* ── BUTTON PRESS EFFECT ─────────────────────────────── */
         .btn, .tab-btn, .category-tab, .mobile-nav-btn, .rich-btn, .feedback-btn {
@@ -2757,6 +2786,15 @@
             #drawing-canvas { height: 40dvh !important; }
             .note-sheet { max-height: 95dvh !important; }
             .app-header { padding: 8px 14px !important; }
+            /* Notch safe-area: iPhone landscape cutout on left/right */
+            .notes-grid {
+                padding-left: max(14px, env(safe-area-inset-left)) !important;
+                padding-right: max(14px, env(safe-area-inset-right)) !important;
+            }
+            .app-header {
+                padding-left: max(14px, env(safe-area-inset-left)) !important;
+                padding-right: max(14px, env(safe-area-inset-right)) !important;
+            }
         }
 
         /* Step 15 — Settings and about: full screen on mobile */
@@ -3175,7 +3213,7 @@
 </div>
 
 <!-- ── SCAN MODAL ────────────────────────────────────────────── -->
-<div id="scan-modal" class="modal-overlay" style="z-index:150;" role="dialog" aria-modal="true" aria-label="Scan handwriting">
+<div id="scan-modal" class="modal-overlay" style="z-index:1050;" role="dialog" aria-modal="true" aria-label="Scan handwriting">
     <div class="scan-modal-card">
         <div class="scan-modal-header">
             <span class="scan-modal-title">Scan Your Writing</span>
@@ -3316,7 +3354,7 @@
 </div>
 
 <!-- ── CONFIRM MODAL ──────────────────────────────────────────── -->
-<div id="confirm-modal" class="modal-overlay" style="z-index:200;" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+<div id="confirm-modal" class="modal-overlay" style="z-index:1100;" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
     <div class="confirm-card">
         <div style="color:var(--error);margin-bottom:4px;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
         <h3 id="confirm-title">Delete this note?</h3>
@@ -3750,6 +3788,7 @@
             initPullToRefresh();
             initFabLongPress();
             initMobileHints();
+            initModalKeyboardBehavior();
         } else {
             showPage('auth-page');
         }
@@ -5521,6 +5560,19 @@ ${notesHTML}
     }
 
     // ── MOBILE HINTS ──────────────────────────────────────────────
+    // ── VISUAL VIEWPORT — keyboard-safe modal height ──────────────
+    function initModalKeyboardBehavior() {
+        if (!window.visualViewport || !isMobile()) return;
+        window.visualViewport.addEventListener('resize', () => {
+            const modal = document.getElementById('note-modal');
+            if (!modal || !modal.classList.contains('open')) return;
+            const sheet = modal.querySelector('.note-sheet');
+            if (!sheet) return;
+            // Keep sheet within the visible area above the virtual keyboard
+            sheet.style.maxHeight = Math.floor(window.visualViewport.height * 0.95) + 'px';
+        });
+    }
+
     function initMobileHints() {
         if (!isMobile() || localStorage.getItem('mobile-hints-shown')) return;
         setTimeout(() => {
