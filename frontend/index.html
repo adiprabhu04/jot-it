@@ -1271,15 +1271,6 @@
         .hashtag-pill { display: inline-block; font-size: 11px; font-weight: 500; color: #5B6EF5; background: rgba(91,110,245,0.12); border: 1px solid rgba(91,110,245,0.2); border-radius: 20px; padding: 2px 8px; margin-right: 4px; margin-top: 4px; }
         .hashtag-pills { margin-top: 4px; }
 
-        .reminder-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 0 16px 12px; }
-        .reminder-label { font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .reminder-input { background: #111118; border: 1px solid #252530; border-radius: 8px; color: var(--text); font-size: 13px; padding: 6px 10px; flex: 1; }
-        .reminder-input::-webkit-calendar-picker-indicator { filter: invert(0.5); }
-        .reminder-clear { background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; }
-        [data-theme="light"] .reminder-input { background: #F5F5F5; border-color: #E0E0EA; }
-
-        .reminder-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; background: rgba(91,110,245,0.12); color: #5B6EF5; border: 1px solid rgba(91,110,245,0.2); }
-        .reminder-badge.overdue { background: rgba(248,113,113,0.12); color: #F87171; border-color: rgba(248,113,113,0.2); }
 
         .btn-save {
             padding: 9px 20px;
@@ -2786,12 +2777,6 @@
             .color-swatch { width: 28px; height: 28px; }
         }
 
-        /* Step 17 — Reminder: stacked on mobile */
-        @media (max-width: 639px) {
-            .reminder-row { flex-wrap: wrap; }
-            .reminder-input { width: 100%; font-size: 16px; }
-        }
-
         /* Step 18 — Rich toolbar: horizontal scroll on mobile */
         @media (max-width: 639px) {
             .rich-toolbar {
@@ -2861,14 +2846,6 @@
             #note-title {
                 font-size: 18px;
                 padding: 8px 0;
-            }
-            .reminder-row {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .reminder-input {
-                width: 100%;
-                font-size: 16px;
             }
             .color-swatch {
                 width: 30px;
@@ -3190,11 +3167,6 @@
                 <button class="color-swatch" data-color="#38BDF8" style="background:#38BDF8" title="Sky"></button>
                 <button class="color-swatch" data-color="#FB923C" style="background:#FB923C" title="Orange"></button>
             </div>
-        </div>
-        <div class="reminder-row">
-            <span class="reminder-label"><i class="fa-solid fa-bell"></i> Reminder</span>
-            <input type="datetime-local" id="note-reminder" class="reminder-input" onchange="document.getElementById('reminder-clear').style.display=this.value?'block':'none'">
-            <button onclick="clearReminder()" class="reminder-clear btn" id="reminder-clear" style="display:none"><i class="fa-solid fa-xmark"></i></button>
         </div>
     </div>
 </div>
@@ -3772,7 +3744,6 @@
             showPage('dashboard-page');
             updateUI();
             fetchNotes();
-            setInterval(checkReminders, 60000);
             initPullToRefresh();
             initFabLongPress();
             initMobileHints();
@@ -4215,7 +4186,6 @@ ${notesHTML}
             state.notes = applyCustomOrder(res.data || []);
             updateNoteCount(state.notes.length);
             renderNotes();
-            checkReminders();
         } else {
             grid.innerHTML = `
                 <div class="empty-state">
@@ -4410,10 +4380,6 @@ ${notesHTML}
 
             const tagList = (note.tags || '').split(',').filter(t => t.startsWith('#'));
             const tagHtml = tagList.slice(0, 3).map(t => `<span class="hashtag-pill">${esc(t)}</span>`).join('');
-            const _now = new Date();
-            const _reminder = note.reminderAt ? new Date(note.reminderAt) : null;
-            const _isOverdue = _reminder && _reminder < _now;
-            const reminderHtml = _reminder ? `<span class="reminder-badge ${_isOverdue ? 'overdue' : ''}"><i class="fa-solid fa-bell"></i>${_reminder.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>` : '';
 
             el.innerHTML = `
                 <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
@@ -4429,7 +4395,7 @@ ${notesHTML}
                         </svg>
                         <span>${dateStr}</span>
                     </div>
-                    <div style="display:flex;align-items:center;gap:6px;">${reminderHtml}<span class="note-card-category ${catInfo.cls}">${catInfo.name}</span></div>
+                    <div style="display:flex;align-items:center;gap:6px;"><span class="note-card-category ${catInfo.cls}">${catInfo.name}</span></div>
                 </div>
                 <div class="card-export-menu" id="export-${note.id}">
                     <button class="card-export-btn pin-btn${note.isPinned ? ' pinned' : ''}" onclick="togglePin(event, '${note.id}')" aria-label="${note.isPinned ? 'Unpin note' : 'Pin note'}" title="${note.isPinned ? 'Unpin' : 'Pin'}">
@@ -4678,22 +4644,6 @@ ${notesHTML}
             summarySection.style.display = 'none';
         }
 
-        const reminderInput = document.getElementById('note-reminder');
-        if (reminderInput) {
-            if (note && note.reminderAt) {
-                const d = new Date(note.reminderAt);
-                const localISO = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-                    .toISOString().slice(0, 16);
-                reminderInput.value = localISO;
-                const clearBtn = document.getElementById('reminder-clear');
-                if (clearBtn) clearBtn.style.display = 'block';
-            } else {
-                reminderInput.value = '';
-                const clearBtn = document.getElementById('reminder-clear');
-                if (clearBtn) clearBtn.style.display = 'none';
-            }
-        }
-
         const _modal = document.getElementById('note-modal');
         _modal.classList.add('open');
         const _sheet = _modal.querySelector('.note-sheet');
@@ -4837,15 +4787,11 @@ ${notesHTML}
         const plainContent = content.replace(/<[^>]*>/g, ' ');
         const hashtagMatches = plainContent.match(/#[a-zA-Z0-9_]+/g) || [];
         const tags = [...new Set(hashtagMatches)].join(',');
-        const reminderInput = document.getElementById('note-reminder');
-        const reminderVal = reminderInput ? reminderInput.value : '';
-        const reminderAt = reminderVal ? new Date(reminderVal).toISOString() : null;
-
         const method = state.editingId ? 'PUT' : 'POST';
         const url    = state.editingId ? `/notes/${state.editingId}` : '/notes';
 
         setButtonLoading(saveBtn, true, 'Saving...');
-        const res = await api(url, method, { title, content, category: cat, color: selectedNoteColor, tags, reminderAt });
+        const res = await api(url, method, { title, content, category: cat, color: selectedNoteColor, tags });
         console.log('API response:', res);
         setButtonLoading(saveBtn, false);
 
@@ -4858,54 +4804,6 @@ ${notesHTML}
             toast('Oops! Couldn\'t save that. Try again?', 'error');
         }
     }
-
-    function clearReminder() {
-        document.getElementById('note-reminder').value = '';
-        document.getElementById('reminder-clear').style.display = 'none';
-    }
-
-    async function checkReminders() {
-        try {
-            if (!('Notification' in window)) return;
-
-            if (Notification.permission === 'default') {
-                const perm = await Notification.requestPermission();
-                if (perm !== 'granted') return;
-            }
-
-            if (Notification.permission !== 'granted') return;
-
-            const now = new Date();
-            const notes = state.notes || [];
-
-            notes.forEach(note => {
-                if (!note.reminderAt) return;
-
-                const reminderTime = new Date(note.reminderAt);
-                const diffMs = now - reminderTime;
-
-                if (diffMs >= 0 && diffMs <= 65000) {
-                    const notifKey = 'notified_' + note.id + '_' + reminderTime.getTime();
-                    if (localStorage.getItem(notifKey)) return;
-
-                    localStorage.setItem(notifKey, '1');
-
-                    new Notification('Jot It Reminder', {
-                        body: note.title || 'You have a reminder',
-                        icon: '/icon-192.png',
-                        tag: note.id,
-                        requireInteraction: true
-                    });
-                }
-            });
-        } catch (e) {
-            console.log('Notification error:', e);
-        }
-    }
-
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) checkReminders();
-    });
 
     function deleteNote(e, id) {
         e.stopPropagation();
