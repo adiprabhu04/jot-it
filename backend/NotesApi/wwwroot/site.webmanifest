@@ -1,19 +1,27 @@
 {
-  "name": "Notely",
-  "short_name": "Notely",
+  "name": "Jot It",
+  "short_name": "Jot It",
+  "description": "Quick note-taking with handwriting OCR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F0F15",
+  "theme_color": "#5B6EF5",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "theme_color": "#6366f1",
-  "background_color": "#f8f8f7",
-  "display": "standalone"
+  ]
 }
