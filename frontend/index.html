@@ -393,7 +393,7 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             flex-shrink: 0; /* never shrink: avatar must remain visible regardless of title length */
         }
 
@@ -453,10 +453,10 @@
             cursor: pointer;
             user-select: none;
             touch-action: manipulation;
-            transition: transform 0.15s, box-shadow 0.15s;
-            box-shadow: 0 2px 8px rgba(91, 110, 245, 0.35);
+            transition: transform 0.18s, box-shadow 0.18s;
+            box-shadow: 0 0 0 2px rgba(91, 110, 245, 0.16), 0 2px 8px rgba(91, 110, 245, 0.32);
         }
-        .header-avatar:hover { box-shadow: 0 4px 16px rgba(91, 110, 245, 0.5); transform: scale(1.05); }
+        .header-avatar:hover { box-shadow: 0 0 0 2.5px rgba(91, 110, 245, 0.52), 0 4px 20px rgba(91, 110, 245, 0.5); transform: scale(1.05); }
         .header-avatar:active { transform: scale(0.9); box-shadow: none; }
 
         /* ── AVATAR WRAPPER + USER MENU ──────────────────────── */
@@ -2626,7 +2626,7 @@
         @media (max-width: 480px) {
             .app-header { padding: 12px 14px; }
             .notes-title { font-size: 20px; }
-            .header-actions { gap: 8px; }
+            .header-actions { gap: 10px; }
         }
 
         /* ── RESPONSIVE: CATEGORY TABS SCROLL ───────────────── */
@@ -3111,6 +3111,7 @@
         @media (min-width: 640px) {
             .header-brand-name { font-size: 19px; }
             .app-header { padding: 12px 20px !important; padding-top: max(12px, env(safe-area-inset-top)) !important; }
+            .header-actions { gap: 14px !important; }
             .dashboard-title-row { padding: 20px 20px 8px; }
             .search-bar-panel { padding: 6px 20px 10px; }
             .filter-tabs-wrap { padding: 4px 20px 14px; }
@@ -3120,6 +3121,7 @@
         @media (min-width: 1024px) {
             .header-brand-name { font-size: 20px; }
             .app-header { padding: 14px 24px !important; padding-top: max(14px, env(safe-area-inset-top)) !important; }
+            .header-actions { gap: 16px !important; }
             .dashboard-section-title { font-size: 28px; }
             .dashboard-title-row { padding: 22px 24px 10px; }
             .search-bar-panel { padding: 8px 24px 12px; }
@@ -3224,6 +3226,20 @@
         @media (min-width: 769px)  { .empty-state { padding-top: 96px !important; } }
         @media (min-width: 1024px) { .empty-state { padding-top: 120px !important; } }
 
+        /* ── HEADER ACTIONS: separator & alignment ───────────────────── */
+        .header-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--glass-border);
+            flex-shrink: 0;
+            border-radius: 1px;
+            opacity: 0.65;
+            align-self: center;
+        }
+        @media (max-width: 480px) {
+            .header-sep { height: 16px; opacity: 0.5; }
+        }
+
     </style>
 </head>
 <body>
@@ -3306,6 +3322,7 @@
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
             </button>
+            <div class="header-sep" aria-hidden="true"></div>
             <div class="avatar-wrap">
             <div class="header-avatar" onclick="toggleUserMenu()" title="Account" aria-label="Open account menu" role="button" tabindex="0">
                 <span id="user-avatar">U</span>
