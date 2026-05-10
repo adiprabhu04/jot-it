@@ -2950,6 +2950,125 @@
             }
         }
 
+        /* ── BRANDING ROW: HEADER ───────────────────────────────── */
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand-logo {
+            width: 34px;
+            height: 34px;
+            background: #5B6EF5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(91,110,245,0.35);
+        }
+        .header-brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+        .header-brand-dot { color: #5B6EF5; }
+
+        /* ── DASHBOARD SECTION TITLE (below header, above search) ─ */
+        .dashboard-title-row {
+            flex-shrink: 0;
+            padding: 20px 16px 8px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .dashboard-section-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.7px;
+            line-height: 1;
+            margin: 0;
+        }
+        .dashboard-title-row .note-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* ── SEARCH & FILTER VERTICAL SPACING ───────────────────── */
+        .search-bar-panel {
+            padding: 6px 16px 10px;
+        }
+        .filter-tabs-wrap {
+            padding: 6px 16px 14px;
+        }
+
+        /* ── CURSOR POLISH (force on all interactables) ──────────── */
+        .filter-tab,
+        .note-card,
+        .nav-item,
+        .nav-fab,
+        .btn-close,
+        .about-feature-item,
+        .about-link,
+        .scan-tab,
+        .canvas-tool-btn,
+        .canvas-size-btn,
+        .canvas-color-btn,
+        .upload-area,
+        .theme-toggle,
+        .auth-nav-theme,
+        .card-export-btn,
+        .btn-modal-export,
+        .btn-scan-trigger,
+        .rich-btn,
+        .word-suggestion-pill,
+        .color-swatch,
+        .btn-system-theme,
+        .btn-cta,
+        .btn-save,
+        .btn-primary,
+        .about-back-btn,
+        .user-menu-item,
+        .pin-btn,
+        .auth-tab,
+        .template-card,
+        .note-card-delete,
+        .header-avatar,
+        .category-select,
+        .command-palette-item {
+            cursor: pointer !important;
+        }
+
+        /* ── RESPONSIVE: TABLET ──────────────────────────────────── */
+        @media (min-width: 640px) {
+            .header-brand-name { font-size: 21px; }
+            .header-brand-logo { width: 36px; height: 36px; font-size: 15px; }
+            .dashboard-title-row { padding: 22px 20px 10px; }
+            .search-bar-panel { padding: 6px 20px 10px; }
+            .filter-tabs-wrap { padding: 4px 20px 14px; }
+        }
+
+        /* ── RESPONSIVE: DESKTOP ─────────────────────────────────── */
+        @media (min-width: 1024px) {
+            .header-brand-name { font-size: 22px; }
+            .dashboard-section-title { font-size: 28px; }
+            .dashboard-title-row { padding: 24px 24px 12px; }
+            .search-bar-panel { padding: 8px 24px 12px; }
+            .filter-tabs-wrap { padding: 4px 24px 16px; }
+        }
+
+        /* ── RESPONSIVE: SMALL MOBILE ────────────────────────────── */
+        @media (max-width: 480px) {
+            .dashboard-section-title { font-size: 22px; }
+            .dashboard-title-row { padding: 14px 14px 6px; }
+        }
+
     </style>
 </head>
 <body>
@@ -3020,9 +3139,11 @@
 
     <!-- Header -->
     <header class="app-header">
-        <div class="header-title-group">
-            <h1 id="view-title" class="app-title">Notes</h1>
-            <span class="note-count" id="note-count-display"></span>
+        <div class="header-brand">
+            <div class="header-brand-logo">
+                <i class="fa-solid fa-pen-nib"></i>
+            </div>
+            <span class="header-brand-name">Jot It<span class="header-brand-dot">.</span></span>
         </div>
         <div class="header-actions">
             <button id="theme-toggle" class="theme-toggle btn" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -3074,6 +3195,12 @@
         </div>
         </div>
     </header>
+
+    <!-- Section title + count -->
+    <div class="dashboard-title-row">
+        <h1 id="view-title" class="dashboard-section-title">Notes</h1>
+        <span class="note-count" id="note-count-display"></span>
+    </div>
 
     <!-- Search bar -->
     <div id="search-bar" class="search-bar-panel">
