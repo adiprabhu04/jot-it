@@ -212,3 +212,16 @@ obj/
 *.sqlite
 .vs/
 .aider*
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Claude Code
+.claude/
+
+# Secrets / credentials
+jotit-491113-1a010526e92c.json
+
+# Vercel
+.vercel/
