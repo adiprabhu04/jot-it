@@ -359,6 +359,34 @@
         }
         .app-title-logo { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
 
+        /* ── DASHBOARD BRANDING ────────────────────────────────── */
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .header-brand-logo {
+            width: 28px;
+            height: 28px;
+            background: #5B6EF5;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(91,110,245,0.35);
+        }
+        .header-brand-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.4px;
+            line-height: 1;
+        }
+        .header-brand-dot { color: #5B6EF5; }
+
         .note-count {
             font-size: 13px;
             color: var(--text-secondary);
@@ -2950,6 +2978,100 @@
             }
         }
 
+        /* ── BRANDING ROW POLISH ─────────────────────────────────── */
+        .header-brand-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .header-brand-name {
+            font-size: 20px;
+            letter-spacing: -0.5px;
+        }
+        .header-brand {
+            gap: 10px;
+        }
+
+        /* ── SEARCH & FILTER VERTICAL SPACING ───────────────────── */
+        .search-bar-panel {
+            padding: 14px 16px 10px;
+        }
+        .filter-tabs-wrap {
+            padding: 6px 16px 14px;
+        }
+
+        /* ── NOTES META BAR (view label + count) ────────────────── */
+        .notes-meta-bar {
+            flex-shrink: 0;
+            padding: 0 16px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .notes-meta-view {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .notes-meta-sep {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            opacity: 0.4;
+            flex-shrink: 0;
+        }
+        .notes-meta-bar .note-count {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        /* ── CURSOR POLISH ───────────────────────────────────────── */
+        .filter-tab,
+        .nav-item,
+        .nav-fab,
+        .btn-close,
+        .about-feature-item,
+        .about-link,
+        .scan-tab,
+        .canvas-tool-btn,
+        .canvas-size-btn,
+        .canvas-color-btn,
+        .upload-area,
+        .theme-toggle,
+        .auth-nav-theme,
+        .card-export-btn,
+        .btn-modal-export,
+        .btn-scan-trigger,
+        .rich-btn,
+        .word-suggestion-pill,
+        .color-swatch,
+        .btn-system-theme,
+        .btn-cta,
+        .btn-save,
+        .btn-primary,
+        .about-back-btn,
+        .user-menu-item,
+        .pin-btn,
+        .auth-tab {
+            cursor: pointer;
+        }
+
+        /* ── DESKTOP HEADER BRANDING SCALE ──────────────────────── */
+        @media (min-width: 640px) {
+            .header-brand-name { font-size: 21px; }
+            .header-brand-logo { width: 36px; height: 36px; font-size: 15px; }
+        }
+        @media (min-width: 1024px) {
+            .header-brand-name { font-size: 22px; }
+            .search-bar-panel { padding: 16px 24px 12px; }
+            .filter-tabs-wrap { padding: 4px 24px 16px; }
+            .notes-meta-bar { padding: 0 24px 12px; }
+        }
+
     </style>
 </head>
 <body>
@@ -3020,9 +3142,11 @@
 
     <!-- Header -->
     <header class="app-header">
-        <div class="header-title-group">
-            <h1 id="view-title" class="app-title">Notes</h1>
-            <span class="note-count" id="note-count-display"></span>
+        <div class="header-brand">
+            <div class="header-brand-logo">
+                <i class="fa-solid fa-pen-nib"></i>
+            </div>
+            <span class="header-brand-name">Jot It<span class="header-brand-dot">.</span></span>
         </div>
         <div class="header-actions">
             <button id="theme-toggle" class="theme-toggle btn" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -3103,6 +3227,13 @@
             <button class="filter-tab nav-btn" role="tab" aria-selected="false" data-cat="ideas"
                     onclick="filterCat('ideas', this)">Ideas</button>
         </div>
+    </div>
+
+    <!-- Notes meta bar -->
+    <div class="notes-meta-bar">
+        <span class="notes-meta-view" id="view-title">Notes</span>
+        <span class="notes-meta-sep"></span>
+        <span class="note-count" id="note-count-display"></span>
     </div>
 
     <!-- Notes grid -->
