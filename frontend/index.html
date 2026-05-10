@@ -3092,6 +3092,96 @@
             .app-header { padding: 10px 14px !important; padding-top: max(10px, env(safe-area-inset-top)) !important; }
         }
 
+        /* ══════════════════════════════════════════════════════════════
+           PRODUCT POLISH PASS — layout, grid, interaction, spacing
+           ══════════════════════════════════════════════════════════════ */
+
+        /* ── CURSOR POLISH ──────────────────────────────────────────── */
+        .filter-tab, .note-card, .nav-item, .nav-fab, .btn-close,
+        .about-feature-item, .about-link, .scan-tab, .canvas-tool-btn,
+        .canvas-size-btn, .canvas-color-btn, .upload-area, .theme-toggle,
+        .auth-nav-theme, .card-export-btn, .btn-modal-export,
+        .btn-scan-trigger, .rich-btn, .word-suggestion-pill, .color-swatch,
+        .btn-system-theme, .btn-cta, .btn-save, .btn-primary, .about-back-btn,
+        .user-menu-item, .pin-btn, .auth-tab, .template-card, .note-card-delete,
+        .header-avatar, .category-select, .command-palette-item, .search-clear,
+        .mobile-nav-btn, .fab-center, .drag-handle { cursor: pointer !important; }
+
+        /* ── FILTER TAB INTERACTION ─────────────────────────────────── */
+        .filter-tab:not(.active):hover {
+            background: #1C1C28 !important;
+            border-color: rgba(91, 110, 245, 0.35) !important;
+            color: var(--text) !important;
+        }
+        [data-theme="light"] .filter-tab:not(.active):hover {
+            background: #F0F0FF !important;
+            border-color: rgba(91, 110, 245, 0.4) !important;
+            color: var(--text) !important;
+        }
+
+        /* ── SEARCH BAR: refined corner radius ──────────────────────── */
+        .search-inner { border-radius: 14px !important; }
+
+        /* ── NOTE CARD: enhanced hover shadow ───────────────────────── */
+        .note-card:hover {
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5) !important;
+        }
+        [data-theme="light"] .note-card:hover {
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14) !important;
+        }
+
+        /* ── DESKTOP: notes-area hands horizontal space to grid ─────── */
+        @media (min-width: 769px) {
+            .notes-area {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .notes-grid {
+                padding: 8px 28px 90px !important;
+                gap: 18px !important;
+            }
+            .bottom-nav {
+                height: calc(64px + env(safe-area-inset-bottom)) !important;
+            }
+        }
+
+        /* ── 1024px ─────────────────────────────────────────────────── */
+        @media (min-width: 1024px) {
+            .notes-grid {
+                padding: 8px 32px 90px !important;
+                gap: 20px !important;
+            }
+        }
+
+        /* ── 1200px wide desktop ────────────────────────────────────── */
+        @media (min-width: 1200px) {
+            .app-header {
+                padding: 16px 56px !important;
+                padding-top: max(16px, env(safe-area-inset-top)) !important;
+            }
+            .dashboard-title-row { padding: 26px 56px 10px !important; }
+            .search-bar-panel    { padding: 8px 56px 12px !important; }
+            .filter-tabs-wrap    { padding: 4px 56px 16px !important; }
+            .notes-grid          { padding: 8px 56px 90px !important; gap: 22px !important; }
+        }
+
+        /* ── 1440px ultra-wide ──────────────────────────────────────── */
+        @media (min-width: 1440px) {
+            .app-header {
+                padding: 18px 88px !important;
+                padding-top: max(18px, env(safe-area-inset-top)) !important;
+            }
+            .dashboard-title-row { padding: 30px 88px 12px !important; }
+            .search-bar-panel    { padding: 10px 88px 14px !important; }
+            .filter-tabs-wrap    { padding: 6px 88px 18px !important; }
+            .notes-grid          { padding: 8px 88px 100px !important; gap: 24px !important; }
+            .dashboard-section-title { font-size: 32px !important; letter-spacing: -1px !important; }
+        }
+
+        /* ── EMPTY STATE: breathing room ────────────────────────────── */
+        @media (min-width: 769px)  { .empty-state { padding-top: 96px !important; } }
+        @media (min-width: 1024px) { .empty-state { padding-top: 120px !important; } }
+
     </style>
 </head>
 <body>
