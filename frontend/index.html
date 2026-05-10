@@ -1370,6 +1370,49 @@
         .btn-save:hover:not(:disabled) { background: var(--accent-hover); }
         .btn-save:active:not(:disabled) { transform: scale(0.97); }
 
+        /* ── CAMERA ACTION SHEET ────────────────────────────── */
+        #camera-action-sheet { align-items: flex-end; }
+        @media (min-width: 640px) { #camera-action-sheet { align-items: center; } }
+
+        .cam-sheet-card {
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+            animation: sheetUp 0.22s cubic-bezier(0.32,0.72,0,1) both;
+        }
+        @media (min-width: 640px) {
+            .cam-sheet-card { border-radius: 16px; padding: 24px; animation: fadeIn 0.18s ease; }
+        }
+        .cam-sheet-title {
+            font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+            text-transform: uppercase; letter-spacing: 0.7px;
+            text-align: center; margin-bottom: 14px;
+        }
+        .cam-sheet-btn {
+            display: flex; align-items: center; gap: 14px;
+            width: 100%; padding: 15px 16px;
+            border-radius: 12px;
+            background: var(--surface-secondary);
+            border: 1px solid var(--border);
+            color: var(--text); font-size: 15px; font-weight: 500;
+            margin-bottom: 10px; cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .cam-sheet-btn i { font-size: 18px; color: var(--accent); width: 22px; flex-shrink: 0; }
+        .cam-sheet-btn:hover { background: var(--glass-bg); border-color: rgba(91,110,245,0.4); }
+        .cam-sheet-btn:active { transform: scale(0.98); }
+        .cam-sheet-cancel {
+            display: block; width: 100%; padding: 13px;
+            border-radius: 12px; background: transparent;
+            border: 1px solid var(--border); color: var(--text-secondary);
+            font-size: 15px; font-weight: 500; cursor: pointer;
+            transition: all 0.15s; margin-top: 2px;
+        }
+        .cam-sheet-cancel:hover { border-color: var(--error); color: var(--error); }
+
         /* ── SCAN MODAL ──────────────────────────────────────── */
         #scan-modal { align-items: center; }
 
@@ -3103,7 +3146,8 @@
         .btn-system-theme, .btn-cta, .btn-save, .btn-primary, .about-back-btn,
         .user-menu-item, .pin-btn, .auth-tab, .template-card, .note-card-delete,
         .header-avatar, .category-select, .command-palette-item, .search-clear,
-        .mobile-nav-btn, .fab-center, .drag-handle { cursor: pointer !important; }
+        .mobile-nav-btn, .fab-center, .drag-handle,
+        .cam-sheet-btn, .cam-sheet-cancel { cursor: pointer !important; }
 
         /* ── FILTER TAB INTERACTION ─────────────────────────────────── */
         .filter-tab:not(.active):hover {
@@ -3456,7 +3500,10 @@
                     <option value="Personal">Personal</option>
                     <option value="Ideas">Ideas</option>
                 </select>
-                <button onclick="openScanModal()" class="btn-scan-trigger btn" title="Scan handwriting" aria-label="Scan handwriting">
+                <button onclick="openScanModal('draw')" class="btn-scan-trigger btn" title="Draw and scan handwriting" aria-label="Draw and scan handwriting">
+                    <i class="fa-solid fa-pen-nib"></i>
+                </button>
+                <button onclick="openCameraSheet()" class="btn-scan-trigger btn" title="Scan image from camera or gallery" aria-label="Scan image">
                     <i class="fa-solid fa-camera"></i>
                 </button>
             </div>
@@ -3625,6 +3672,23 @@
     </div>
 </div>
 
+<!-- ── CAMERA ACTION SHEET ────────────────────────────────────── -->
+<div id="camera-action-sheet" class="modal-overlay" style="z-index:1060;" role="dialog" aria-modal="true" aria-label="Add image" onclick="if(event.target===this)closeCameraSheet()">
+    <div class="cam-sheet-card">
+        <p class="cam-sheet-title">Scan Image</p>
+        <button onclick="triggerCameraCapture()" class="cam-sheet-btn btn">
+            <i class="fa-solid fa-camera"></i>
+            <span>Take Photo</span>
+        </button>
+        <button onclick="triggerGalleryUpload()" class="cam-sheet-btn btn">
+            <i class="fa-solid fa-image"></i>
+            <span>Upload from Gallery</span>
+        </button>
+        <button onclick="closeCameraSheet()" class="cam-sheet-cancel btn">Cancel</button>
+    </div>
+</div>
+<input type="file" id="camera-capture-input" hidden accept="image/*" capture="environment" onchange="handleFileSelected(event)">
+
 <!-- ── CONFIRM MODAL ──────────────────────────────────────────── -->
 <div id="confirm-modal" class="modal-overlay" style="z-index:1100;" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
     <div class="confirm-card">
@@ -3789,7 +3853,7 @@
 <!-- ── FAB LONG-PRESS MENU ────────────────────────────────────── -->
 <div id="fab-menu" class="fab-menu" role="menu">
     <div class="fab-menu-backdrop" onclick="closeFabMenu()"></div>
-    <button class="fab-menu-item btn" style="animation-delay:0.05s" onclick="closeFabMenu(); openScanModal()">
+    <button class="fab-menu-item btn" style="animation-delay:0.05s" onclick="closeFabMenu(); openScanModal('draw')">
         <span>📷</span> Scan Handwriting
     </button>
     <button class="fab-menu-item btn" onclick="closeFabMenu(); openModal()">
@@ -5184,21 +5248,42 @@ ${notesHTML}
         document.getElementById('confirm-modal').classList.remove('open');
     }
 
-    function openScanModal() {
+    function openScanModal(tab) {
+        tab = tab || 'draw';
         switchScanStep('input');
-        switchScanTab('draw');
+        switchScanTab(tab);
         lastScannedImageData = null;
         currentOcrWords = [];
-        pendingUploadFile = null;
-        document.getElementById('upload-drop-area').classList.remove('hidden');
-        document.getElementById('upload-preview-section').classList.add('hidden');
-        document.getElementById('scan-file-input').value = '';
+        if (tab === 'draw') {
+            pendingUploadFile = null;
+            document.getElementById('upload-drop-area').classList.remove('hidden');
+            document.getElementById('upload-preview-section').classList.add('hidden');
+            document.getElementById('scan-file-input').value = '';
+        }
         document.getElementById('scan-modal').classList.add('open');
         initDrawingCanvas();
     }
 
     function closeScanModal() {
         document.getElementById('scan-modal').classList.remove('open');
+    }
+
+    function openCameraSheet() {
+        document.getElementById('camera-action-sheet').classList.add('open');
+    }
+
+    function closeCameraSheet() {
+        document.getElementById('camera-action-sheet').classList.remove('open');
+    }
+
+    function triggerCameraCapture() {
+        closeCameraSheet();
+        document.getElementById('camera-capture-input').click();
+    }
+
+    function triggerGalleryUpload() {
+        closeCameraSheet();
+        document.getElementById('scan-file-input').click();
     }
 
     function switchScanTab(tab) {
@@ -5222,6 +5307,11 @@ ${notesHTML}
         const reader = new FileReader();
         reader.onload = (ev) => {
             lastScannedImageData = ev.target.result;
+            if (!document.getElementById('scan-modal').classList.contains('open')) {
+                openScanModal('upload');
+            } else {
+                switchScanTab('upload');
+            }
             document.getElementById('upload-preview-img').src = ev.target.result;
             document.getElementById('upload-drop-area').classList.add('hidden');
             document.getElementById('upload-preview-section').classList.remove('hidden');
@@ -5834,7 +5924,7 @@ ${notesHTML}
     // ── COMMAND PALETTE ──────────────────────────────────────────
     const commands = [
         { id: 'new-note',   title: 'New Note',           icon: '📝', shortcut: 'Ctrl+N',       action: () => openModal() },
-        { id: 'scan',       title: 'Scan Handwriting',   icon: '📷', shortcut: '',             action: () => openScanModal() },
+        { id: 'scan',       title: 'Scan Handwriting',   icon: '📷', shortcut: '',             action: () => openScanModal('draw') },
         { id: 'search',     title: 'Search Notes',       icon: '🔍', shortcut: 'Ctrl+F',       action: () => focusSearch() },
         { id: 'duplicate',  title: 'Duplicate Note',     icon: '📋', shortcut: 'Ctrl+D',       action: () => duplicateCurrentNote() },
         { id: 'copy',       title: 'Copy Note Content',  icon: '📄', shortcut: 'Ctrl+Shift+C', action: () => copyNoteContent() },
