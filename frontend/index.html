@@ -2978,7 +2978,7 @@
             }
         }
 
-        /* ── BRANDING ROW POLISH ─────────────────────────────────── */
+        /* ── BRANDING ROW: HEADER ───────────────────────────────── */
         .header-brand-logo {
             width: 34px;
             height: 34px;
@@ -2993,44 +2993,39 @@
             gap: 10px;
         }
 
+        /* ── DASHBOARD SECTION TITLE (below header, above search) ─ */
+        .dashboard-title-row {
+            flex-shrink: 0;
+            padding: 20px 16px 8px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .dashboard-section-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.7px;
+            line-height: 1;
+            margin: 0;
+        }
+        .dashboard-title-row .note-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
         /* ── SEARCH & FILTER VERTICAL SPACING ───────────────────── */
         .search-bar-panel {
-            padding: 14px 16px 10px;
+            padding: 6px 16px 10px;
         }
         .filter-tabs-wrap {
             padding: 6px 16px 14px;
         }
 
-        /* ── NOTES META BAR (view label + count) ────────────────── */
-        .notes-meta-bar {
-            flex-shrink: 0;
-            padding: 0 16px 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .notes-meta-view {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-        .notes-meta-sep {
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            background: var(--text-tertiary);
-            opacity: 0.4;
-            flex-shrink: 0;
-        }
-        .notes-meta-bar .note-count {
-            font-size: 11px;
-            color: var(--text-tertiary);
-        }
-
-        /* ── CURSOR POLISH ───────────────────────────────────────── */
+        /* ── CURSOR POLISH (force on all interactables) ──────────── */
         .filter-tab,
+        .note-card,
         .nav-item,
         .nav-fab,
         .btn-close,
@@ -3056,20 +3051,37 @@
         .about-back-btn,
         .user-menu-item,
         .pin-btn,
-        .auth-tab {
-            cursor: pointer;
+        .auth-tab,
+        .template-card,
+        .note-card-delete,
+        .header-avatar,
+        .category-select,
+        .command-palette-item {
+            cursor: pointer !important;
         }
 
-        /* ── DESKTOP HEADER BRANDING SCALE ──────────────────────── */
+        /* ── RESPONSIVE: TABLET ──────────────────────────────────── */
         @media (min-width: 640px) {
             .header-brand-name { font-size: 21px; }
             .header-brand-logo { width: 36px; height: 36px; font-size: 15px; }
+            .dashboard-title-row { padding: 22px 20px 10px; }
+            .search-bar-panel { padding: 6px 20px 10px; }
+            .filter-tabs-wrap { padding: 4px 20px 14px; }
         }
+
+        /* ── RESPONSIVE: DESKTOP ─────────────────────────────────── */
         @media (min-width: 1024px) {
             .header-brand-name { font-size: 22px; }
-            .search-bar-panel { padding: 16px 24px 12px; }
+            .dashboard-section-title { font-size: 28px; }
+            .dashboard-title-row { padding: 24px 24px 12px; }
+            .search-bar-panel { padding: 8px 24px 12px; }
             .filter-tabs-wrap { padding: 4px 24px 16px; }
-            .notes-meta-bar { padding: 0 24px 12px; }
+        }
+
+        /* ── RESPONSIVE: SMALL MOBILE ────────────────────────────── */
+        @media (max-width: 480px) {
+            .dashboard-section-title { font-size: 22px; }
+            .dashboard-title-row { padding: 14px 14px 6px; }
         }
 
     </style>
@@ -3199,6 +3211,12 @@
         </div>
     </header>
 
+    <!-- Section title + count -->
+    <div class="dashboard-title-row">
+        <h1 id="view-title" class="dashboard-section-title">Notes</h1>
+        <span class="note-count" id="note-count-display"></span>
+    </div>
+
     <!-- Search bar -->
     <div id="search-bar" class="search-bar-panel">
         <div class="search-inner">
@@ -3227,13 +3245,6 @@
             <button class="filter-tab nav-btn" role="tab" aria-selected="false" data-cat="ideas"
                     onclick="filterCat('ideas', this)">Ideas</button>
         </div>
-    </div>
-
-    <!-- Notes meta bar -->
-    <div class="notes-meta-bar">
-        <span class="notes-meta-view" id="view-title">Notes</span>
-        <span class="notes-meta-sep"></span>
-        <span class="note-count" id="note-count-display"></span>
     </div>
 
     <!-- Notes grid -->
