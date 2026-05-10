@@ -3776,51 +3776,152 @@
 <div id="help-modal" class="modal-overlay" role="dialog" aria-modal="true" onclick="closeHelpModal(event)">
     <div class="side-panel help-panel" onclick="event.stopPropagation()">
         <div class="side-panel-header">
-            <h2>How to Use Jot It</h2>
+            <h2>Get Help</h2>
             <button onclick="closeHelpModal()" class="btn-close btn" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="side-panel-body">
             <div class="help-section">
                 <h3>Creating Notes</h3>
-                <p>Tap the yellow + button to create a note. Type your content or use the Scan tab for handwriting.</p>
-            </div>
-            <div class="help-section">
-                <h3>Handwriting Recognition</h3>
-                <p>Use the Scan tab to draw or upload handwritten notes. OCR converts your handwriting to text.</p>
+                <p>Tap <strong>+</strong> or press <kbd>Ctrl</kbd>+<kbd>N</kbd> to open the editor. Add a title, write your content, then tap <strong>Save</strong>.</p>
                 <ul>
-                    <li>Write clearly for best results</li>
-                    <li>Use dark ink on light background</li>
-                    <li>Avoid crossed-out text</li>
+                    <li>Use the category selector to tag as Personal, Work, Ideas, or General</li>
+                    <li>Add <code>#hashtags</code> inside note body to auto-tag</li>
+                    <li>Pin important notes using the pin icon on any card</li>
+                    <li>Choose a border color from the palette in the editor footer</li>
                 </ul>
             </div>
             <div class="help-section">
-                <h3>Drawing Tips</h3>
+                <h3>Drawing &amp; Scanning Handwriting</h3>
+                <p>Tap the <strong>pen icon</strong> in the note editor to open the handwriting canvas. Draw, then tap <strong>Scan Drawing</strong> to convert to text.</p>
                 <ul>
-                    <li>Select pen size (small / medium / large)</li>
-                    <li>Choose black for best OCR accuracy</li>
-                    <li>Use eraser to fix mistakes</li>
-                    <li>Clear resets the canvas</li>
+                    <li>Write clearly — avoid overlapping strokes</li>
+                    <li>Use black ink and medium or large pen size for best accuracy</li>
+                    <li>Use the eraser to fix mistakes before scanning</li>
+                    <li>Clear resets the entire canvas</li>
+                    <li>Review and edit extracted text before saving</li>
                 </ul>
             </div>
             <div class="help-section">
-                <h3>Organizing Notes</h3>
-                <p>Use category tabs — Personal, Work, Ideas — or add hashtags like <code>#work</code> in content.</p>
+                <h3>Camera &amp; Photo Scanning</h3>
+                <p>Tap the <strong>camera icon</strong> in the note editor to capture or import a handwritten image.</p>
+                <ul>
+                    <li><strong>Take Photo</strong> opens your device camera directly</li>
+                    <li><strong>Upload from Gallery</strong> lets you pick a saved image</li>
+                    <li>Supports JPEG, PNG, WebP — up to 10 MB</li>
+                    <li>Use dark ink on a light background for best OCR results</li>
+                </ul>
             </div>
             <div class="help-section">
-                <h3>Search</h3>
-                <p>Tap the Search icon in the bottom nav to search by title or content.</p>
+                <h3>Exporting Notes</h3>
+                <p>Open a note and use the export buttons in the editor toolbar.</p>
+                <ul>
+                    <li><strong>PDF</strong> — saves the note as a formatted PDF</li>
+                    <li><strong>CSV</strong> — saves content for spreadsheet use</li>
+                    <li>Bulk export all notes via Settings → Export Notes</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h3>Search &amp; Filters</h3>
+                <p>Tap the search icon in the bottom nav, or press <kbd>/</kbd>. Use the category tabs above your notes to filter by type. Search matches note titles and body content.</p>
+            </div>
+            <div class="help-section">
+                <h3>Mobile Tips</h3>
+                <ul>
+                    <li>Long-press a note card for quick actions (edit, duplicate, delete)</li>
+                    <li>Swipe left on a note to delete; swipe right to edit</li>
+                    <li>Install to home screen via your browser for a full-screen experience</li>
+                    <li>The app works in landscape — the canvas expands accordingly</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h3>Troubleshooting</h3>
+                <ul>
+                    <li><strong>OCR returns no text</strong> — write larger, darker strokes on a clean white canvas</li>
+                    <li><strong>OCR service busy</strong> — wait a moment and retry; the AI may be waking from idle</li>
+                    <li><strong>Note not saving</strong> — check your internet connection; notes require a live server</li>
+                    <li><strong>Login not working</strong> — verify email and password; try a different browser</li>
+                    <li><strong>App feels slow</strong> — hard refresh with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> to clear cache</li>
+                    <li><strong>Favicon shows wrong icon</strong> — clear browser cache and reload</li>
+                </ul>
             </div>
             <div class="help-section" style="border-bottom:none;">
                 <h3>Keyboard Shortcuts</h3>
                 <ul>
-                    <li><kbd>Ctrl</kbd> + <kbd>K</kbd> — Command palette</li>
-                    <li><kbd>Ctrl</kbd> + <kbd>N</kbd> — New note</li>
-                    <li><kbd>Ctrl</kbd> + <kbd>F</kbd> or <kbd>/</kbd> — Search</li>
-                    <li><kbd>Ctrl</kbd> + <kbd>S</kbd> — Save</li>
-                    <li><kbd>Esc</kbd> — Close modal</li>
-                    <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> — Switch category</li>
-                    <li><kbd>?</kbd> — Full shortcuts reference</li>
+                    <li><kbd>Ctrl</kbd>+<kbd>K</kbd> — Command palette</li>
+                    <li><kbd>Ctrl</kbd>+<kbd>N</kbd> — New note</li>
+                    <li><kbd>Ctrl</kbd>+<kbd>F</kbd> or <kbd>/</kbd> — Search</li>
+                    <li><kbd>Ctrl</kbd>+<kbd>S</kbd> — Save current note</li>
+                    <li><kbd>Esc</kbd> — Close any modal</li>
+                    <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> — Switch category tab</li>
+                    <li><kbd>?</kbd> — Full keyboard shortcuts reference</li>
                 </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── LEARN MORE MODAL ───────────────────────────────────────── -->
+<div id="learn-modal" class="modal-overlay" role="dialog" aria-modal="true" onclick="closeLearnModal(event)">
+    <div class="side-panel learn-panel" onclick="event.stopPropagation()">
+        <div class="side-panel-header">
+            <h2>Learn More</h2>
+            <button onclick="closeLearnModal()" class="btn-close btn" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="side-panel-body">
+            <div class="help-section">
+                <h3>How OCR Confidence Works</h3>
+                <p>After scanning, a confidence bar shows how certain Azure Computer Vision was about each word it recognised.</p>
+                <ul>
+                    <li><strong>High (80–100%)</strong> — text is likely accurate; minor review only</li>
+                    <li><strong>Medium (50–79%)</strong> — review carefully; handwriting may have been ambiguous</li>
+                    <li><strong>Low (&lt;50%)</strong> — significant uncertainty; try rescanning with clearer writing</li>
+                    <li>Click any highlighted word in the word list to edit it before saving</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h3>How AI Summaries Work</h3>
+                <p>When a note is saved, its content is sent to a Python AI service that generates a short summary using natural language processing. The summary is stored alongside your note and shown when you expand the AI Summary section.</p>
+                <ul>
+                    <li>Powered by a FastAPI service with NLP summarisation</li>
+                    <li>Notes shorter than ~20 words may not generate a summary</li>
+                    <li>The AI service runs on Render — the first request after inactivity may be slow as it wakes up</li>
+                    <li>Summaries are re-generated each time you edit and save a note</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h3>Privacy &amp; Data Handling</h3>
+                <p>Your notes are stored in a PostgreSQL database on Render, scoped to your user account. No note content is ever shared or used for model training.</p>
+                <ul>
+                    <li>Passwords are hashed with bcrypt — never stored in plain text</li>
+                    <li>Auth uses signed JWT tokens with a 7-day expiry</li>
+                    <li>Scanned images are processed by Azure Vision and not retained by the OCR service</li>
+                    <li>Each note is tied to your user ID at the database level — other accounts cannot access your data</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h3>PWA &amp; Offline Behaviour</h3>
+                <p>Jot It is a Progressive Web App. You can install it on any device home screen for a native-app experience.</p>
+                <ul>
+                    <li>Install via browser "Add to Home Screen" or the install prompt banner</li>
+                    <li>A service worker caches static assets — the app shell loads instantly even on slow connections</li>
+                    <li>Note creation, OCR, and login all require an active internet connection</li>
+                    <li>Previously loaded pages and assets are served from cache during poor connectivity</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h3>Architecture Overview</h3>
+                <p>Jot It runs across three separate cloud services, each with its own responsibility:</p>
+                <ul>
+                    <li><strong>Frontend</strong> — Vanilla JS SPA hosted on Vercel</li>
+                    <li><strong>Backend API</strong> — ASP.NET Core 8 (C#) on Render, backed by PostgreSQL</li>
+                    <li><strong>AI Service</strong> — Python FastAPI on Render, using Azure Computer Vision for OCR and NLP for summaries</li>
+                    <li>All API communication is over HTTPS with JWT-authenticated endpoints</li>
+                </ul>
+            </div>
+            <div class="help-section" style="border-bottom:none;">
+                <h3>Why This Was Built</h3>
+                <p>Jot It started as an internship project at Persistent Systems in 2026 — a chance to explore full-stack development across a real production stack while integrating AI services with a modern web app.</p>
+                <p style="margin-top:10px;">The goal was to build something genuinely useful: a notes app that doesn't require typing everything. Handwriting still feels natural for many people, and bridging that with digital search and AI felt like the right problem to tackle.</p>
             </div>
         </div>
     </div>
@@ -4353,7 +4454,7 @@
         if (action === 'settings') openSettingsModal();
         else if (action === 'language') toast('Language selection coming soon!', 'info');
         else if (action === 'help') openHelpModal();
-        else if (action === 'learn') openHelpModal();
+        else if (action === 'learn') openLearnModal();
     }
 
     async function openSettingsModal() {
@@ -4403,6 +4504,15 @@
     function closeHelpModal(e) {
         if (e && e.target !== document.getElementById('help-modal')) return;
         document.getElementById('help-modal').classList.remove('open');
+    }
+
+    function openLearnModal() {
+        document.getElementById('learn-modal').classList.add('open');
+    }
+
+    function closeLearnModal(e) {
+        if (e && e.target !== document.getElementById('learn-modal')) return;
+        document.getElementById('learn-modal').classList.remove('open');
     }
 
     function exportAsCSV() {
@@ -6018,6 +6128,7 @@ ${notesHTML}
         cancelConfirm();
         document.getElementById('settings-modal').classList.remove('open');
         document.getElementById('help-modal').classList.remove('open');
+        document.getElementById('learn-modal').classList.remove('open');
         closeCommandPalette();
         closeKeyboardHelp();
         closeQuickActions();
