@@ -3500,7 +3500,7 @@
                     <option value="Personal">Personal</option>
                     <option value="Ideas">Ideas</option>
                 </select>
-                <button onclick="openScanModal('draw')" class="btn-scan-trigger btn" title="Draw and scan handwriting" aria-label="Draw and scan handwriting">
+                <button onclick="openScanModal('draw', true)" class="btn-scan-trigger btn" title="Draw and scan handwriting" aria-label="Draw and scan handwriting">
                     <i class="fa-solid fa-pen-nib"></i>
                 </button>
                 <button onclick="openCameraSheet()" class="btn-scan-trigger btn" title="Scan image from camera or gallery" aria-label="Scan image">
@@ -3535,7 +3535,7 @@
 <div id="scan-modal" class="modal-overlay" style="z-index:1050;" role="dialog" aria-modal="true" aria-label="Scan handwriting">
     <div class="scan-modal-card">
         <div class="scan-modal-header">
-            <span class="scan-modal-title">Scan Your Writing</span>
+            <span class="scan-modal-title" id="scan-modal-title">Scan Your Writing</span>
             <button onclick="closeScanModal()" class="btn-close btn" aria-label="Close">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -3543,7 +3543,7 @@
 
         <!-- Step: Input -->
         <div id="scan-step-input">
-            <div class="scan-tabs">
+            <div class="scan-tabs" id="scan-tabs-row">
                 <button class="scan-tab btn active" data-scan-tab="draw" onclick="switchScanTab('draw')">
                     <i class="fa-solid fa-pen-nib"></i> Draw
                 </button>
@@ -3853,7 +3853,7 @@
 <!-- ── FAB LONG-PRESS MENU ────────────────────────────────────── -->
 <div id="fab-menu" class="fab-menu" role="menu">
     <div class="fab-menu-backdrop" onclick="closeFabMenu()"></div>
-    <button class="fab-menu-item btn" style="animation-delay:0.05s" onclick="closeFabMenu(); openScanModal('draw')">
+    <button class="fab-menu-item btn" style="animation-delay:0.05s" onclick="closeFabMenu(); openScanModal('draw', true)">
         <span>📷</span> Scan Handwriting
     </button>
     <button class="fab-menu-item btn" onclick="closeFabMenu(); openModal()">
@@ -4090,6 +4090,7 @@
     };
     let pendingUploadFile = null;
     let lastScannedImageData = null;
+    let scanDrawOnly = false;
     let lastScanResult = null;
     let pendingConfirmAction = null;
     let currentOcrWords = [];
@@ -5248,18 +5249,19 @@ ${notesHTML}
         document.getElementById('confirm-modal').classList.remove('open');
     }
 
-    function openScanModal(tab) {
+    function openScanModal(tab, drawOnly) {
         tab = tab || 'draw';
-        switchScanStep('input');
-        switchScanTab(tab);
+        scanDrawOnly = !!drawOnly;
         lastScannedImageData = null;
         currentOcrWords = [];
-        if (tab === 'draw') {
-            pendingUploadFile = null;
-            document.getElementById('upload-drop-area').classList.remove('hidden');
-            document.getElementById('upload-preview-section').classList.add('hidden');
-            document.getElementById('scan-file-input').value = '';
-        }
+        pendingUploadFile = null;
+        document.getElementById('upload-drop-area').classList.remove('hidden');
+        document.getElementById('upload-preview-section').classList.add('hidden');
+        document.getElementById('scan-file-input').value = '';
+        document.getElementById('scan-tabs-row').classList.toggle('hidden', scanDrawOnly);
+        document.getElementById('scan-modal-title').textContent = scanDrawOnly ? 'Scan Handwriting' : 'Scan Image';
+        switchScanStep('input');
+        switchScanTab(scanDrawOnly ? 'draw' : tab);
         document.getElementById('scan-modal').classList.add('open');
         initDrawingCanvas();
     }
@@ -5298,6 +5300,9 @@ ${notesHTML}
         ['input','loading','error','preview'].forEach(s => {
             document.getElementById(`scan-step-${s}`).classList.toggle('hidden', s !== step);
         });
+        if (step === 'input') {
+            document.getElementById('scan-tabs-row').classList.toggle('hidden', scanDrawOnly);
+        }
     }
 
     function handleFileSelected(e) {
@@ -5924,7 +5929,7 @@ ${notesHTML}
     // ── COMMAND PALETTE ──────────────────────────────────────────
     const commands = [
         { id: 'new-note',   title: 'New Note',           icon: '📝', shortcut: 'Ctrl+N',       action: () => openModal() },
-        { id: 'scan',       title: 'Scan Handwriting',   icon: '📷', shortcut: '',             action: () => openScanModal('draw') },
+        { id: 'scan',       title: 'Scan Handwriting',   icon: '📷', shortcut: '',             action: () => openScanModal('draw', true) },
         { id: 'search',     title: 'Search Notes',       icon: '🔍', shortcut: 'Ctrl+F',       action: () => focusSearch() },
         { id: 'duplicate',  title: 'Duplicate Note',     icon: '📋', shortcut: 'Ctrl+D',       action: () => duplicateCurrentNote() },
         { id: 'copy',       title: 'Copy Note Content',  icon: '📄', shortcut: 'Ctrl+Shift+C', action: () => copyNoteContent() },
