@@ -5311,7 +5311,6 @@ ${notesHTML}
         drawingState.isDrawing = false;
         if (drawingState.currentStroke && drawingState.currentStroke.points.length > 1) {
             drawingState.strokeHistory.push(drawingState.currentStroke);
-            checkForStrikeErase(drawingState.currentStroke);
         }
         drawingState.currentStroke = null;
     }
@@ -5360,32 +5359,6 @@ ${notesHTML}
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         for (const stroke of drawingState.strokeHistory) {
             drawStroke(ctx, stroke, 1);
-        }
-    }
-
-    function checkForStrikeErase(stroke) {
-        if (stroke.tool === 'eraser') return;
-        const xs = stroke.points.map(p => p.x);
-        const ys = stroke.points.map(p => p.y);
-        const minX = Math.min(...xs), maxX = Math.max(...xs);
-        const minY = Math.min(...ys), maxY = Math.max(...ys);
-        const w = maxX - minX, h = maxY - minY;
-        if (w < 40 || w <= h * 3) return;
-        const toRemove = new Set([stroke]);
-        for (const s of drawingState.strokeHistory) {
-            if (s === stroke) continue;
-            const sxs = s.points.map(p => p.x);
-            const sys = s.points.map(p => p.y);
-            const sMinX = Math.min(...sxs), sMaxX = Math.max(...sxs);
-            const sMinY = Math.min(...sys), sMaxY = Math.max(...sys);
-            if (sMaxX >= minX && sMinX <= maxX && sMaxY >= minY && sMinY <= maxY) {
-                toRemove.add(s);
-            }
-        }
-        if (toRemove.size > 1) {
-            drawingState.strokeHistory = drawingState.strokeHistory.filter(s => !toRemove.has(s));
-            redrawFromHistory();
-            toast('Cleared!', 'success');
         }
     }
 
