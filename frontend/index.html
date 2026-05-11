@@ -1935,6 +1935,68 @@
             font-family: inherit;
         }
 
+        /* ── DEVICE-AWARE HELP ─────────────────────────────────── */
+        .help-desktop-only,
+        .help-touch-only { display: none; }
+
+        .help-device-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 20px;
+            background: rgba(91,110,245,0.1);
+            color: var(--accent);
+            border: 1px solid rgba(91,110,245,0.18);
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 7px 16px;
+            margin-top: 8px;
+            align-items: center;
+        }
+        .shortcut-key {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+        .shortcut-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .gesture-list { margin-top: 8px; display: flex; flex-direction: column; }
+        .gesture-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .gesture-item:last-child { border-bottom: none; padding-bottom: 2px; }
+        .gesture-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: rgba(91,110,245,0.1);
+            border: 1px solid rgba(91,110,245,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 15px;
+            color: var(--accent);
+        }
+        .gesture-text { flex: 1; padding-top: 3px; }
+        .gesture-text strong { font-size: 13px; color: var(--text); display: block; font-weight: 600; line-height: 1.3; }
+        .gesture-text span { font-size: 12px; color: var(--text-tertiary); display: block; margin-top: 2px; }
+
         /* ── MOBILE TOUCH GESTURES ──────────────────────────────── */
 
         /* Swipe hints on note cards */
@@ -3793,13 +3855,17 @@
 <div id="help-modal" class="modal-overlay" role="dialog" aria-modal="true" onclick="closeHelpModal(event)">
     <div class="side-panel help-panel" onclick="event.stopPropagation()">
         <div class="side-panel-header">
-            <h2>Get Help</h2>
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+                <h2>Get Help</h2>
+                <span id="help-device-badge" class="help-device-badge"></span>
+            </div>
             <button onclick="closeHelpModal()" class="btn-close btn" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="side-panel-body">
+
             <div class="help-section">
                 <h3>Creating Notes</h3>
-                <p>Tap <strong>+</strong> or press <kbd>Ctrl</kbd>+<kbd>N</kbd> to open the editor. Add a title, write your content, then tap <strong>Save</strong>.</p>
+                <p>Tap <strong>+</strong> to open the editor. Add a title, write content, then save.</p>
                 <ul>
                     <li>Use the category selector to tag as Personal, Work, Ideas, or General</li>
                     <li>Add <code>#hashtags</code> inside note body to auto-tag</li>
@@ -3807,72 +3873,143 @@
                     <li>Choose a border color from the palette in the editor footer</li>
                 </ul>
             </div>
+
             <div class="help-section">
-                <h3>Drawing &amp; Scanning Handwriting</h3>
-                <p>Tap the <strong>pen icon</strong> in the note editor to open the handwriting canvas. Draw, then tap <strong>Scan Drawing</strong> to convert to text.</p>
+                <h3>Handwriting &amp; OCR</h3>
+                <p>Tap the <strong>pen icon</strong> in the note editor to open the drawing canvas. Draw, then tap <strong>Scan Drawing</strong> to convert handwriting to text.</p>
                 <ul>
                     <li>Write clearly — avoid overlapping strokes</li>
-                    <li>Use black ink and medium or large pen size for best accuracy</li>
+                    <li>Use medium or large pen size for best accuracy</li>
                     <li>Use the eraser to fix mistakes before scanning</li>
-                    <li>Clear resets the entire canvas</li>
-                    <li>Review and edit extracted text before saving</li>
+                    <li>Review and edit extracted text before saving to a note</li>
                 </ul>
             </div>
+
             <div class="help-section">
                 <h3>Camera &amp; Photo Scanning</h3>
                 <p>Tap the <strong>camera icon</strong> in the note editor to capture or import a handwritten image.</p>
                 <ul>
                     <li><strong>Take Photo</strong> opens your device camera directly</li>
-                    <li><strong>Upload from Gallery</strong> lets you pick a saved image</li>
-                    <li>Supports JPEG, PNG, WebP — up to 10 MB</li>
+                    <li><strong>Upload from Gallery</strong> picks a saved image</li>
                     <li>Use dark ink on a light background for best OCR results</li>
+                    <li>Supports JPEG, PNG, WebP — up to 10 MB</li>
                 </ul>
             </div>
-            <div class="help-section">
-                <h3>Exporting Notes</h3>
-                <p>Open a note and use the export buttons in the editor toolbar.</p>
-                <ul>
-                    <li><strong>PDF</strong> — saves the note as a formatted PDF</li>
-                    <li><strong>CSV</strong> — saves content for spreadsheet use</li>
-                    <li>Bulk export all notes via Settings → Export Notes</li>
-                </ul>
-            </div>
+
             <div class="help-section">
                 <h3>Search &amp; Filters</h3>
-                <p>Tap the search icon in the bottom nav, or press <kbd>/</kbd>. Use the category tabs above your notes to filter by type. Search matches note titles and body content.</p>
-            </div>
-            <div class="help-section">
-                <h3>Mobile Tips</h3>
+                <p>Use the category tabs to filter by type. Search matches note titles and body content in real time.</p>
                 <ul>
-                    <li>Long-press a note card for quick actions (edit, duplicate, delete)</li>
-                    <li>Swipe left on a note to delete; swipe right to edit</li>
-                    <li>Install to home screen via your browser for a full-screen experience</li>
-                    <li>The app works in landscape — the canvas expands accordingly</li>
+                    <li>Filter by category using the tabs above your notes</li>
+                    <li>Pinned notes always appear at the top of the list</li>
+                    <li>Search is real-time — results update as you type</li>
                 </ul>
             </div>
+
+            <!-- Touch-only: gestures -->
+            <div class="help-section help-touch-only">
+                <h3>Touch Gestures</h3>
+                <div class="gesture-list">
+                    <div class="gesture-item">
+                        <div class="gesture-icon">←</div>
+                        <div class="gesture-text">
+                            <strong>Swipe left on a note</strong>
+                            <span>Reveals the delete action</span>
+                        </div>
+                    </div>
+                    <div class="gesture-item">
+                        <div class="gesture-icon">→</div>
+                        <div class="gesture-text">
+                            <strong>Swipe right on a note</strong>
+                            <span>Opens the note for editing</span>
+                        </div>
+                    </div>
+                    <div class="gesture-item">
+                        <div class="gesture-icon">⋯</div>
+                        <div class="gesture-text">
+                            <strong>Long press a note card</strong>
+                            <span>Quick actions: edit, duplicate, delete</span>
+                        </div>
+                    </div>
+                    <div class="gesture-item">
+                        <div class="gesture-icon">＋</div>
+                        <div class="gesture-text">
+                            <strong>Long press the + button</strong>
+                            <span>Shortcut to handwriting scan or plain text note</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Touch-only: mobile tips -->
+            <div class="help-section help-touch-only">
+                <h3>Mobile &amp; Tablet Tips</h3>
+                <ul>
+                    <li>Use the camera scan in good lighting with a plain background</li>
+                    <li>The app works in landscape — the drawing canvas expands to fill the screen</li>
+                    <li>Tap the nav bar icons at the bottom to switch between views</li>
+                    <li>Export as PDF or CSV using the buttons inside the note editor toolbar</li>
+                </ul>
+            </div>
+
+            <!-- Touch-only: install -->
+            <div class="help-section help-touch-only">
+                <h3>Install to Home Screen</h3>
+                <p>Add Jot It to your home screen for a full-screen app experience with no browser chrome.</p>
+                <ul>
+                    <li><strong>iOS (Safari):</strong> Tap Share → Add to Home Screen</li>
+                    <li><strong>Android (Chrome):</strong> Tap menu → Add to Home Screen, or accept the install banner</li>
+                    <li>The installed app loads instantly even on slow connections</li>
+                    <li>Behaves like a native app — full-screen canvas, swipe navigation</li>
+                </ul>
+            </div>
+
+            <!-- Desktop-only: keyboard shortcuts -->
+            <div class="help-section help-desktop-only">
+                <h3>Keyboard Shortcuts</h3>
+                <div class="shortcut-grid">
+                    <div class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>N</kbd></div><div class="shortcut-desc">New note</div>
+                    <div class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>S</kbd></div><div class="shortcut-desc">Save current note</div>
+                    <div class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>/</kbd></div><div class="shortcut-desc">Focus search</div>
+                    <div class="shortcut-key"><kbd>Ctrl</kbd>+<kbd>K</kbd></div><div class="shortcut-desc">Command palette</div>
+                    <div class="shortcut-key"><kbd>Esc</kbd></div><div class="shortcut-desc">Close any modal</div>
+                    <div class="shortcut-key"><kbd>1</kbd>&thinsp;<kbd>2</kbd>&thinsp;<kbd>3</kbd>&thinsp;<kbd>4</kbd></div><div class="shortcut-desc">Switch category tab</div>
+                    <div class="shortcut-key"><kbd>?</kbd></div><div class="shortcut-desc">Full shortcuts reference</div>
+                </div>
+            </div>
+
+            <!-- Desktop-only: productivity tips -->
+            <div class="help-section help-desktop-only">
+                <h3>Desktop Tips</h3>
+                <ul>
+                    <li>Use <kbd>Ctrl</kbd>+<kbd>K</kbd> to navigate without reaching for the mouse</li>
+                    <li>Press <kbd>/</kbd> from anywhere on the dashboard to instantly search</li>
+                    <li>Press <kbd>?</kbd> to open the full keyboard shortcuts reference</li>
+                    <li>Number keys <kbd>1</kbd>–<kbd>4</kbd> switch note categories instantly</li>
+                    <li>Hard refresh with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> to clear cache if the app feels slow</li>
+                </ul>
+            </div>
+
             <div class="help-section">
+                <h3>Exporting Notes</h3>
+                <ul>
+                    <li><strong>PDF</strong> — saves the note as a formatted PDF document</li>
+                    <li><strong>CSV</strong> — exports all notes for spreadsheet use</li>
+                    <li>Bulk export available in Settings → Export Notes</li>
+                </ul>
+            </div>
+
+            <div class="help-section" style="border-bottom:none;">
                 <h3>Troubleshooting</h3>
                 <ul>
                     <li><strong>OCR returns no text</strong> — write larger, darker strokes on a clean white canvas</li>
                     <li><strong>OCR service busy</strong> — wait a moment and retry; the AI may be waking from idle</li>
                     <li><strong>Note not saving</strong> — check your internet connection; notes require a live server</li>
                     <li><strong>Login not working</strong> — verify email and password; try a different browser</li>
-                    <li><strong>App feels slow</strong> — hard refresh with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> to clear cache</li>
-                    <li><strong>Favicon shows wrong icon</strong> — clear browser cache and reload</li>
+                    <li><strong>App feels slow</strong> — hard refresh or close and reopen to clear cache</li>
                 </ul>
             </div>
-            <div class="help-section" style="border-bottom:none;">
-                <h3>Keyboard Shortcuts</h3>
-                <ul>
-                    <li><kbd>Ctrl</kbd>+<kbd>K</kbd> — Command palette</li>
-                    <li><kbd>Ctrl</kbd>+<kbd>N</kbd> — New note</li>
-                    <li><kbd>Ctrl</kbd>+<kbd>F</kbd> or <kbd>/</kbd> — Search</li>
-                    <li><kbd>Ctrl</kbd>+<kbd>S</kbd> — Save current note</li>
-                    <li><kbd>Esc</kbd> — Close any modal</li>
-                    <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> — Switch category tab</li>
-                    <li><kbd>?</kbd> — Full keyboard shortcuts reference</li>
-                </ul>
-            </div>
+
         </div>
     </div>
 </div>
@@ -4515,6 +4652,11 @@
     }
 
     function openHelpModal() {
+        const isTouch = window.matchMedia('(pointer: coarse)').matches;
+        document.querySelectorAll('.help-desktop-only').forEach(el => { el.style.display = isTouch ? 'none' : 'block'; });
+        document.querySelectorAll('.help-touch-only').forEach(el => { el.style.display = isTouch ? 'block' : 'none'; });
+        const badge = document.getElementById('help-device-badge');
+        if (badge) badge.textContent = isTouch ? 'Mobile & Tablet' : 'Desktop';
         document.getElementById('help-modal').classList.add('open');
     }
 
