@@ -5543,7 +5543,6 @@ ${notesHTML}
     function handleFileSelected(e) {
         const file = e.target.files[0];
         if (!file) return;
-        pendingUploadFile = file;
         const reader = new FileReader();
         reader.onload = (ev) => {
             lastScannedImageData = ev.target.result;
@@ -5552,6 +5551,8 @@ ${notesHTML}
             } else {
                 switchScanTab('upload');
             }
+            // Set after openScanModal — openScanModal resets pendingUploadFile to null
+            pendingUploadFile = file;
             document.getElementById('upload-preview-img').src = ev.target.result;
             document.getElementById('upload-drop-area').classList.add('hidden');
             document.getElementById('upload-preview-section').classList.remove('hidden');
