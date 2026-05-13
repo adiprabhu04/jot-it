@@ -1,151 +1,207 @@
-# Jot It
+# Jot It — AI-Powered Notes App
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-5B6EF5?style=for-the-badge)](https://persistent-ai-ml-internship.onrender.com)
-[![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![Python](https://img.shields.io/badge/Python-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React Native](https://img.shields.io/badge/React_Native-Expo-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Azure](https://img.shields.io/badge/Azure-Computer_Vision-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com/en-us/products/ai-services/ai-vision)
-[![Render](https://img.shields.io/badge/Deployed_on-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/)
-
-An AI-powered note-taking app with handwriting OCR. Create text notes or draw directly on a canvas, and let Azure Computer Vision convert your handwriting into editable text with per-word confidence scores.
-
-**Live:** [https://persistent-ai-ml-internship.onrender.com](https://persistent-ai-ml-internship.onrender.com)
+![Live](https://img.shields.io/badge/Live-jotit--notes.netlify.app-5B6EF5?style=for-the-badge)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![Python](https://img.shields.io/badge/Python-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-Computer_Vision-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Netlify](https://img.shields.io/badge/Frontend-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)
+![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
 
 ---
 
-## Table of Contents
+## Overview
 
-- [Features](#features)
-- [Architecture](#architecture)
-- [Screenshots](#screenshots)
-- [Local Setup](#local-setup)
-- [Environment Variables](#environment-variables)
-- [API Reference](#api-reference)
-- [Deployment](#deployment)
-- [Roadmap](#roadmap)
-- [License](#license)
+Jot It is an AI-powered note-taking application built across a three-service architecture. Users write and organize notes with a rich text editor, draw handwriting on a canvas or upload images for OCR via Azure Computer Vision, and receive AI-generated summaries on every save. The system supports full CRUD, real-time search, hashtag filtering, note pinning, color coding, drag-and-drop reordering, PDF/CSV export, and a React Native mobile companion app — all wired to the same backend API.
 
 ---
 
-## Features
+## Live URLs
 
-### Authentication
-![](https://img.shields.io/badge/-C%23-239120?style=flat&logo=csharp&logoColor=white)
-![](https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+| Service | URL |
+|---------|-----|
+| Frontend | https://jotit-notes.netlify.app |
+| Backend API | https://persistent-ai-ml-internship.onrender.com |
+| AI Service | https://ai-service-ocr.onrender.com |
+| Repository | https://github.com/adiprabhu04/persistent-ai-ml-internship |
 
-- Register and log in with a username and password
-- JWT-based authentication with token expiry
-- BCrypt password hashing server-side
-- Protected API routes — all note operations require a valid token
+---
 
-### Note Management
-![](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![](https://img.shields.io/badge/-C%23-239120?style=flat&logo=csharp&logoColor=white)
+## Tech Stack
 
-- Create, edit, and delete notes
-- Four built-in categories: General, Personal, Work, Ideas
-- Paginated note listing (`GET /notes?page=1&pageSize=50`)
-- Real-time client-side search across note titles and content
-- Original scanned images saved and displayed alongside OCR notes
-
-### Handwriting OCR
-![](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)
-![](https://img.shields.io/badge/-Azure-0078D4?style=flat&logo=microsoftazure&logoColor=white)
-
-- Draw directly on an HTML canvas with mouse or touch input
-- Upload an existing image (JPG, PNG) for text extraction
-- Azure Computer Vision processes the image and returns per-word results
-- Each extracted word displays a confidence score
-- Strike-through gesture on the canvas to erase individual words
-- Word suggestions shown while typing in the note editor
-
-### User Experience
-![](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![](https://img.shields.io/badge/-Expo-000020?style=flat&logo=expo&logoColor=white)
-
-- Dark and light theme toggle, persisted across sessions
-- Progressive Web App — installable on desktop and mobile from the browser
-- React Native mobile app (Expo SDK 54) for iOS and Android
-- Responsive layout, mobile-first design
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Frontend | Vanilla JS, HTML5, CSS3 | Single-file PWA, no build step |
+| Backend | ASP.NET Core 8 Minimal API | REST API, auth, business logic |
+| Database | PostgreSQL on Neon | Persistent storage via EF Core |
+| AI / OCR | Python FastAPI + Azure Computer Vision | Handwriting recognition |
+| Mobile | React Native + Expo SDK 54 | iOS and Android companion app |
+| Deployment | Netlify (frontend) + Render (backend + AI) | Production hosting |
 
 ---
 
 ## Architecture
 
-Jot It is composed of three independent services. In production each service runs as a separate Render web service.
+Jot It is composed of three independently deployed services communicating over HTTPS.
 
 ```
 Browser / Mobile App
         |
         | HTTPS
         v
-+-------------------+        +-------------------+
-|  ASP.NET Core 8   |  HTTP  |  Python FastAPI    |
-|  Backend API      +------->+  OCR Service       |
-|  (port 8080)      |        |  (port 8000)       |
-+--------+----------+        +--------+-----------+
-         |                            |
-         | EF Core                    | Azure SDK
-         v                            v
-+-------------------+        +-------------------+
-|   PostgreSQL      |        | Azure Computer    |
-|   Database        |        | Vision API        |
-+-------------------+        +-------------------+
++------------------------+        +------------------------+
+|  ASP.NET Core 8        |  HTTP  |  Python FastAPI        |
+|  Backend API           +------->+  OCR Service           |
+|  Render Web Service    |        |  Render Web Service    |
++----------+-------------+        +-----------+------------+
+           |                                  |
+           | EF Core / Npgsql                 | Azure SDK
+           v                                  v
++------------------------+        +------------------------+
+|  PostgreSQL            |        |  Azure Computer        |
+|  Neon Serverless       |        |  Vision Read API       |
++------------------------+        +------------------------+
+
+Frontend (Netlify) served statically — communicates directly with Backend API.
 ```
 
-### Backend — ASP.NET Core 8
-![](https://img.shields.io/badge/-C%23-239120?style=flat&logo=csharp&logoColor=white)
-![](https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+---
 
-Located at `/backend/NotesApi`. Implements a minimal API with the following responsibilities:
+## Features
 
-- User registration and login, issuing signed JWT tokens
-- Full CRUD for notes, scoped to the authenticated user
-- Forwards scan requests (multipart image) to the AI service and returns OCR results
-- Serves the web frontend from `wwwroot/index.html`
-- Database migrations via Entity Framework Core
+### Core Notes
 
-### AI Service — Python FastAPI
-![](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)
-![](https://img.shields.io/badge/-Azure-0078D4?style=flat&logo=microsoftazure&logoColor=white)
+- Full CRUD with rich text editor (bold, italic, underline, ordered and unordered lists, headings)
+- 6 note templates for quick starting points
+- Categories: General, Personal, Work, Ideas
+- Note color coding across 8 colors
+- Hashtag support: `#tag` auto-extracted from content and available as filters
+- Note pinning to keep priority notes at the top
+- Drag and drop reordering of the note list
+- Real-time search across titles and content
+- Word suggestions from a 170+ word dictionary while typing
 
-Located at `/ai-service`. A lightweight FastAPI application with a single `/scan` endpoint:
+### AI Features
 
-- Accepts a multipart image upload
-- Sends the image to Azure Computer Vision using the Read API
-- Parses the response and returns a list of words with confidence scores
-- Containerised with Docker for consistent deployment
+- Handwriting OCR via Azure Computer Vision Read API
+- Canvas drawing with mouse and touch input, plus image upload (JPG, PNG)
+- Per-word confidence scoring displayed as color-coded pills
+- AI-generated summary on every note save using TF-scoring (approximately 50 words)
+- OCR accuracy feedback loop: thumbs up / thumbs down per scan
+- OCR stats dashboard showing accuracy trends over time
+- Strike-through gesture on canvas to erase individual recognized words
+- Original scan image saved alongside the OCR result in the note
 
-### Mobile App — React Native / Expo
-![](https://img.shields.io/badge/-Expo-000020?style=flat&logo=expo&logoColor=white)
+### Export and Data
 
-Located at `/mobile`. Built with Expo SDK 54:
+- Export all notes as a single PDF or CSV file
+- Export individual note as PDF or CSV
+- AI-generated summary included in PDF export
 
-- Consumes the same backend REST API as the web frontend
-- Screens for note list, note editor, and OCR scanner
-- EAS Build configuration for producing standalone iOS and Android binaries
+### UI / UX
 
-### Web Frontend — Vanilla JavaScript
-![](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+- Dark and light mode with OS-level auto-detection, persisted across sessions
+- Inter font, indigo (`#5B6EF5`) design system throughout
+- PWA installable from the browser on desktop and mobile
+- Fully responsive layout for mobile, tablet, and desktop viewports
+- Skeleton loaders, confetti animation on note creation, staggered list animations
+- Landing page for first-time visitors before authentication
+- About page with social links
 
-Located at `backend/NotesApi/wwwroot/index.html`. A single-file Progressive Web App:
+### Mobile App
 
-- No JavaScript framework or build step required
-- Service worker for offline caching of static assets
-- Canvas-based drawing surface for handwriting input
+- React Native + Expo SDK 54
+- Screens: Auth, Home, Scan, NewNote, EditNote, Settings
+- Wired to the same backend REST API as the web frontend
+- EAS Build configuration for standalone iOS and Android binaries
 
 ---
 
-## Screenshots
+## API Endpoints
 
-> Screenshots will be added after the live deployment is fully stable.
-> 
-> Planned captures: note list view, note editor, OCR canvas drawing, OCR results with confidence chips, dark theme, mobile app (React Native).
+All `/notes` and `/ocr` endpoints require an `Authorization: Bearer <token>` header.
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|:---:|
+| `POST` | `/auth/register` | Register new user | No |
+| `POST` | `/auth/login` | Login and receive JWT | No |
+| `GET` | `/auth/me` | Get current user profile | Yes |
+| `GET` | `/notes` | Get all notes (paginated) | Yes |
+| `POST` | `/notes` | Create note | Yes |
+| `PUT` | `/notes/:id` | Update note | Yes |
+| `DELETE` | `/notes/:id` | Delete note | Yes |
+| `PUT` | `/notes/:id/pin` | Toggle pin status | Yes |
+| `POST` | `/notes/scan` | OCR scan image (multipart/form-data) | Yes |
+| `POST` | `/ocr/feedback` | Submit OCR accuracy rating | Yes |
+| `GET` | `/ocr/stats` | Get OCR accuracy stats | Yes |
+| `GET` | `/health` | Health check | No |
 
 ---
 
-## Local Setup
+## Database Schema
+
+### Notes
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `Id` | UUID | Primary key |
+| `Title` | string | Note title |
+| `Content` | text | Rich HTML content |
+| `Category` | string | General / Personal / Work / Ideas |
+| `IsPinned` | bool | Pin status |
+| `Color` | string | One of 8 color values |
+| `Tags` | string | Comma-separated hashtags extracted from content |
+| `Summary` | text | AI-generated TF-score summary |
+| `ImageData` | text | Base64 original scan image |
+| `CreatedAt` | datetime | UTC creation timestamp |
+| `UpdatedAt` | datetime | UTC last-modified timestamp |
+| `UserId` | UUID | Foreign key to Users |
+
+### Users
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `Id` | UUID | Primary key |
+| `Name` | string | Display name |
+| `Email` | string | Unique, used for login |
+| `PasswordHash` | string | BCrypt hash |
+| `CreatedAt` | datetime | UTC creation timestamp |
+
+### OcrFeedback
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `Id` | UUID | Primary key |
+| `UserId` | UUID | Foreign key to Users |
+| `ExtractedText` | text | OCR output text |
+| `Engine` | string | Vision engine identifier |
+| `Confidence` | float | Aggregate confidence score |
+| `IsAccurate` | bool | User thumbs up / down |
+| `CreatedAt` | datetime | UTC creation timestamp |
+
+---
+
+## Environment Variables
+
+### Backend (Render)
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string (Neon) |
+| `JWT_SECRET_KEY` | Secret for signing JWT tokens — minimum 32 characters |
+| `AI_SERVICE_URL` | Base URL of the deployed Python OCR service |
+| `ALLOWED_ORIGINS` | Comma-separated CORS allowed origins |
+
+### AI Service (Render)
+
+| Variable | Description |
+|----------|-------------|
+| `AZURE_VISION_KEY` | Azure Computer Vision API key |
+| `AZURE_VISION_ENDPOINT` | Azure Computer Vision endpoint URL |
+
+---
+
+## Local Development
 
 ### Prerequisites
 
@@ -153,35 +209,29 @@ Located at `backend/NotesApi/wwwroot/index.html`. A single-file Progressive Web 
 |------|---------|
 | .NET SDK | 8.0+ |
 | Python | 3.10+ |
-| PostgreSQL | 14+ |
 | Node.js | 18+ |
-| Azure Computer Vision resource | any tier |
+| Azure Computer Vision resource | Any tier |
 
 ### Backend
-![](https://img.shields.io/badge/-C%23-239120?style=flat&logo=csharp&logoColor=white)
 
 ```bash
 cd backend/NotesApi
 dotnet run
 ```
 
-The API and web frontend are served on `http://localhost:8080`.
-
-Set the required environment variables before running (see [Environment Variables](#environment-variables)).
+Serves API and frontend at `http://localhost:8080`.
 
 ### AI Service
-![](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)
 
 ```bash
 cd ai-service
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
 ```
 
-The OCR service runs on `http://localhost:8000`.
+OCR service runs at `http://localhost:8000`.
 
 ### Mobile App
-![](https://img.shields.io/badge/-Expo-000020?style=flat&logo=expo&logoColor=white)
 
 ```bash
 cd mobile
@@ -189,124 +239,102 @@ npm install
 npx expo start
 ```
 
-Scan the QR code with the Expo Go app, or press `i` / `a` to open an iOS or Android simulator.
+Scan the QR code with Expo Go, or press `i` / `a` for iOS / Android simulator.
+
+### Frontend (standalone)
+
+Open `frontend/index.html` directly, or serve it:
+
+```bash
+python -m http.server 8080
+```
 
 ---
 
-## Environment Variables
+## Repository Structure
 
-### Backend (Render or local)
-
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `JWT_SECRET_KEY` | Secret used to sign JWT tokens — minimum 32 characters |
-| `AI_SERVICE_URL` | Base URL of the Python OCR service (e.g. `https://your-ai-service.onrender.com`) |
-| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins |
-
-### AI Service (Render or local)
-
-| Variable | Description |
-|----------|-------------|
-| `AZURE_VISION_KEY` | Azure Computer Vision API key |
-| `AZURE_VISION_ENDPOINT` | Azure Computer Vision endpoint URL (e.g. `https://your-resource.cognitiveservices.azure.com/`) |
+```
+/backend/NotesApi     ASP.NET Core 8 Minimal API
+/ai-service           Python FastAPI OCR service
+/mobile               React Native Expo app
+/frontend             Netlify deployment files
+/sync-frontend.ps1    Script to sync frontend build to Netlify
+```
 
 ---
 
-## API Reference
+## Challenges and Solutions
 
-All `/notes` endpoints require an `Authorization: Bearer <token>` header.
+**1. inotify crash on Render**
+ASP.NET Core file watching exhausted inotify handles on the free-tier container. Fixed by setting `reloadOnChange: false` in `appsettings.json`.
 
-### Authentication
+**2. Google Vision billing**
+Google Cloud Vision required a billing account even at low usage. Switched to Azure Computer Vision for Azure Students, which provides free credits without a credit card.
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/auth/register` | Create a new account |
-| `POST` | `/auth/login` | Sign in and receive a JWT |
-| `GET` | `/auth/me` | Return the authenticated user's profile |
+**3. Canvas OCR producing empty results**
+The canvas `toBlob()` call was executing before the composite drawing operations completed. Fixed by ensuring the image and drawing layers were fully composited before the blob was captured.
 
-### Notes
+**4. Memory OOM on Render free tier**
+Image preprocessing with scipy was pushing the AI service over the 512 MB memory limit. Removed scipy, replaced with Pillow-only processing, and capped image upscaling to stay within limits.
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/notes?page=1&pageSize=50` | List notes (paginated) |
-| `POST` | `/notes` | Create a note |
-| `PUT` | `/notes/:id` | Update a note |
-| `DELETE` | `/notes/:id` | Delete a note |
-| `POST` | `/notes/scan` | Submit a handwriting image for OCR (multipart/form-data) |
-
----
-
-## Deployment
-
-Both the backend and AI service are deployed as free-tier web services on Render.
-![](https://img.shields.io/badge/-Render-46E3B7?style=flat&logo=render&logoColor=white)
-![](https://img.shields.io/badge/-Docker-2496ED?style=flat&logo=docker&logoColor=white)
-
-### Render Setup
-
-1. Fork or push this repository to GitHub.
-2. In the Render dashboard, create a new **Web Service** for each of the two services:
-
-**Backend**
-
-| Setting | Value |
-|---------|-------|
-| Root directory | `backend/NotesApi` |
-| Build command | `dotnet publish -c Release -o out` |
-| Start command | `dotnet out/NotesApi.dll` |
-| Environment | Set all backend environment variables listed above |
-
-**AI Service**
-
-| Setting | Value |
-|---------|-------|
-| Root directory | `ai-service` |
-| Dockerfile | `ai-service/Dockerfile` |
-| Environment | Set `AZURE_VISION_KEY` and `AZURE_VISION_ENDPOINT` |
-
-3. After both services are live, set `AI_SERVICE_URL` in the backend service to the URL of the deployed AI service.
-4. Set `ALLOWED_ORIGINS` in the backend to include the frontend URL (same domain as the backend on Render).
-
-### Free Tier Note
-
-Render free-tier services spin down after 15 minutes of inactivity. The first request after a cold start may take 30–60 seconds while the service wakes up. Subsequent requests are fast.
+**5. CORS errors on Netlify**
+Splitting the frontend to Netlify while the API stayed on Render caused cross-origin failures. Resolved by setting the `ALLOWED_ORIGINS` environment variable on the backend to include the Netlify domain.
 
 ---
 
 ## Roadmap
 
-| Feature | Status |
-|---------|--------|
-| User registration and JWT authentication | Done |
-| Create, edit, delete notes | Done |
-| Note categories (General, Personal, Work, Ideas) | Done |
-| Real-time search | Done |
-| Handwriting OCR via canvas drawing | Done |
-| Handwriting OCR via image upload | Done |
-| Per-word confidence scores | Done |
-| Strike-through gesture to erase canvas words | Done |
-| Word suggestions while typing | Done |
-| Original scan image saved with note | Done |
-| Dark / light theme | Done |
-| PWA — installable from browser | Done |
-| React Native mobile app (Expo) | Done |
-| Azure Computer Vision integration | Done |
-| Rich text editing (bold, italic, lists) | Planned |
-| Note sharing via public link | Planned |
-| Voice notes | Planned |
-| Note templates | Planned |
-| Reminders and push notifications | Planned |
-| Note version history | Planned |
-| Multi-language OCR support | Planned |
-| Collaborative editing | Planned |
+### Month 1 — Foundation
+
+- [x] User registration and JWT authentication
+- [x] Create, edit, delete notes
+- [x] Note categories (General, Personal, Work, Ideas)
+- [x] Real-time client-side search
+- [x] PostgreSQL database with EF Core migrations
+- [x] Render deployment (backend + AI service)
+
+### Month 2 — AI and OCR
+
+- [x] Handwriting OCR via canvas drawing
+- [x] Handwriting OCR via image upload
+- [x] Azure Computer Vision integration
+- [x] Per-word confidence scoring with color-coded pills
+- [x] Strike-through gesture to erase canvas words
+- [x] Original scan image saved with note
+- [x] OCR accuracy feedback (thumbs up / down)
+- [x] OCR stats dashboard
+
+### Month 3 — Features and Polish
+
+- [x] Rich text editor (bold, italic, underline, lists, headings)
+- [x] 6 note templates
+- [x] Note color coding (8 colors)
+- [x] Hashtag auto-extraction and filter
+- [x] Note pinning
+- [x] Drag and drop reordering
+- [x] Word suggestions dictionary
+- [x] AI-generated note summary (TF-scoring)
+- [x] Dark / light mode with OS auto-detection
+- [x] PWA — installable from browser
+- [x] Skeleton loaders and stagger animations
+
+### Month 4 — Export and Mobile
+
+- [x] Export all notes as PDF or CSV
+- [x] Export individual note as PDF or CSV
+- [x] Summary included in PDF export
+- [x] React Native mobile app (Expo SDK 54)
+- [x] Mobile screens: Auth, Home, Scan, NewNote, EditNote, Settings
+- [x] Netlify deployment for frontend
+- [x] Landing page for first-time visitors
+- [x] About page with social links
 
 ---
 
-## License
+## Built By
 
-This project was developed as part of an internship program. All rights reserved.
+**Aditya Prabhudessai**
+Internship at Persistent Systems, 2026
 
----
-
-**Repository:** [https://github.com/adiprabhu04/persistent-ai-ml-internship](https://github.com/adiprabhu04/persistent-ai-ml-internship)
+- GitHub: https://github.com/adiprabhu04
+- LinkedIn: https://www.linkedin.com/in/aditya-prabhudessai
