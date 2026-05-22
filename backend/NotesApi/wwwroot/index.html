@@ -6624,20 +6624,6 @@ ${notesHTML}
         editor.addEventListener('blur', () => container.classList.add('hidden'));
     })();
 
-// Keepalive pings to prevent Render free tier sleep
-(function keepAlive() {
-  const services = [
-    'https://persistent-ai-ml-internship.onrender.com/health',
-    'https://ai-service-ocr.onrender.com/health'
-  ];
-  function ping() {
-    services.forEach(url => {
-      fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
-    });
-  }
-  ping(); // ping immediately on page load
-  setInterval(ping, 10 * 60 * 1000); // then every 10 minutes
-})();
 </script>
 
 <div id="about-page" class="about-page" style="display:none">

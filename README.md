@@ -6,11 +6,11 @@
 ![Azure](https://img.shields.io/badge/Azure-Computer_Vision-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
+![Railway](https://img.shields.io/badge/Backend-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)
 
 ---
 
-Jot It is a note-taking app with handwriting OCR. Users write notes with a rich text editor, draw on a canvas or upload a photo to extract text via Azure Computer Vision, and get a short AI-generated summary on every save. The project runs as three separate services: a Vanilla JS frontend on Vercel, an ASP.NET Core 8 API on Render, and a Python FastAPI OCR service on Render.
+Jot It is a note-taking app with handwriting OCR. Users write notes with a rich text editor, draw on a canvas or upload a photo to extract text via Azure Computer Vision, and get a short AI-generated summary on every save. The project runs as three separate services: a Vanilla JS frontend on Vercel, an ASP.NET Core 8 API on Railway, and a Python FastAPI OCR service on Railway.
 
 ---
 
@@ -19,8 +19,8 @@ Jot It is a note-taking app with handwriting OCR. Users write notes with a rich 
 | Service | URL |
 |---------|-----|
 | Frontend | https://persistent-ai-ml-internship.vercel.app |
-| Backend API | https://persistent-ai-ml-internship.onrender.com |
-| AI Service | https://ai-service-ocr.onrender.com |
+| Backend API | https://YOUR_RAILWAY_BACKEND_URL_HERE |
+| AI Service | https://YOUR_RAILWAY_AI_SERVICE_URL_HERE |
 | Repository | https://github.com/adiprabhu04/persistent-ai-ml-internship |
 
 ---

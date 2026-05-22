@@ -156,7 +156,6 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
 app.UseCors("AllowConfigured");
 
 app.UseDefaultFiles();
@@ -587,6 +586,7 @@ _ = Task.Run(async () => {
     }
 });
 
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
 
 record SummarizeResult(string Summary);
