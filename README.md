@@ -10,7 +10,22 @@
 
 ---
 
-Jot It is a note-taking app with handwriting OCR. Users write notes with a rich text editor, draw on a canvas or upload a photo to extract text via Azure Computer Vision, and get a short AI-generated summary on every save. The project runs as three separate services: a Vanilla JS frontend on Vercel, an ASP.NET Core 8 API on Railway, and a Python FastAPI OCR service on Railway.
+# Jot It
+
+Jot It is an AI-powered handwriting notes platform that combines note management, OCR, and intelligent summarization into a modern cross-platform experience.
+
+Users can:
+- write and organize notes
+- draw handwriting on a canvas
+- upload handwritten pages
+- extract text using Azure Computer Vision OCR
+- generate AI-powered summaries
+- export notes as PDF or CSV
+
+The project is deployed as a modern multi-service architecture using:
+- Vercel (frontend)
+- Railway (backend + AI OCR service)
+- Neon PostgreSQL
 
 ---
 
@@ -25,9 +40,37 @@ Jot It is a note-taking app with handwriting OCR. Users write notes with a rich 
 
 ---
 
+## Product Experience
+
+The landing page was designed as a modern SaaS-style product experience inspired by:
+
+- Linear
+- Raycast
+- Vercel
+- Framer
+- Apple product pages
+
+UI highlights include:
+
+- Premium dark luxury aesthetic
+- Glassmorphism navigation
+- Bento-grid feature layouts
+- Sticky product showcase interactions
+- Scroll-triggered reveal animations
+- Ambient glow and parallax effects
+- Responsive mobile-first layouts
+- Lightweight vanilla JavaScript animation architecture
+
+---
+
 ## Screenshots
 
-> Screenshots will be added after the live deployment is fully stable. Planned captures: note list, note editor, OCR canvas, confidence chip results, dark mode, mobile app.
+> Add screenshots here:
+- Hero section
+- Bento grid feature section
+- OCR canvas
+- Notes dashboard
+- Mobile responsive UI
 
 ---
 
@@ -35,40 +78,46 @@ Jot It is a note-taking app with handwriting OCR. Users write notes with a rich 
 
 ### Core Notes
 
-- Full CRUD with rich text editor (bold, italic, underline, ordered and unordered lists, headings)
-- 6 note templates
-- Categories (General, Personal, Work, Ideas) with color coding across 8 colors
-- Hashtag auto-extraction from content with filter; real-time search across titles and content
-- Note pinning; inline word suggestions while typing
+- Full CRUD note management
+- Rich text editor
+- Categories and color-coded organization
+- Hashtag auto-extraction
+- Real-time search
+- Note pinning
+- Inline word suggestions
 
 ### AI Features
 
-- Handwriting OCR via Azure Computer Vision Read API
-- Draw handwriting on canvas (pen icon) or capture/upload a photo (camera icon) for OCR processing
-- Per-word confidence scoring displayed as color-coded pills (green / orange / red)
-- AI-generated summary on every save using TF-scoring (approximately 50 words)
-- OCR accuracy feedback (thumbs up / down) and stats dashboard
+- Handwriting OCR using Azure Computer Vision
+- Canvas handwriting recognition
+- Camera/image OCR upload
+- Confidence scoring pills
+- AI-generated summaries
+- OCR feedback and analytics
 
-### Export and Data
+### Export Features
 
-- Export all notes as a single PDF or CSV
-- Export individual note as PDF or CSV
-- AI summary included in PDF export
+- Export notes as PDF
+- Export notes as CSV
+- AI summary included in exports
 
 ### UI / UX
 
-- Dark and light mode with OS auto-detection, persisted across sessions
-- Inter font, indigo (`#5B6EF5`) design system throughout
-- PWA installable from the browser on desktop and mobile
-- Fully responsive; skeleton loaders, confetti on note creation, staggered list animations
-- Landing page for first-time visitors; About page with social links
+- Dark and light mode
+- Premium SaaS-inspired landing page
+- Glassmorphism and bento-grid layouts
+- Sticky interactive showcase section
+- Scroll-triggered reveal animations
+- Responsive desktop/tablet/mobile layouts
+- Skeleton loaders and microinteractions
+- Progressive Web App support
 
 ### Mobile App
 
 - React Native + Expo SDK 54
-- Screens: Auth, Home, Scan, NewNote, EditNote, Settings
-- Wired to the same backend API as the web frontend
-- EAS Build configuration for standalone iOS and Android binaries
+- Shared backend API with web frontend
+- Auth, OCR scanning, notes management
+- Android and iOS support
 
 ---
 
@@ -76,20 +125,20 @@ Jot It is a note-taking app with handwriting OCR. Users write notes with a rich 
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| Frontend | Vanilla JS, HTML5, CSS3 | Single-file PWA, no build step |
-| Backend | ASP.NET Core 8 Minimal API | REST API, auth, business logic |
-| Database | PostgreSQL on Neon | Persistent storage via EF Core |
-| AI / OCR | Python FastAPI + Azure Computer Vision | Handwriting recognition |
-| Mobile | React Native + Expo SDK 54 | iOS and Android companion app |
-| Deployment | Vercel (frontend) + Render (backend + AI) | Production hosting |
+| Frontend | Vanilla JS, HTML5, CSS3 | Lightweight static frontend |
+| Backend | ASP.NET Core 8 Minimal API | REST API + business logic |
+| Database | PostgreSQL on Neon | Persistent storage |
+| AI / OCR | Python FastAPI + Azure Computer Vision | OCR processing |
+| Mobile | React Native + Expo SDK 54 | Mobile companion app |
+| Deployment | Vercel + Railway | Production hosting |
 
 ---
 
 ## Architecture
 
-Jot It runs as three independently deployed services communicating over HTTPS. The frontend is served statically from Vercel and calls the backend API directly. The backend proxies OCR requests to the Python service and owns all database access.
+Jot It runs as three independently deployed services communicating over HTTPS.
 
-```
+```text
 Browser / Mobile App
         |
         | HTTPS
@@ -97,7 +146,7 @@ Browser / Mobile App
 +------------------------+        +------------------------+
 |  ASP.NET Core 8        |  HTTP  |  Python FastAPI        |
 |  Backend API           +------->+  OCR Service           |
-|  Render                |        |  Render                |
+|  Railway               |        |  Railway               |
 +----------+-------------+        +-----------+------------+
            |                                  |
            | EF Core / Npgsql                 | Azure SDK
@@ -106,40 +155,66 @@ Browser / Mobile App
 |  PostgreSQL            |        |  Azure Computer        |
 |  Neon                  |        |  Vision Read API       |
 +------------------------+        +------------------------+
-
-Frontend (Vercel) served statically — communicates directly with Backend API.
 ```
+
+Frontend is deployed statically on Vercel and communicates directly with the ASP.NET Core backend API.
+
+---
+
+## Why Vanilla JS?
+
+The frontend intentionally avoids heavy frontend frameworks to:
+
+- minimize bundle size
+- reduce deployment complexity
+- eliminate build-step overhead
+- maximize performance
+- keep the architecture transparent and easy to debug
+
+Animations and interactions are implemented using lightweight vanilla JavaScript and IntersectionObserver APIs instead of heavy animation frameworks.
+
+---
+
+## Performance Considerations
+
+- Passive scroll listeners
+- IntersectionObserver-based reveal system
+- Reduced-motion accessibility support
+- Lightweight static deployment on Vercel
+- No heavy frontend frameworks
+- Optimized reveal animations
+- Unobserved elements after animation trigger
+- Performance-friendly animation architecture
 
 ---
 
 ## Technical Decisions
 
-- Minimal API (ASP.NET Core 8) over MVC — smaller surface area, no controller overhead for a REST-only service.
-- Vanilla JS frontend — no build step, deploys as static files to Vercel, loads without a bundle.
-- Azure Computer Vision over Google Vision — free credits via Azure for Students, no billing account or credit card required.
-- TF-scoring for summaries instead of a hosted LLM — runs in-process on the AI service, no API cost per note save.
+- ASP.NET Core 8 Minimal API for lightweight REST architecture
+- Vanilla JS frontend for simplicity and performance
+- Azure Computer Vision OCR for handwriting recognition
+- Railway deployment for scalable backend hosting
+- TF-scoring summaries instead of hosted LLM APIs to avoid API costs
 
 ---
 
 ## Challenges and Solutions
 
-**1. inotify crash on Render**
-ASP.NET Core file watching exhausted inotify handles on the free-tier container. Fixed by setting `reloadOnChange: false` in `appsettings.json`.
+### Railway Migration
 
-**2. Google Vision billing**
-Google Cloud Vision required a billing account even at low usage. Switched to Azure Computer Vision for Azure Students, which provides free credits with no credit card.
+The original deployment used Render free-tier infrastructure which caused uptime and memory limitations. The project was migrated to Railway with separated backend and AI services for improved stability and scalability.
 
-**3. Canvas OCR returning empty results**
-The `toBlob()` call was executing before the composite drawing operations completed. Fixed by ensuring the image and drawing layers were fully composited before the blob was captured.
+### OCR Confidence UX
 
-**4. Memory OOM on Render free tier**
-Image preprocessing with scipy was pushing the AI service over the 512 MB memory limit. Removed scipy, replaced with Pillow-only processing, and capped image upscaling.
+Raw OCR confidence scores confused users during testing. Redesigned the system into color-coded confidence pills for better readability.
 
-**5. Mobile responsive on iOS Safari**
-iOS Safari viewport height includes the browser chrome, breaking fixed-position layouts. Switched to `dvh` units and `env(safe-area-inset-bottom)` throughout.
+### Mobile Responsiveness
 
-**6. OCR confidence UX**
-The initial confidence display showed raw numbers that confused users during testing. Redesigned to per-word color pills (green / orange / red) and an editable text area before saving.
+iOS Safari viewport behavior caused layout issues. Fixed using dynamic viewport units (`dvh`) and safe-area support.
+
+### OCR Performance
+
+Image preprocessing memory usage was optimized by replacing heavy scipy-based processing with lightweight Pillow-only pipelines.
 
 ---
 
@@ -152,14 +227,16 @@ cd backend/NotesApi
 dotnet run
 ```
 
-Serves the API at `http://localhost:8080`. Set environment variables before running (see table below).
+Environment variables:
 
 | Variable | Description |
 |----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string (Neon) |
-| `JWT_SECRET_KEY` | JWT signing secret — minimum 32 characters |
-| `AI_SERVICE_URL` | Base URL of the OCR service |
-| `ALLOWED_ORIGINS` | Comma-separated CORS allowed origins |
+| DATABASE_URL | PostgreSQL connection string |
+| JWT_SECRET_KEY | JWT signing secret |
+| AI_SERVICE_URL | OCR service base URL |
+| ALLOWED_ORIGINS | Allowed frontend origins |
+
+---
 
 ### AI Service
 
@@ -169,7 +246,12 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-OCR service runs at `http://localhost:8000` locally. Production: `https://imaginative-cat-production-43f6.up.railway.app`. Requires `AZURE_VISION_KEY` and `AZURE_VISION_ENDPOINT` environment variables.
+Required environment variables:
+
+- AZURE_VISION_KEY
+- AZURE_VISION_ENDPOINT
+
+---
 
 ### Mobile App
 
@@ -179,23 +261,25 @@ npm install
 npx expo start
 ```
 
-Scan the QR code with Expo Go, or press `i` / `a` for iOS / Android simulator.
-
 ---
 
 ## Future Improvements
 
-- Voice-to-text note input
-- Note sharing via public link
-- Multi-language OCR support
-- Collaborative editing
+- Interactive OCR demo on landing page
+- Voice-to-text notes
+- Public note sharing
+- Multi-language OCR
+- Real-time collaboration
+- AI semantic search
+- Cloud sync improvements
 
 ---
 
 ## Built By
 
-**Aditya Prabhudessai**
-Internship at Persistent Systems, 2026
+### Aditya Prabhudessai
+
+Persistent Systems Internship Project — 2026
 
 - GitHub: https://github.com/adiprabhu04
 - LinkedIn: https://www.linkedin.com/in/aditya-prabhudessai
