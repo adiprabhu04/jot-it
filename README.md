@@ -19,8 +19,8 @@ Jot It is a note-taking app with handwriting OCR. Users write notes with a rich 
 | Service | URL |
 |---------|-----|
 | Frontend | https://persistent-ai-ml-internship.vercel.app |
-| Backend API | https://YOUR_RAILWAY_BACKEND_URL_HERE |
-| AI Service | https://YOUR_RAILWAY_AI_SERVICE_URL_HERE |
+| Backend API | https://persistent-ai-ml-internship-production.up.railway.app |
+| AI Service | https://imaginative-cat-production-43f6.up.railway.app |
 | Repository | https://github.com/adiprabhu04/persistent-ai-ml-internship |
 
 ---
@@ -169,7 +169,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-OCR service runs at `http://localhost:8000`. Requires `AZURE_VISION_KEY` and `AZURE_VISION_ENDPOINT` environment variables.
+OCR service runs at `http://localhost:8000` locally. Production: `https://imaginative-cat-production-43f6.up.railway.app`. Requires `AZURE_VISION_KEY` and `AZURE_VISION_ENDPOINT` environment variables.
 
 ### Mobile App
 

@@ -1,8 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// TODO: Replace with your Railway backend URL after deployment
-const BASE_URL = 'https://YOUR_RAILWAY_BACKEND_URL_HERE';
+const BASE_URL = 'https://persistent-ai-ml-internship-production.up.railway.app';
 
 const api = axios.create({
   baseURL: BASE_URL,
