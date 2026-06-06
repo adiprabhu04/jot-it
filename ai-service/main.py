@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 from msrest.authentication import CognitiveServicesCredentials
+from anthropic import Anthropic
 import pytesseract
 import time
 from PIL import Image, ImageEnhance, ImageFilter
@@ -28,6 +29,16 @@ AZURE_VISION_KEY = (os.environ.get("AZURE_VISION_KEY") or "").strip().strip('"')
 AZURE_VISION_ENDPOINT = (os.environ.get("AZURE_VISION_ENDPOINT") or "").strip().strip('"').strip("'")
 AZURE_VISION_PRESENT = bool(AZURE_VISION_KEY and AZURE_VISION_ENDPOINT)
 print(f"Azure Vision configured: {AZURE_VISION_PRESENT} (endpoint set: {bool(AZURE_VISION_ENDPOINT)}, key set: {bool(AZURE_VISION_KEY)})")
+
+# Claude summarization. Same strip() guard for Railway-tainted env vars.
+ANTHROPIC_API_KEY = (os.environ.get("ANTHROPIC_API_KEY") or "").strip().strip('"').strip("'")
+ANTHROPIC_PRESENT = bool(ANTHROPIC_API_KEY)
+anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_PRESENT else None
+print(f"Claude summarization configured: {ANTHROPIC_PRESENT}")
+
+# Summary length presets -> hard word cap
+SUMMARY_LENGTHS = {"short": 10, "medium": 20, "detailed": 50}
+SUMMARY_MODEL = "claude-haiku-4-5-20251001"
 
 PSM_MODES = {
     "auto": 3,
@@ -103,72 +114,109 @@ def get_tesseract_config(image_type: str = "auto") -> str:
     return f"--oem 3 --psm {psm}"
 
 
+def _truncate_words(text: str, max_words: int) -> str:
+    """Hard cap word count. Safety net for model overshoot / extractive sentences."""
+    words = text.split()
+    if len(words) <= max_words:
+        return text
+    return " ".join(words[:max_words]).rstrip(",;:") + "…"
+
+
+def _extractive_summary(clean: str, max_words: int) -> str:
+    """Frequency-based extractive fallback when Claude is unavailable."""
+    import re
+    from collections import Counter
+
+    sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', clean)
+                 if len(s.strip()) > 8]
+    if not sentences:
+        return ' '.join(clean.split()[:max_words])
+
+    stop = {'the','a','an','and','or','but','in','on','at','to','for',
+            'of','with','by','from','is','are','was','were','be','been',
+            'have','has','had','do','does','did','will','would','could',
+            'should','may','might','this','that','these','those','it',
+            'its','we','i','you','he','she','they','their','our','my'}
+
+    all_words = re.findall(r'\b[a-z]+\b', clean.lower())
+    freq = Counter(w for w in all_words if w not in stop)
+
+    def score(s):
+        words = re.findall(r'\b[a-z]+\b', s.lower())
+        if not words:
+            return 0
+        return sum(freq.get(w, 0) for w in words if w not in stop) / len(words)
+
+    ranked = sorted(enumerate(sentences), key=lambda x: score(x[1]), reverse=True)
+
+    result = []
+    word_count = 0
+    soft_floor = max(1, int(max_words * 0.6))
+    for _, sentence in ranked:
+        w = len(sentence.split())
+        if word_count + w <= max_words:
+            result.append(sentence)
+            word_count += w
+        if word_count >= soft_floor:
+            break
+
+    if not result:
+        result = [sentences[0]]
+
+    orig_order = {s: i for i, s in enumerate(sentences)}
+    result.sort(key=lambda s: orig_order.get(s, 0))
+    return _truncate_words(' '.join(result), max_words)
+
+
 @app.post("/summarize")
 async def summarize_text(request: dict):
     try:
         text = request.get("text", "")
+        length = str(request.get("length") or "medium").lower()
+        max_words = SUMMARY_LENGTHS.get(length, SUMMARY_LENGTHS["medium"])
+
         if not text or len(text.strip()) < 20:
             return {"summary": ""}
 
         import re
-        from collections import Counter
-
-        # Strip HTML
         clean = re.sub(r'<[^>]+>', ' ', text)
         clean = re.sub(r'\s+', ' ', clean).strip()
-
         if len(clean) < 20:
             return {"summary": ""}
 
-        # Split sentences
-        sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', clean)
-                     if len(s.strip()) > 8]
+        # Primary: Claude with an explicit word-count constraint.
+        if anthropic_client:
+            try:
+                msg = anthropic_client.messages.create(
+                    model=SUMMARY_MODEL,
+                    max_tokens=max_words * 6 + 32,
+                    system=(
+                        "You are a concise summarization engine. "
+                        f"Summarize the user's note in NO MORE THAN {max_words} words. "
+                        "Capture only the single most important point. "
+                        "Output only the summary text — no preamble, no quotes, "
+                        "no labels, no markdown, no trailing period commentary."
+                    ),
+                    messages=[{"role": "user", "content": clean}],
+                )
+                summary = "".join(
+                    b.text for b in msg.content if getattr(b, "type", None) == "text"
+                ).strip()
+                summary = _truncate_words(summary, max_words)
+                if summary:
+                    return {"summary": summary, "engine": "claude", "length": length}
+                print("Claude returned empty summary — using extractive fallback")
+            except Exception as e:
+                print(f"Claude summarize error: {type(e).__name__}: {str(e)}")
+        else:
+            print("Claude NOT configured — using extractive fallback (set ANTHROPIC_API_KEY)")
 
-        if not sentences:
-            words = clean.split()[:50]
-            return {"summary": ' '.join(words)}
-
-        # Stop words
-        stop = {'the','a','an','and','or','but','in','on','at','to','for',
-                'of','with','by','from','is','are','was','were','be','been',
-                'have','has','had','do','does','did','will','would','could',
-                'should','may','might','this','that','these','those','it',
-                'its','we','i','you','he','she','they','their','our','my'}
-
-        # Word frequency
-        all_words = re.findall(r'\b[a-z]+\b', clean.lower())
-        freq = Counter(w for w in all_words if w not in stop)
-
-        def score(s):
-            words = re.findall(r'\b[a-z]+\b', s.lower())
-            if not words: return 0
-            return sum(freq.get(w,0) for w in words if w not in stop)/len(words)
-
-        # Sort by score
-        ranked = sorted(enumerate(sentences), key=lambda x: score(x[1]),
-                       reverse=True)
-
-        # Build summary — add whole sentences until 50 words
-        result = []
-        word_count = 0
-
-        for _, sentence in ranked:
-            w = len(sentence.split())
-            if word_count + w <= 50:
-                result.append(sentence)
-                word_count += w
-            if word_count >= 30:
-                break
-
-        if not result:
-            result = [sentences[0]]
-
-        # Sort by original order
-        orig_order = {s: i for i, s in enumerate(sentences)}
-        result.sort(key=lambda s: orig_order.get(s, 0))
-
-        summary = ' '.join(result)
-        return {"summary": summary}
+        # Fallback: extractive NLP
+        return {
+            "summary": _extractive_summary(clean, max_words),
+            "engine": "extractive",
+            "length": length,
+        }
 
     except Exception as e:
         print(f"Summarize error: {str(e)}")

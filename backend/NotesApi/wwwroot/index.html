@@ -1154,6 +1154,28 @@
         .note-scan-image { margin-top: 16px; }
         .scan-image-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 
+        .summarize-controls { margin-top: 12px; padding-top: 12px; border-top: 1px solid #1E1E1E; }
+        [data-theme="light"] .summarize-controls { border-top-color: #E5E5E5; }
+        .summarize-row { display: flex; gap: 8px; align-items: center; }
+        .summary-length-select {
+            flex: 1; min-width: 0; height: 34px; padding: 0 10px;
+            font-size: 12px; color: var(--text-secondary);
+            background: #111; border: 1px solid #1E1E1E; border-radius: 8px;
+            cursor: pointer; transition: border-color .15s ease;
+        }
+        .summary-length-select:hover, .summary-length-select:focus {
+            border-color: #5B6EF5; outline: none;
+        }
+        [data-theme="light"] .summary-length-select { background: #F5F5F5; border-color: #E5E5E5; }
+        .btn-summarize {
+            display: inline-flex; align-items: center; gap: 6px; height: 34px;
+            padding: 0 14px; font-size: 12px; font-weight: 600; white-space: nowrap;
+            color: #fff; background: #5B6EF5; border: none; border-radius: 8px;
+            cursor: pointer; transition: background .15s ease, transform .1s ease;
+        }
+        .btn-summarize:hover { background: #4a5cd8; }
+        .btn-summarize:active { transform: scale(0.97); }
+        .btn-summarize:disabled { opacity: 0.6; cursor: default; }
         .note-summary-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid #1E1E1E; }
         .summary-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: block; }
         .note-summary-display { font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-style: italic; padding: 8px 12px; background: #111; border-radius: 8px; border-left: 3px solid #5B6EF5; }
@@ -3538,6 +3560,19 @@
                 <p class="scan-image-label">Original Scan</p>
                 <img id="note-scan-image-img" src="" alt="Original scan" style="max-width:100%;border-radius:8px;margin-top:8px;">
             </div>
+            <div class="summarize-controls" id="summarize-controls">
+              <label class="summary-label">AI Summary</label>
+              <div class="summarize-row">
+                <select id="summary-length" class="summary-length-select" aria-label="Summary length">
+                  <option value="short">Short · ~10 words</option>
+                  <option value="medium" selected>Medium · ~20 words</option>
+                  <option value="detailed">Detailed · ~50 words</option>
+                </select>
+                <button type="button" id="summarize-btn" class="btn-summarize btn" onclick="summarizeNote()">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Summarize
+                </button>
+              </div>
+            </div>
             <div class="note-summary-section" id="note-summary-section" style="display:none">
               <label class="summary-label">AI Summary</label>
               <div class="note-summary-display" id="note-summary-display"></div>
@@ -5416,6 +5451,29 @@ ${notesHTML}
             triggerConfetti();
         } else {
             toast('Oops! Couldn\'t save that. Try again?', 'error');
+        }
+    }
+
+    async function summarizeNote() {
+        const editor = document.getElementById('note-content-editor');
+        const plain  = (editor.innerHTML || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        const length = document.getElementById('summary-length').value;
+        const btn    = document.getElementById('summarize-btn');
+
+        if (plain.length < 20) {
+            toast('Write at least ~20 words before summarizing', 'warning');
+            return;
+        }
+
+        setButtonLoading(btn, true, 'Summarizing...');
+        const res = await api('/notes/summarize', 'POST', { text: plain, length });
+        setButtonLoading(btn, false);
+
+        if (res && res.summary && res.summary.trim()) {
+            document.getElementById('note-summary-display').textContent = res.summary;
+            document.getElementById('note-summary-section').style.display = 'block';
+        } else {
+            toast('Couldn\'t generate a summary. Try again?', 'error');
         }
     }
 

@@ -451,6 +451,43 @@ app.MapPost("/notes/scan", async (
 .RequireAuthorization()
 .DisableAntiforgery();
 
+app.MapPost("/notes/summarize", async (
+    SummarizeRequest request,
+    HttpContext context,
+    IHttpClientFactory clientFactory) =>
+{
+    var userId = AuthHelpers.GetUserId(context);
+    if (userId == Guid.Empty) return Results.Unauthorized();
+
+    if (string.IsNullOrWhiteSpace(request.Text))
+        return Results.BadRequest(new { error = "No text provided" });
+
+    var allowedLengths = new[] { "short", "medium", "detailed" };
+    var length = (request.Length ?? "medium").ToLower();
+    if (!allowedLengths.Contains(length)) length = "medium";
+
+    try
+    {
+        var aiServiceBase = Environment.GetEnvironmentVariable("AI_SERVICE_URL")
+            ?? "http://localhost:8000";
+        using var client = clientFactory.CreateClient();
+        var summarizeUrl = aiServiceBase.TrimEnd('/') + "/summarize";
+        var response = await client.PostAsJsonAsync(summarizeUrl,
+            new { text = request.Text, length });
+
+        if (!response.IsSuccessStatusCode)
+            return Results.Json(new { error = "Summarization service failed" }, statusCode: 502);
+
+        var result = await response.Content.ReadFromJsonAsync<SummarizeResult>();
+        return Results.Ok(new { summary = result?.Summary ?? "", length });
+    }
+    catch
+    {
+        return Results.Problem("AI service is currently unavailable. Please try again later.");
+    }
+})
+.RequireAuthorization();
+
 app.MapGet("/auth/me", async (HttpContext context, NotesDbContext db) =>
 {
     var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -590,3 +627,4 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
 
 record SummarizeResult(string Summary);
+record SummarizeRequest(string Text, string? Length);
