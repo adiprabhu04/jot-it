@@ -21,9 +21,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-AZURE_VISION_KEY = os.environ.get("AZURE_VISION_KEY")
-AZURE_VISION_ENDPOINT = os.environ.get("AZURE_VISION_ENDPOINT")
+# strip() guards against trailing newlines / surrounding quotes that Railway
+# env vars commonly carry — a whitespace-tainted endpoint produces a malformed
+# Azure client URL and silent OCR failures.
+AZURE_VISION_KEY = (os.environ.get("AZURE_VISION_KEY") or "").strip().strip('"').strip("'")
+AZURE_VISION_ENDPOINT = (os.environ.get("AZURE_VISION_ENDPOINT") or "").strip().strip('"').strip("'")
 AZURE_VISION_PRESENT = bool(AZURE_VISION_KEY and AZURE_VISION_ENDPOINT)
+print(f"Azure Vision configured: {AZURE_VISION_PRESENT} (endpoint set: {bool(AZURE_VISION_ENDPOINT)}, key set: {bool(AZURE_VISION_KEY)})")
 
 PSM_MODES = {
     "auto": 3,
@@ -190,6 +194,9 @@ async def extract_text(
 ):
     try:
         contents = await file.read()
+        if not contents:
+            raise HTTPException(status_code=400, detail="Empty image upload")
+        print(f"Received {len(contents)} bytes for OCR (source={source})")
         image = Image.open(io.BytesIO(contents))
 
         # Apply enhanced preprocessing
@@ -209,6 +216,10 @@ async def extract_text(
                 img_byte_arr = io.BytesIO()
                 processed.save(img_byte_arr, format='PNG')
                 img_byte_arr.seek(0)
+                sent_bytes = img_byte_arr.getbuffer().nbytes
+                print(f"Sending {sent_bytes} bytes to Azure Read API")
+                if sent_bytes == 0:
+                    raise ValueError("Processed image produced 0 bytes — nothing to send to Azure")
 
                 # Use Read API for better handwriting support
                 read_response = client.read_in_stream(img_byte_arr, raw=True)
@@ -244,7 +255,11 @@ async def extract_text(
                     "engine": "azure_vision"
                 }
             except Exception as e:
-                print(f"Azure Vision error: {str(e)}")
+                import traceback
+                print(f"Azure Vision error: {type(e).__name__}: {str(e)}")
+                traceback.print_exc()
+        else:
+            print("Azure Vision NOT configured — check AZURE_VISION_KEY / AZURE_VISION_ENDPOINT env vars on Railway")
 
         # Fallback to Tesseract
         if not result:
