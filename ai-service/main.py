@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 from msrest.authentication import CognitiveServicesCredentials
-from anthropic import Anthropic
+from groq import Groq
 import pytesseract
 import time
 from PIL import Image, ImageEnhance, ImageFilter
@@ -30,15 +30,15 @@ AZURE_VISION_ENDPOINT = (os.environ.get("AZURE_VISION_ENDPOINT") or "").strip().
 AZURE_VISION_PRESENT = bool(AZURE_VISION_KEY and AZURE_VISION_ENDPOINT)
 print(f"Azure Vision configured: {AZURE_VISION_PRESENT} (endpoint set: {bool(AZURE_VISION_ENDPOINT)}, key set: {bool(AZURE_VISION_KEY)})")
 
-# Claude summarization. Same strip() guard for Railway-tainted env vars.
-ANTHROPIC_API_KEY = (os.environ.get("ANTHROPIC_API_KEY") or "").strip().strip('"').strip("'")
-ANTHROPIC_PRESENT = bool(ANTHROPIC_API_KEY)
-anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_PRESENT else None
-print(f"Claude summarization configured: {ANTHROPIC_PRESENT}")
+# Groq summarization. Same strip() guard for Railway-tainted env vars.
+GROQ_API_KEY = (os.environ.get("GROQ_API_KEY") or "").strip().strip('"').strip("'")
+GROQ_PRESENT = bool(GROQ_API_KEY)
+groq_client = Groq(api_key=GROQ_API_KEY) if GROQ_PRESENT else None
+print(f"Groq summarization configured: {GROQ_PRESENT}")
 
 # Summary length presets -> hard word cap
 SUMMARY_LENGTHS = {"short": 10, "medium": 20, "detailed": 50}
-SUMMARY_MODEL = "claude-haiku-4-5-20251001"
+SUMMARY_MODEL = "llama-3.1-8b-instant"
 
 PSM_MODES = {
     "auto": 3,
@@ -123,7 +123,7 @@ def _truncate_words(text: str, max_words: int) -> str:
 
 
 def _extractive_summary(clean: str, max_words: int) -> str:
-    """Frequency-based extractive fallback when Claude is unavailable."""
+    """Frequency-based extractive fallback when Groq is unavailable."""
     import re
     from collections import Counter
 
@@ -184,32 +184,35 @@ async def summarize_text(request: dict):
         if len(clean) < 20:
             return {"summary": ""}
 
-        # Primary: Claude with an explicit word-count constraint.
-        if anthropic_client:
+        # Primary: Groq with an explicit word-count constraint.
+        if groq_client:
             try:
-                msg = anthropic_client.messages.create(
+                completion = groq_client.chat.completions.create(
                     model=SUMMARY_MODEL,
                     max_tokens=max_words * 6 + 32,
-                    system=(
-                        "You are a concise summarization engine. "
-                        f"Summarize the user's note in NO MORE THAN {max_words} words. "
-                        "Capture only the single most important point. "
-                        "Output only the summary text — no preamble, no quotes, "
-                        "no labels, no markdown, no trailing period commentary."
-                    ),
-                    messages=[{"role": "user", "content": clean}],
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are a concise summarization engine. "
+                                f"Summarize the user's note in NO MORE THAN {max_words} words. "
+                                "Capture only the single most important point. "
+                                "Output only the summary text — no preamble, no quotes, "
+                                "no labels, no markdown, no trailing period commentary."
+                            ),
+                        },
+                        {"role": "user", "content": clean},
+                    ],
                 )
-                summary = "".join(
-                    b.text for b in msg.content if getattr(b, "type", None) == "text"
-                ).strip()
+                summary = (completion.choices[0].message.content or "").strip()
                 summary = _truncate_words(summary, max_words)
                 if summary:
-                    return {"summary": summary, "engine": "claude", "length": length}
-                print("Claude returned empty summary — using extractive fallback")
+                    return {"summary": summary, "engine": "groq", "length": length}
+                print("Groq returned empty summary — using extractive fallback")
             except Exception as e:
-                print(f"Claude summarize error: {type(e).__name__}: {str(e)}")
+                print(f"Groq summarize error: {type(e).__name__}: {str(e)}")
         else:
-            print("Claude NOT configured — using extractive fallback (set ANTHROPIC_API_KEY)")
+            print("Groq NOT configured — using extractive fallback (set GROQ_API_KEY)")
 
         # Fallback: extractive NLP
         return {
