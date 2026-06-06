@@ -36,8 +36,11 @@ GROQ_PRESENT = bool(GROQ_API_KEY)
 groq_client = Groq(api_key=GROQ_API_KEY) if GROQ_PRESENT else None
 print(f"Groq summarization configured: {GROQ_PRESENT}")
 
-# Summary length presets -> hard word cap
-SUMMARY_LENGTHS = {"short": 10, "medium": 20, "detailed": 50}
+# Summary length presets -> target word count (prompt aims for these).
+SUMMARY_LENGTHS = {"short": 15, "medium": 35, "detailed": 60}
+# Prompts now say "at least / aim for N", so the truncate cap needs headroom
+# above the target — otherwise output landing slightly over N gets clipped.
+SUMMARY_CAP_RATIO = 1.5
 SUMMARY_MODEL = "llama-3.1-8b-instant"
 
 PSM_MODES = {
@@ -174,6 +177,7 @@ async def summarize_text(request: dict):
         text = request.get("text", "")
         length = str(request.get("length") or "medium").lower()
         max_words = SUMMARY_LENGTHS.get(length, SUMMARY_LENGTHS["medium"])
+        cap_words = int(max_words * SUMMARY_CAP_RATIO)
 
         if not text or len(text.strip()) < 20:
             return {"summary": ""}
@@ -194,9 +198,10 @@ async def summarize_text(request: dict):
                         {
                             "role": "system",
                             "content": (
-                                "You are a concise summarization engine. "
-                                f"Summarize the user's note in NO MORE THAN {max_words} words. "
-                                "Capture only the single most important point. "
+                                "You are a summarization engine. "
+                                f"Write a summary of the user's note that is AT LEAST {max_words} words; "
+                                f"aim for {max_words} words. "
+                                "Capture the key points. "
                                 "Output only the summary text — no preamble, no quotes, "
                                 "no labels, no markdown, no trailing period commentary."
                             ),
@@ -205,7 +210,7 @@ async def summarize_text(request: dict):
                     ],
                 )
                 summary = (completion.choices[0].message.content or "").strip()
-                summary = _truncate_words(summary, max_words)
+                summary = _truncate_words(summary, cap_words)
                 if summary:
                     return {"summary": summary, "engine": "groq", "length": length}
                 print("Groq returned empty summary — using extractive fallback")
@@ -216,7 +221,7 @@ async def summarize_text(request: dict):
 
         # Fallback: extractive NLP
         return {
-            "summary": _extractive_summary(clean, max_words),
+            "summary": _extractive_summary(clean, cap_words),
             "engine": "extractive",
             "length": length,
         }
