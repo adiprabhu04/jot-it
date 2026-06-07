@@ -124,165 +124,19 @@
         /* ── HERO ─────────────────────────────────────────────── */
         .hero {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 100vh;
+            grid-template-columns: 1fr;
+            min-height: 70vh;
             padding-top: 80px;
             position: relative;
         }
-        /* Hero ambient glow — removed for flat design */
-        .hero-ambient { display: none; }
         .hero-left {
-            background: transparent;
             display: flex;
             align-items: center;
-            padding: var(--sp-section) 56px var(--sp-section) 80px;
+            padding: var(--sp-section) 32px;
+            max-width: 760px;
+            margin: 0 auto;
             position: relative;
             z-index: 1;
-        }
-        .hero-right {
-            background: var(--bg-2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--sp-section) 48px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Orbs — removed for flat design */
-        .orb { display: none; }
-        .orb-1, .orb-2, .orb-3 { display: none; }
-        @keyframes orb-drift-a {
-            0%,100% { transform: translate(0,0) scale(1); }
-            33%      { transform: translate(36px,-28px) scale(1.07); }
-            66%      { transform: translate(-18px,18px) scale(0.96); }
-        }
-        @keyframes orb-drift-b {
-            0%,100% { transform: translate(0,0); }
-            50%      { transform: translate(-30px,-22px) scale(1.05); }
-        }
-        @keyframes orb-drift-c {
-            0%,100% { transform: translate(0,0); }
-            50%      { transform: translate(22px,-14px); }
-        }
-
-        /* Floating pills */
-        .hero-float {
-            position: absolute;
-            z-index: 3;
-        }
-        .hero-float-conf  { top: 11%; right: 7%; animation: gentle-float 3.2s ease-in-out infinite; }
-        .hero-float-cat   { top: 40%; left: 3%; animation: gentle-float 3.8s ease-in-out infinite 0.8s; }
-        .hero-float-toast { bottom: 15%; right: 4%; animation: gentle-float 4.2s ease-in-out infinite 1.4s; }
-        @keyframes gentle-float {
-            0%,100% { transform: translateY(0); }
-            50%      { transform: translateY(-9px); }
-        }
-        .float-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 8px 14px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.4);
-        }
-        .float-pill.conf {
-            background: #13241E;
-            color: #34D399;
-            border: 1px solid #1E3A30;
-        }
-        .float-pill.cat {
-            background: var(--accent-dim);
-            color: var(--accent);
-            border: 1px solid var(--border-mid);
-        }
-        .float-pill.toast {
-            background: var(--surface-2);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        .float-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-        }
-
-        /* Note mockup */
-        .note-mockup-wrap { position: relative; z-index: 2; }
-        .note-card-mockup {
-            width: 340px;
-            background: var(--surface-2);
-            border-radius: 22px;
-            border: 1px solid var(--border);
-            padding: 28px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.55);
-        }
-        .note-card-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        .note-cat-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--accent-dim);
-            color: #818CF8;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 100px;
-            border: 1px solid rgba(91,110,245,0.2);
-        }
-        .note-pin-icon { color: rgba(255,255,255,0.25); font-size: 14px; }
-        .note-card-title-mock {
-            font-family: var(--serif);
-            font-size: 18px;
-            font-weight: 700;
-            color: #EFEFF7;
-            letter-spacing: -0.3px;
-            margin-bottom: 10px;
-        }
-        .note-card-body {
-            font-size: 13px;
-            color: rgba(255,255,255,0.38);
-            line-height: 1.65;
-            margin-bottom: 16px;
-        }
-        .note-ai-summary {
-            background: var(--accent-dim);
-            border-left: 2px solid var(--accent);
-            border-radius: 0 10px 10px 0;
-            padding: 10px 13px;
-            margin-bottom: 16px;
-        }
-        .note-ai-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.9px;
-            margin-bottom: 4px;
-        }
-        .note-ai-text {
-            font-size: 12px;
-            color: rgba(239,239,247,0.6);
-            line-height: 1.55;
-        }
-        .note-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-        .note-tag {
-            font-size: 11px;
-            font-weight: 500;
-            padding: 3px 9px;
-            border-radius: 100px;
-            background: var(--surface-1);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
         }
 
         /* Hero text */
@@ -405,45 +259,6 @@
         }
         .play-icon svg { margin-left: 2px; }
 
-        /* ── STATS BAR ─────────────────────────────────────────── */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 0;
-            background: var(--bg-2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .stat {
-            text-align: center;
-            padding: 48px 64px;
-            flex: 1;
-            max-width: 240px;
-            border-right: 1px solid var(--border);
-            transition: background 0.3s var(--ease);
-        }
-        .stat:last-child { border-right: none; }
-        .stat:hover { background: var(--accent-dim); }
-        .stat-value-row { display: flex; align-items: baseline; justify-content: center; gap: 1px; }
-        .stat-number {
-            font-size: 52px;
-            font-weight: 800;
-            color: var(--accent);
-            line-height: 1;
-            letter-spacing: -2px;
-            font-variant-numeric: tabular-nums;
-        }
-        .stat-suffix { font-size: 32px; font-weight: 800; color: var(--accent); line-height: 1; }
-        .stat-label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-            font-weight: 600;
-        }
-
         /* ── FEATURES / BENTO ─────────────────────────────────── */
         .features {
             padding: var(--sp-section) 32px;
@@ -471,11 +286,10 @@
             text-align: center;
         }
 
-        /* Bento: 3-col grid, varied card sizes */
+        /* Bento: even 2-col grid of feature cards */
         .bento {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: auto auto;
+            grid-template-columns: repeat(2, 1fr);
             gap: var(--sp-elem);
         }
         .bento-card {
@@ -493,7 +307,6 @@
         .card-indigo {
             background: var(--accent);
             color: white;
-            grid-column: span 2;
             box-shadow: 0 4px 24px rgba(0,0,0,0.3);
         }
         .card-indigo:hover { box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
@@ -501,7 +314,6 @@
             background: var(--surface-1);
             color: white;
             border: 1px solid var(--border);
-            grid-row: span 2;
         }
         .card-dark:hover { box-shadow: 0 14px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--accent); }
         .card-light {
@@ -544,222 +356,6 @@
         .card-dark .bento-desc   { color: var(--text-muted); opacity: 1; }
         .card-light .bento-desc  { color: var(--text-muted); }
         .card-teal .bento-desc   { opacity: 0.82; }
-
-        /* OCR card visual detail */
-        .ocr-visual {
-            margin-top: 28px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .ocr-word {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 9px;
-            border-radius: 6px;
-            border: 1px solid var(--border-mid);
-            background: var(--surface-2);
-            position: relative;
-        }
-        .ocr-word::after {
-            content: attr(data-conf);
-            position: absolute;
-            bottom: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: rgba(255,255,255,0.5);
-            white-space: nowrap;
-        }
-
-        /* AI card vertical detail */
-        .ai-summary-visual {
-            margin-top: 24px;
-        }
-        .ai-line {
-            height: 8px;
-            border-radius: 100px;
-            background: var(--surface-2);
-            margin-bottom: 8px;
-        }
-        .ai-line:nth-child(1) { width: 90%; }
-        .ai-line:nth-child(2) { width: 70%; }
-        .ai-line:nth-child(3) { width: 82%; }
-        .ai-line.highlight {
-            background: var(--accent);
-            animation: shimmer 2.4s ease-in-out infinite;
-        }
-        @keyframes shimmer {
-            0%,100% { opacity:1; }
-            50%      { opacity:0.55; }
-        }
-
-        /* ── STICKY SHOWCASE ──────────────────────────────────── */
-        .showcase-section {
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-2);
-        }
-        .showcase-inner {
-            max-width: 1180px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-        }
-        .showcase-left {
-            position: sticky;
-            top: 80px;
-            height: calc(100vh - 80px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--sp-section) 48px;
-            border-right: 1px solid var(--border);
-            align-self: start;
-        }
-        .showcase-panel {
-            width: 100%;
-            max-width: 340px;
-            background: var(--surface-2);
-            border-radius: 22px;
-            border: 1px solid var(--border-mid);
-            padding: 28px;
-            box-shadow: 0 32px 80px rgba(0,0,0,0.5);
-            min-height: 320px;
-            position: relative;
-            overflow: hidden;
-        }
-        .showcase-panel-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .dot-row { display: flex; gap: 6px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot.r { background: #FF5F57; }
-        .dot.y { background: #FFBD2E; }
-        .dot.g { background: #27C93F; }
-        .showcase-tab {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-left: auto;
-            background: var(--surface-1);
-            padding: 3px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-        /* Panel states */
-        .sp-state { display: none; }
-        .sp-state.active { display: block; }
-
-        /* Canvas state */
-        .canvas-mock {
-            background: var(--surface-1);
-            border-radius: 12px;
-            height: 180px;
-            border: 1px dashed var(--border-mid);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .canvas-stroke {
-            position: absolute;
-            height: 2px;
-            border-radius: 1px;
-            background: var(--accent);
-            opacity: 0.6;
-            transform-origin: left center;
-        }
-        /* OCR result state */
-        .ocr-result-mock { }
-        .ocr-chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-        .ocr-chip {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-            border: 1px solid;
-        }
-        .ocr-chip.hi  { background: #13241E; color:#34D399; border-color:#1E3A30; }
-        .ocr-chip.med { background: #2A2310; color:#FBBF24; border-color:#42360F; }
-        /* Summary state */
-        .summary-mock .summ-line {
-            height: 9px; border-radius: 5px;
-            background: var(--surface-2);
-            margin-bottom: 9px;
-        }
-        .summary-mock .summ-line.accent {
-            background: var(--accent);
-        }
-        .summ-quote { color: rgba(239,239,247,0.7); }
-        /* Organize state */
-        .tag-mock { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-        .tag-mock-item {
-            font-size: 11px; padding: 4px 10px;
-            border-radius: 100px;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            background: var(--surface-1);
-            color: var(--text-muted);
-        }
-
-        /* Right scrolling content */
-        .showcase-right {
-            padding: var(--sp-section) 64px;
-        }
-        .showcase-item {
-            min-height: 40vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 48px 0;
-            border-bottom: 1px solid var(--border);
-            opacity: 0.35;
-            transition: opacity 0.5s var(--ease);
-        }
-        .showcase-item:last-child { border-bottom: none; }
-        .showcase-item.sc-active { opacity: 1; }
-        .sc-num {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--accent);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-        .sc-title {
-            font-family: var(--serif);
-            font-size: clamp(26px, 3vw, 36px);
-            font-weight: 700;
-            letter-spacing: -1px;
-            line-height: 1.1;
-            color: var(--text);
-            margin-bottom: 16px;
-        }
-        .sc-desc {
-            font-size: 16px;
-            color: var(--text-muted);
-            line-height: 1.75;
-            max-width: 380px;
-        }
-        .sc-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #34D399;
-            background: #13241E;
-            border: 1px solid #1E3A30;
-            padding: 5px 12px;
-            border-radius: 100px;
-        }
 
         /* ── HOW IT WORKS ──────────────────────────────────────── */
         .how-it-works {
@@ -863,9 +459,6 @@
             overflow: hidden;
             border-top: 1px solid var(--border);
         }
-        /* Layered glows — removed for flat design */
-        .cta-glow { display: none; }
-        .cta-glow-1, .cta-glow-2 { display: none; }
         .cta-heading {
             font-family: var(--serif);
             font-size: clamp(44px, 6.5vw, 80px);
@@ -1085,38 +678,14 @@
         [data-theme="light"] .play-icon { background: var(--surface-1); border-color: var(--border); }
         [data-theme="light"] .card-dark { background: #E6E6F0; color: #0A0A14; border-color: var(--border); }
         [data-theme="light"] .card-dark .bento-desc { color: #555568; }
-        /* Hero mockup card — light mode: visible border + shadow, dark text */
-        [data-theme="light"] .note-card-mockup {
-            background: #FFFFFF;
-            border: 1px solid #D5D5E0;
-            box-shadow: 0 20px 50px rgba(20,20,40,0.14);
-        }
-        [data-theme="light"] .note-card-title-mock { color: #0A0A14; }
-        [data-theme="light"] .note-card-body { color: #555568; }
-        [data-theme="light"] .note-ai-text { color: #44445A; }
-        [data-theme="light"] .note-pin-icon { color: #8A8AA0; }
-        [data-theme="light"] .note-cat-badge { color: var(--accent); border-color: #C7CCF6; }
-        /* Floating badges — light mode: solid bg, dark text */
-        [data-theme="light"] .float-pill { box-shadow: 0 8px 24px rgba(20,20,40,0.14); }
-        [data-theme="light"] .float-pill.conf  { background: #DCF5EC; color: #0F7A5A; border-color: #B6E6D4; }
-        [data-theme="light"] .float-pill.cat   { background: #E6E8FB; color: #3E4FD6; border-color: #C7CCF6; }
-        [data-theme="light"] .float-pill.toast { background: #FFFFFF; color: #0A0A14; border-color: #D5D5E0; }
-        [data-theme="light"] .hero-right { background: #EEEEF6; }
-        [data-theme="light"] .showcase-panel { background: white; border-color: var(--border); }
         [data-theme="light"] .cta-heading { color: #0A0A14; }
         [data-theme="light"] .proof-caption { color: #555568; }
         [data-theme="light"] .hero-heading { color: #0A0A14; }
-        [data-theme="light"] .ai-line { background: #E2E2EC; }
-        [data-theme="light"] .canvas-mock { background: var(--surface-1); border-color: var(--border); }
         /* Hero badge — darker text + border on light lavender */
         [data-theme="light"] .hero-badge { color: #3E4FD6; border-color: #C7CCF6; }
-        /* OCR word chips sit on the accent card; chip turns white in light, so darken the text */
-        [data-theme="light"] .ocr-word { color: #0A0A14; }
         /* Bento icons with a white/light stroke — darken so they read on the light icon tile */
         [data-theme="light"] .card-dark .bento-icon svg,
         [data-theme="light"] .card-teal .bento-icon svg { stroke: var(--accent); }
-        /* Showcase summary quote */
-        [data-theme="light"] .summ-quote { color: #44445A; }
         /* Footer stays dark in both modes — keep its internal surfaces/borders dark
            so theme vars (which flip light) don't wash out text on the dark footer */
         [data-theme="light"] footer { border-top-color: #1E1E2A; }
@@ -1127,24 +696,13 @@
         [data-theme="light"] .tech-badge:hover { color: rgba(255,255,255,0.75); border-color: #3A3A4A; }
 
         /* ── RESPONSIVE ───────────────────────────────────────── */
-        @media (max-width: 1024px) {
-            .bento { grid-template-columns: 1fr 1fr; }
-            .card-indigo { grid-column: span 1; }
-            .card-dark { grid-row: span 1; }
-            .showcase-section { display: none; } /* hidden on tablet — too complex */
-        }
         @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; min-height: auto; }
             .hero-left { padding: var(--sp-section) 36px; }
-            .hero-right { padding: var(--sp-section) 36px; min-height: 500px; }
             .bento { grid-template-columns: 1fr; }
-            .card-indigo, .card-dark { grid-column: span 1; grid-row: span 1; }
-            .steps { grid-template-columns: 1fr; gap: 52px; }
+            .steps { grid-template-columns: 1fr; gap: var(--sp-block); }
             .steps::before { display: none; }
             .step { padding: 0; }
             .proof-facts { gap: 12px; font-size: 13px; }
-            .stats-bar { flex-wrap: wrap; }
-            .stat { max-width: 50%; border-bottom: 1px solid var(--border); }
             .nav-links a:not(.btn-nav):not(.landing-theme-btn) { display: none; }
         }
         @media (max-width: 640px) {
@@ -1153,13 +711,8 @@
             :root { --sp-section: 56px; --sp-block: 36px; }
             .nav-inner { padding: 0 20px; }
             .hero-left { padding: var(--sp-section) 22px; }
-            .hero-right { padding: var(--sp-section) 22px; }
             .bento-card { padding: 28px; }
             .footer-top { flex-direction: column; }
-            .note-card-mockup { width: 290px; }
-            .hero-float { display: none; }
-            .stat { max-width: 50%; padding: 36px 28px; }
-            .stat-number { font-size: 42px; }
             .cta-credibility { gap: 14px; }
             .cred-dot { display: none; }
         }
@@ -1186,7 +739,6 @@
 
 <!-- HERO -->
 <section class="hero" id="hero">
-    <div class="hero-ambient"></div>
     <div class="hero-left">
         <div>
             <div class="hero-badge fade-up">
@@ -1216,73 +768,7 @@
             </div>
         </div>
     </div>
-    <div class="hero-right">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-
-        <div class="hero-float hero-float-conf">
-            <div class="float-pill conf">
-                <div class="float-dot" style="background:#34D399"></div>
-                94% confidence
-            </div>
-        </div>
-        <div class="hero-float hero-float-cat">
-            <div class="float-pill cat">Work</div>
-        </div>
-        <div class="hero-float hero-float-toast">
-            <div class="float-pill toast">Note saved</div>
-        </div>
-
-        <div class="note-mockup-wrap fade-up delay-2">
-            <div class="note-card-mockup">
-                <div class="note-card-top">
-                    <div class="note-cat-badge">Work</div>
-                    <span class="note-pin-icon">Pinned</span>
-                </div>
-                <div class="note-card-title-mock">Q3 Strategy Meeting</div>
-                <div class="note-card-body">Discussed roadmap priorities and resource allocation for next quarter. Mobile team cutting release branch — freeze non-critical merges after Thursday.</div>
-                <div class="note-ai-summary">
-                    <div class="note-ai-label">AI summary</div>
-                    <div class="note-ai-text">Q3 planning focused on mobile release cutoff and resource prioritization for the next quarter.</div>
-                </div>
-                <div class="note-tags">
-                    <span class="note-tag">#work</span>
-                    <span class="note-tag">#strategy</span>
-                    <span class="note-tag">#q3</span>
-                </div>
-            </div>
-        </div>
-    </div>
 </section>
-
-<!-- STATS BAR -->
-<div class="stats-bar fade-up">
-    <div class="stat">
-        <div class="stat-value-row">
-            <span class="stat-number" data-target="12">0</span><span class="stat-suffix">+</span>
-        </div>
-        <span class="stat-label">AI Features</span>
-    </div>
-    <div class="stat">
-        <div class="stat-value-row">
-            <span class="stat-number" data-target="95">0</span><span class="stat-suffix">%</span>
-        </div>
-        <span class="stat-label">OCR Accuracy</span>
-    </div>
-    <div class="stat">
-        <div class="stat-value-row">
-            <span class="stat-number" data-target="6">0</span>
-        </div>
-        <span class="stat-label">Note Templates</span>
-    </div>
-    <div class="stat">
-        <div class="stat-value-row">
-            <span class="stat-number" data-target="50">0</span><span class="stat-suffix">w</span>
-        </div>
-        <span class="stat-label">Word Suggestions</span>
-    </div>
-</div>
 
 <!-- FEATURES / BENTO -->
 <section class="features" id="features">
@@ -1297,13 +783,6 @@
             </div>
             <div class="bento-title">Handwriting OCR</div>
             <p class="bento-desc">Draw or upload handwriting and the app reads it back as text, with a confidence score for each word. Works with print or cursive.</p>
-            <div class="ocr-visual">
-                <div class="ocr-word" data-conf="98%">Meeting</div>
-                <div class="ocr-word" data-conf="94%">notes</div>
-                <div class="ocr-word" data-conf="89%">strategy</div>
-                <div class="ocr-word" data-conf="97%">Q3</div>
-                <div class="ocr-word" data-conf="91%">roadmap</div>
-            </div>
         </div>
 
         <!-- AI summary card — spans 2 rows vertically -->
@@ -1313,13 +792,6 @@
             </div>
             <div class="bento-title">Summaries</div>
             <p class="bento-desc">When you save a note, the app writes a short summary of it, so you can see what it's about without rereading the whole thing.</p>
-            <div class="ai-summary-visual">
-                <div class="ai-line highlight"></div>
-                <div class="ai-line"></div>
-                <div class="ai-line" style="width:75%"></div>
-                <div class="ai-line highlight" style="width:60%"></div>
-                <div class="ai-line" style="width:88%"></div>
-            </div>
         </div>
 
         <!-- Tag card -->
@@ -1338,119 +810,6 @@
             </div>
             <div class="bento-title">PDF & CSV Export</div>
             <p class="bento-desc">Export any note as a PDF or CSV file. Download your notes whenever you want.</p>
-        </div>
-    </div>
-</section>
-
-<!-- STICKY SHOWCASE -->
-<section class="showcase-section">
-    <div class="showcase-inner">
-        <!-- LEFT: sticky panel -->
-        <div class="showcase-left">
-            <div class="showcase-panel">
-                <div class="showcase-panel-header">
-                    <div class="dot-row">
-                        <div class="dot r"></div>
-                        <div class="dot y"></div>
-                        <div class="dot g"></div>
-                    </div>
-                    <div class="showcase-tab" id="sc-tab-label">Canvas</div>
-                </div>
-
-                <!-- State 1: Draw -->
-                <div class="sp-state active" id="sp-0">
-                    <div class="canvas-mock">
-                        <svg width="100%" height="100%" viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="padding:20px">
-                            <path d="M20 90 C40 60 60 40 90 55 C120 70 130 100 160 80 C185 63 200 45 230 60" stroke="#5B6EF5" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.7"/>
-                            <path d="M30 120 C60 105 80 110 110 100 C135 92 155 85 180 95" stroke="#818CF8" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
-                            <path d="M45 140 C75 132 100 128 130 133" stroke="#5B6EF5" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.35"/>
-                        </svg>
-                    </div>
-                    <div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Draw, or upload a photo</div>
-                </div>
-
-                <!-- State 2: OCR result -->
-                <div class="sp-state" id="sp-1">
-                    <div class="ocr-result-mock">
-                        <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;font-weight:600">Reading your handwriting…</div>
-                        <div style="font-family:var(--serif);font-size:15px;color:var(--text);line-height:1.6;margin-bottom:12px">"Q3 strategy — prioritize mobile release and resource allocation across teams."</div>
-                        <div class="ocr-chip-row">
-                            <div class="ocr-chip hi">Q3 · 98%</div>
-                            <div class="ocr-chip hi">strategy · 95%</div>
-                            <div class="ocr-chip med">prioritize · 88%</div>
-                            <div class="ocr-chip hi">mobile · 96%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- State 3: AI summary -->
-                <div class="sp-state" id="sp-2">
-                    <div class="summary-mock">
-                        <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">AI summary</div>
-                        <div class="summ-line accent" style="width:95%"></div>
-                        <div class="summ-line" style="width:78%"></div>
-                        <div class="summ-line accent" style="width:88%"></div>
-                        <div class="summ-line" style="width:65%"></div>
-                        <div class="summ-quote" style="margin-top:14px;font-family:var(--serif);font-size:13px;font-style:italic;line-height:1.6">"Q3 planning focused on mobile release cutoff and resource prioritization."</div>
-                    </div>
-                </div>
-
-                <!-- State 4: Organize -->
-                <div class="sp-state" id="sp-3">
-                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Q3 Strategy Meeting</div>
-                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Work · Pinned · PDF exported</div>
-                    <div class="tag-mock">
-                        <div class="tag-mock-item">#work</div>
-                        <div class="tag-mock-item">#strategy</div>
-                        <div class="tag-mock-item">#q3</div>
-                        <div class="tag-mock-item">#mobile</div>
-                    </div>
-                    <div style="margin-top:16px;display:flex;gap:8px">
-                        <div style="font-size:11px;padding:4px 10px;border-radius:6px;background:#13241E;color:#34D399;border:1px solid #1E3A30;font-weight:600">PDF ↓</div>
-                        <div style="font-size:11px;padding:4px 10px;border-radius:6px;background:#1A1B2E;color:#818CF8;border:1px solid #2C2C3A;font-weight:600">CSV ↓</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT: scrolling items -->
-        <div class="showcase-right">
-            <div class="showcase-item sc-active" data-state="0">
-                <div class="sc-num">01</div>
-                <div class="sc-title">Draw or<br>Upload</div>
-                <p class="sc-desc">Draw on the canvas with your finger or a stylus, or upload a photo of notes you've already written. Works on any device.</p>
-                <div class="sc-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Supports JPEG, PNG, WebP, BMP
-                </div>
-            </div>
-            <div class="showcase-item" data-state="1">
-                <div class="sc-num">02</div>
-                <div class="sc-title">It reads<br>your text</div>
-                <p class="sc-desc">The app reads the image and gives you back typed text in a few seconds, with a confidence score for each word. Print or cursive.</p>
-                <div class="sc-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Uses the Azure Vision API
-                </div>
-            </div>
-            <div class="showcase-item" data-state="2">
-                <div class="sc-num">03</div>
-                <div class="sc-title">You get a<br>summary</div>
-                <p class="sc-desc">When you save a note, the app writes a short summary of it so you can skim what it's about later.</p>
-                <div class="sc-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Summaries written by an AI model
-                </div>
-            </div>
-            <div class="showcase-item" data-state="3">
-                <div class="sc-num">04</div>
-                <div class="sc-title">Organize &<br>export</div>
-                <p class="sc-desc">Tag notes with #hashtags, pin the ones you use most, set reminders, and export to PDF or CSV when you need them elsewhere.</p>
-                <div class="sc-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    PDF & CSV export built-in
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -1520,8 +879,6 @@
 
 <!-- CTA -->
 <section class="cta-section">
-    <div class="cta-glow cta-glow-1"></div>
-    <div class="cta-glow cta-glow-2"></div>
     <h2 class="cta-heading fade-up">
         Start taking<br><em>notes</em>.
     </h2>
@@ -1629,29 +986,6 @@
     }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.fade-up').forEach(el => revealObserver.observe(el));
 
-    /* ── COUNT-UP ───────────────────────────────────────────── */
-    function animateCount(el) {
-        const target = parseInt(el.dataset.target);
-        let count = 0;
-        const step = target / (1000 / 16);
-        const timer = setInterval(() => {
-            count = Math.min(count + step, target);
-            el.textContent = Math.round(count);
-            if (count >= target) clearInterval(timer);
-        }, 16);
-    }
-    const statsBar = document.querySelector('.stats-bar');
-    if (statsBar) {
-        new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target._counted) {
-                    entry.target._counted = true;
-                    entry.target.querySelectorAll('.stat-number').forEach(animateCount);
-                }
-            });
-        }, { threshold: 0.25 }).observe(statsBar);
-    }
-
     /* ── TYPING ─────────────────────────────────────────────── */
     const phrases = ['Draw a note.', 'Scan your handwriting.', 'Get editable text.', 'Find it later.'];
     let phraseIdx = 0, charIdx = 0, deleting = false;
@@ -1684,30 +1018,6 @@
         });
     });
 
-    /* ── STICKY SHOWCASE ────────────────────────────────────── */
-    const showcaseItems = document.querySelectorAll('.showcase-item');
-    const tabLabel = document.getElementById('sc-tab-label');
-    const tabNames = ['Canvas', 'OCR', 'Summary', 'Organize'];
-
-    if (showcaseItems.length) {
-        const scObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const state = parseInt(entry.target.dataset.state);
-                    // Update active item
-                    showcaseItems.forEach(el => el.classList.remove('sc-active'));
-                    entry.target.classList.add('sc-active');
-                    // Update panel state
-                    document.querySelectorAll('.sp-state').forEach(s => s.classList.remove('active'));
-                    const panel = document.getElementById(`sp-${state}`);
-                    if (panel) panel.classList.add('active');
-                    if (tabLabel) tabLabel.textContent = tabNames[state] || '';
-                }
-            });
-        }, { threshold: 0.55, rootMargin: '-80px 0px -80px 0px' });
-        showcaseItems.forEach(el => scObserver.observe(el));
-    }
-
     /* ── PARALLAX (hero text slight drift) ──────────────────── */
     const heroLeft = document.querySelector('.hero-left');
     if (heroLeft && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1715,17 +1025,6 @@
             const y = window.scrollY;
             if (y < window.innerHeight) {
                 heroLeft.style.transform = `translateY(${y * 0.06}px)`;
-            }
-        }, { passive: true });
-    }
-
-    /* ── HERO AMBIENT PARALLAX ──────────────────────────────── */
-    const heroAmbient = document.querySelector('.hero-ambient');
-    if (heroAmbient) {
-        window.addEventListener('scroll', () => {
-            const y = window.scrollY;
-            if (y < window.innerHeight) {
-                heroAmbient.style.transform = `translateY(${y * 0.12}px)`;
             }
         }, { passive: true });
     }
