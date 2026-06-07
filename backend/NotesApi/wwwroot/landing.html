@@ -689,6 +689,7 @@
         .summary-mock .summ-line.accent {
             background: var(--accent);
         }
+        .summ-quote { color: rgba(239,239,247,0.7); }
         /* Organize state */
         .tag-mock { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
         .tag-mock-item {
@@ -1100,6 +1101,23 @@
         [data-theme="light"] .hero-heading { color: #0A0A14; }
         [data-theme="light"] .ai-line { background: #E2E2EC; }
         [data-theme="light"] .canvas-mock { background: var(--surface-1); border-color: var(--border); }
+        /* Hero badge — darker text + border on light lavender */
+        [data-theme="light"] .hero-badge { color: #3E4FD6; border-color: #C7CCF6; }
+        /* OCR word chips sit on the accent card; chip turns white in light, so darken the text */
+        [data-theme="light"] .ocr-word { color: #0A0A14; }
+        /* Bento icons with a white/light stroke — darken so they read on the light icon tile */
+        [data-theme="light"] .card-dark .bento-icon svg,
+        [data-theme="light"] .card-teal .bento-icon svg { stroke: var(--accent); }
+        /* Showcase summary quote */
+        [data-theme="light"] .summ-quote { color: #44445A; }
+        /* Footer stays dark in both modes — keep its internal surfaces/borders dark
+           so theme vars (which flip light) don't wash out text on the dark footer */
+        [data-theme="light"] footer { border-top-color: #1E1E2A; }
+        [data-theme="light"] .footer-top { border-bottom-color: #1E1E2A; }
+        [data-theme="light"] .footer-links a { border-color: #2C2C3A; }
+        [data-theme="light"] .footer-links a:hover { background: #15151E; color: #FFFFFF; border-color: #3A3A4A; }
+        [data-theme="light"] .tech-badge { background: #15151E; border-color: #2C2C3A; color: rgba(255,255,255,0.45); }
+        [data-theme="light"] .tech-badge:hover { color: rgba(255,255,255,0.75); border-color: #3A3A4A; }
 
         /* ── RESPONSIVE ───────────────────────────────────────── */
         @media (max-width: 1024px) {
@@ -1367,7 +1385,7 @@
                         <div class="summ-line" style="width:78%"></div>
                         <div class="summ-line accent" style="width:88%"></div>
                         <div class="summ-line" style="width:65%"></div>
-                        <div style="margin-top:14px;font-family:var(--serif);font-size:13px;color:rgba(239,239,247,0.7);font-style:italic;line-height:1.6">"Q3 planning focused on mobile release cutoff and resource prioritization."</div>
+                        <div class="summ-quote" style="margin-top:14px;font-family:var(--serif);font-size:13px;font-style:italic;line-height:1.6">"Q3 planning focused on mobile release cutoff and resource prioritization."</div>
                     </div>
                 </div>
 
