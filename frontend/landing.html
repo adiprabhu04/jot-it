@@ -1077,7 +1077,22 @@
         [data-theme="light"] .play-icon { background: var(--surface-1); border-color: var(--border); }
         [data-theme="light"] .card-dark { background: #E6E6F0; color: #0A0A14; border-color: var(--border); }
         [data-theme="light"] .card-dark .bento-desc { color: #555568; }
-        [data-theme="light"] .note-card-mockup { background: white; border-color: var(--border); }
+        /* Hero mockup card — light mode: visible border + shadow, dark text */
+        [data-theme="light"] .note-card-mockup {
+            background: #FFFFFF;
+            border: 1px solid #D5D5E0;
+            box-shadow: 0 20px 50px rgba(20,20,40,0.14);
+        }
+        [data-theme="light"] .note-card-title-mock { color: #0A0A14; }
+        [data-theme="light"] .note-card-body { color: #555568; }
+        [data-theme="light"] .note-ai-text { color: #44445A; }
+        [data-theme="light"] .note-pin-icon { color: #8A8AA0; }
+        [data-theme="light"] .note-cat-badge { color: var(--accent); border-color: #C7CCF6; }
+        /* Floating badges — light mode: solid bg, dark text */
+        [data-theme="light"] .float-pill { box-shadow: 0 8px 24px rgba(20,20,40,0.14); }
+        [data-theme="light"] .float-pill.conf  { background: #DCF5EC; color: #0F7A5A; border-color: #B6E6D4; }
+        [data-theme="light"] .float-pill.cat   { background: #E6E8FB; color: #3E4FD6; border-color: #C7CCF6; }
+        [data-theme="light"] .float-pill.toast { background: #FFFFFF; color: #0A0A14; border-color: #D5D5E0; }
         [data-theme="light"] .hero-right { background: #EEEEF6; }
         [data-theme="light"] .showcase-panel { background: white; border-color: var(--border); }
         [data-theme="light"] .cta-heading { color: #0A0A14; }
