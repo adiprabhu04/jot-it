@@ -8,8 +8,9 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><path d='M18 8 C17 8 15 9 15 11 L14 78 C14 80 16 82 18 82 L68 83 C70 83 72 81 72 79 L73 28 L52 7 Z' fill='%231A1D3A' stroke='%235B6EF5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M52 7 L51 27 L73 28' fill='%23111130' stroke='%235B6EF5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/><path d='M24 38 C26 36 29 35 32 37 C35 39 34 43 37 42 C40 41 39 37 43 36 C46 35 48 37 49 39' stroke='%23818CF8' stroke-width='2.5' stroke-linecap='round' fill='none'/><circle cx='78' cy='72' r='14' fill='%235B6EF5'/><path d='M78 64 L79.5 69.5 L85 71 L79.5 72.5 L78 78 L76.5 72.5 L71 71 L76.5 69.5 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -26,9 +27,15 @@
             --card-bg:    #12121C;
             --surface-1:  #15151E;  /* flat raised surface */
             --surface-2:  #1B1B26;  /* flat higher surface */
-            --serif: 'Newsreader', Georgia, serif;
-            --sans:  'Inter', system-ui, sans-serif;
+            /* single typeface across the whole page */
+            --sans:  'Inter', system-ui, -apple-system, sans-serif;
+            --serif: var(--sans);
             --ease: cubic-bezier(0.4, 0, 0.2, 1);
+            /* spacing scale */
+            --sp-section: 80px;  /* section top/bottom padding */
+            --sp-block:   48px;  /* between major blocks (heading -> content) */
+            --sp-elem:    24px;  /* between elements within a block */
+            --sp-tight:   12px;
         }
 
         html { scroll-behavior: auto; }
@@ -128,7 +135,7 @@
             background: transparent;
             display: flex;
             align-items: center;
-            padding: 90px 56px 90px 80px;
+            padding: var(--sp-section) 56px var(--sp-section) 80px;
             position: relative;
             z-index: 1;
         }
@@ -137,7 +144,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 48px;
+            padding: var(--sp-section) 48px;
             position: relative;
             overflow: hidden;
         }
@@ -291,7 +298,7 @@
             text-transform: uppercase;
             padding: 7px 16px;
             border-radius: 100px;
-            margin-bottom: 32px;
+            margin-bottom: var(--sp-elem);
             border: 1px solid rgba(91,110,245,0.2);
         }
         .hero-badge-dot {
@@ -312,7 +319,7 @@
             line-height: 1.07;
             letter-spacing: -2.5px;
             color: var(--text);
-            margin-bottom: 26px;
+            margin-bottom: var(--sp-elem);
         }
         .hero-heading em {
             font-style: italic;
@@ -323,12 +330,12 @@
             color: var(--text-muted);
             line-height: 1.75;
             max-width: 420px;
-            margin-bottom: 8px;
+            margin-bottom: var(--sp-tight);
         }
         .typing-line {
             font-size: 16px;
             color: var(--text-muted);
-            margin-bottom: 44px;
+            margin-bottom: var(--sp-block);
             min-height: 26px;
         }
         .typing-text { color: var(--accent); font-weight: 600; }
@@ -439,7 +446,7 @@
 
         /* ── FEATURES / BENTO ─────────────────────────────────── */
         .features {
-            padding: 100px 32px 110px;
+            padding: var(--sp-section) 32px;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -449,7 +456,7 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--accent);
-            margin-bottom: 14px;
+            margin-bottom: var(--sp-elem);
             text-align: center;
         }
         .section-title {
@@ -460,7 +467,7 @@
             line-height: 1.08;
             color: var(--text);
             max-width: 520px;
-            margin: 0 auto 72px;
+            margin: 0 auto var(--sp-block);
             text-align: center;
         }
 
@@ -469,7 +476,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: auto auto;
-            gap: 14px;
+            gap: var(--sp-elem);
         }
         .bento-card {
             border-radius: 22px;
@@ -607,7 +614,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 48px;
+            padding: var(--sp-section) 48px;
             border-right: 1px solid var(--border);
             align-self: start;
         }
@@ -703,7 +710,7 @@
 
         /* Right scrolling content */
         .showcase-right {
-            padding: 80px 64px;
+            padding: var(--sp-section) 64px;
         }
         .showcase-item {
             min-height: 40vh;
@@ -759,15 +766,15 @@
             background: var(--bg);
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
-            padding: 110px 32px;
+            padding: var(--sp-section) 32px;
         }
         .how-inner { max-width: 1100px; margin: 0 auto; }
         .steps {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 0;
+            gap: var(--sp-elem);
             position: relative;
-            margin-top: 72px;
+            margin-top: var(--sp-block);
         }
         .steps::before {
             content: '';
@@ -795,7 +802,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 22px;
+            margin: 0 auto var(--sp-elem);
             position: relative;
             z-index: 1;
             transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease);
@@ -816,12 +823,12 @@
 
         /* ── PROOF ─────────────────────────────────────────────── */
         .proof-section {
-            padding: 110px 32px;
+            padding: var(--sp-section) 32px;
             background: var(--bg);
         }
         .proof-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
         .proof-shot {
-            margin-top: 56px;
+            margin-top: var(--sp-block);
             border-radius: 16px;
             border: 1px solid var(--border);
             background: var(--bg-2);
@@ -830,12 +837,12 @@
         }
         .proof-shot img { display: block; width: 100%; height: auto; }
         .proof-caption {
-            margin-top: 18px;
+            margin-top: var(--sp-elem);
             font-size: 13px;
             color: var(--text-muted);
         }
         .proof-facts {
-            margin-top: 36px;
+            margin-top: var(--sp-block);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -850,7 +857,7 @@
         /* ── CTA ──────────────────────────────────────────────── */
         .cta-section {
             background: var(--bg-2);
-            padding: 160px 32px;
+            padding: var(--sp-section) 32px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -866,7 +873,7 @@
             letter-spacing: -3.5px;
             color: white;
             line-height: 1.03;
-            margin-bottom: 18px;
+            margin-bottom: var(--sp-elem);
             position: relative;
             z-index: 1;
         }
@@ -877,7 +884,7 @@
         .cta-sub {
             font-size: 16px;
             color: var(--text-muted);
-            margin-bottom: 52px;
+            margin-bottom: var(--sp-block);
             position: relative;
             z-index: 1;
         }
@@ -913,7 +920,7 @@
             justify-content: center;
             gap: 24px;
             flex-wrap: wrap;
-            margin-top: 48px;
+            margin-top: var(--sp-block);
             position: relative;
             z-index: 1;
         }
@@ -936,7 +943,7 @@
         footer {
             background: #06060C;
             border-top: 1px solid var(--border);
-            padding: 60px 32px 44px;
+            padding: var(--sp-section) 32px;
         }
         .footer-inner { max-width: 1180px; margin: 0 auto; }
         .footer-top {
@@ -945,8 +952,8 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 36px;
-            padding-bottom: 40px;
-            margin-bottom: 32px;
+            padding-bottom: var(--sp-block);
+            margin-bottom: var(--sp-block);
             border-bottom: 1px solid var(--border);
         }
         .footer-brand {
@@ -1128,8 +1135,8 @@
         }
         @media (max-width: 900px) {
             .hero { grid-template-columns: 1fr; min-height: auto; }
-            .hero-left { padding: 80px 36px 60px; }
-            .hero-right { padding: 60px 36px; min-height: 500px; }
+            .hero-left { padding: var(--sp-section) 36px; }
+            .hero-right { padding: var(--sp-section) 36px; min-height: 500px; }
             .bento { grid-template-columns: 1fr; }
             .card-indigo, .card-dark { grid-column: span 1; grid-row: span 1; }
             .steps { grid-template-columns: 1fr; gap: 52px; }
@@ -1141,17 +1148,16 @@
             .nav-links a:not(.btn-nav):not(.landing-theme-btn) { display: none; }
         }
         @media (max-width: 640px) {
+            /* shrink the whole spacing scale uniformly so every section
+               stays the same relative height on mobile */
+            :root { --sp-section: 56px; --sp-block: 36px; }
             .nav-inner { padding: 0 20px; }
-            .hero-left { padding: 80px 22px 48px; }
-            .hero-right { padding: 48px 22px; }
-            .features { padding: 60px 20px 80px; }
+            .hero-left { padding: var(--sp-section) 22px; }
+            .hero-right { padding: var(--sp-section) 22px; }
             .bento-card { padding: 28px; }
-            .how-it-works { padding: 72px 22px; }
-            .proof-section { padding: 72px 20px; }
             .footer-top { flex-direction: column; }
             .note-card-mockup { width: 290px; }
             .hero-float { display: none; }
-            .cta-section { padding: 100px 22px; }
             .stat { max-width: 50%; padding: 36px 28px; }
             .stat-number { font-size: 42px; }
             .cta-credibility { gap: 14px; }
