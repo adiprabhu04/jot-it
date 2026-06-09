@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jotit-v59';
+const CACHE_NAME = 'jotit-v60';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -27,17 +27,21 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+// Routes that must always hit the network and never be served from cache.
+const BYPASS_PREFIXES = ['/api', '/auth', '/notes', '/health'];
+
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  if (
-    url.pathname.startsWith('/auth') ||
-    url.pathname.startsWith('/notes') ||
-    url.pathname.startsWith('/health')
-  ) {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
-    );
+  // API routes: bypass the service worker entirely (network-only).
+  // No respondWith() => the browser performs its default fetch, so a cache
+  // miss can never resolve to undefined and break respondWith.
+  if (BYPASS_PREFIXES.some(prefix => url.pathname.startsWith(prefix))) {
+    return;
+  }
+
+  // Only handle GET; let the browser deal with POST/PUT/etc. directly.
+  if (event.request.method !== 'GET') {
     return;
   }
 
@@ -50,7 +54,12 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
         return response;
-      }).catch(() => caches.match('/'));
+      }).catch(async () => {
+        // Offline fallback. Guarantee a Response so respondWith never
+        // receives undefined.
+        const fallback = await caches.match('/index.html') || await caches.match('/');
+        return fallback || Response.error();
+      });
     })
   );
 });
