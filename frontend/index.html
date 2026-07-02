@@ -4349,6 +4349,13 @@
                 ? '<i class="fa-solid fa-sun"></i>'
                 : '<i class="fa-solid fa-moon"></i>';
         }
+        // Visible auth-nav toggle uses two pre-rendered icons; swap their visibility.
+        const navMoon = document.getElementById('auth-nav-moon');
+        const navSun  = document.getElementById('auth-nav-sun');
+        if (navMoon && navSun) {
+            navMoon.style.display = isDark ? 'none' : '';
+            navSun.style.display  = isDark ? '' : 'none';
+        }
     }
 
     initTheme();
