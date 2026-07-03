@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jotit-v60';
+const CACHE_NAME = 'jotit-v61';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -45,6 +45,34 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // HTML documents (navigations / the app shell) are network-first. A
+  // cache-first shell is dangerous: once a stale or partially-cached
+  // index.html lands in the cache it is served forever, so its outdated
+  // JavaScript keeps running even after the real file is fixed (missing
+  // functions, "unexpected end of input"). Always fetch fresh HTML, refresh
+  // the cache on success, and fall back to cache only when offline.
+  const isHTML = event.request.mode === 'navigate' ||
+    (event.request.headers.get('accept') || '').includes('text/html') ||
+    url.pathname === '/' || url.pathname.endsWith('.html');
+
+  if (isHTML) {
+    event.respondWith(
+      fetch(event.request).then(response => {
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      }).catch(async () => {
+        const fallback = await caches.match(event.request) ||
+          await caches.match('/index.html') || await caches.match('/');
+        return fallback || Response.error();
+      })
+    );
+    return;
+  }
+
+  // Other static assets: cache-first (fast, immutable-ish icons/manifest).
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
