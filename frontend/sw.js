@@ -1,10 +1,13 @@
-const CACHE_NAME = 'jotit-v61';
+const CACHE_NAME = 'jotit-v62';
+// Relative to the service worker's scope so registration/install works whether
+// the app is served at the domain root (.NET wwwroot) or under a sub-path
+// (Live Server serving the workspace, GitHub Pages project sites, etc.).
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  './',
+  'index.html',
+  'manifest.json',
+  'icon-192.png',
+  'icon-512.png'
 ];
 
 self.addEventListener('install', event => {
@@ -65,7 +68,7 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(async () => {
         const fallback = await caches.match(event.request) ||
-          await caches.match('/index.html') || await caches.match('/');
+          await caches.match('index.html') || await caches.match('./');
         return fallback || Response.error();
       })
     );
@@ -85,7 +88,7 @@ self.addEventListener('fetch', event => {
       }).catch(async () => {
         // Offline fallback. Guarantee a Response so respondWith never
         // receives undefined.
-        const fallback = await caches.match('/index.html') || await caches.match('/');
+        const fallback = await caches.match('index.html') || await caches.match('./');
         return fallback || Response.error();
       });
     })

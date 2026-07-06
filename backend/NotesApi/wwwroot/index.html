@@ -7,10 +7,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
-    <link rel="apple-touch-icon" href="/icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <title>Jot It</title>
     <!-- build: 2026-07-03b — cache-bust: force stale/truncated cached shells to re-fetch the complete document -->
     <meta name="app-build" content="2026-07-03b">
@@ -6669,7 +6669,7 @@ ${notesHTML}
     }
 
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+        window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
     }
 
     // ── WORD SUGGESTIONS ────────────────────────────────────────
