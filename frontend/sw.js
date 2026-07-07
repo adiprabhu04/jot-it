@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jotit-v62';
+const CACHE_NAME = 'jotit-v63';
 // Relative to the service worker's scope so registration/install works whether
 // the app is served at the domain root (.NET wwwroot) or under a sub-path
 // (Live Server serving the workspace, GitHub Pages project sites, etc.).
