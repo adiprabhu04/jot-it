@@ -12,7 +12,7 @@
 ![Azure](https://img.shields.io/badge/Azure-Computer_Vision-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![Railway](https://img.shields.io/badge/Backend-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)
+![Render](https://img.shields.io/badge/Backend-Render-0B0D0E?style=for-the-badge&logo=render&logoColor=white)
 
 [**Live App**](https://usejotit.vercel.app) · [**Repository**](https://github.com/adiprabhu04/jot-it) · [**Documentation**](./docs)
 
@@ -186,7 +186,7 @@ uvicorn main:app --reload --port 8000
 
 ### Frontend
 
-The frontend is static. Serve `frontend/` with any static server, or open `frontend/index.html` directly. In production it is deployed to Vercel and proxies API calls to the backend via `/api`.
+The frontend is static (no build step). Serve `frontend/` with any static server, or open `frontend/index.html` directly. All API calls use the relative base `/api`, so the backend URL is **not** hardcoded in the page. In production, Vercel's `vercel.json` rewrites `/api/*` to `https://jotit-api.onrender.com` — to point the app at a different backend, change that single `destination` value.
 
 ### Mobile App
 
@@ -223,11 +223,11 @@ npx expo start
 | Service | Platform |
 |---------|----------|
 | Frontend | Vercel (static + `/api` rewrite proxy to the backend) |
-| Backend API | Railway (Docker, `/health` healthcheck) |
-| AI Service | Railway |
+| Backend API | Render (Docker, `/health` healthcheck) — `https://jotit-api.onrender.com` |
+| AI Service | Render |
 | Database | Neon (PostgreSQL) |
 
-The backend ships as a Docker image (`Dockerfile`) and is configured for Railway via `railway.toml`. The frontend's `vercel.json` rewrites `/api/*` to the backend to keep API calls same-origin.
+The backend ships as a Docker image (`Dockerfile`) and is deployed on Render. The frontend's `vercel.json` rewrites `/api/*` to `https://jotit-api.onrender.com` to keep API calls same-origin.
 
 ---
 
