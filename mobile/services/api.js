@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { sha256 } from './hash';
 
 const BASE_URL = 'https://jotit-api.onrender.com';
 
@@ -15,11 +16,14 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Passwords are SHA-256 hashed client-side before transport, matching the
+// web client, so an account created on either platform works on both.
+// (The server additionally bcrypts this value.)
 export const login = (email, password) =>
-  api.post('/auth/login', { email, password });
+  api.post('/auth/login', { email, password: sha256(password) });
 
 export const register = (name, email, password) =>
-  api.post('/auth/register', { name, email, password });
+  api.post('/auth/register', { name, email, password: sha256(password) });
 
 export const getNotes = () => api.get('/notes');
 
@@ -37,7 +41,8 @@ export const scanImage = async (imageUri) => {
   const match = /\.(\w+)$/.exec(filename);
   const type = match ? `image/${match[1]}` : 'image/jpeg';
 
-  formData.append('image', {
+  // Field name must be "file" — the backend binds IFormFile file.
+  formData.append('file', {
     uri: imageUri,
     name: filename,
     type,
