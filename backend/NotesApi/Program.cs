@@ -269,7 +269,8 @@ app.MapPost("/notes", async (
             note.Summary = summarizeResult?.Summary ?? "";
         }
     } catch {
-        note.Summary = "";
+        // AI summary is best-effort. On failure, preserve any existing
+        // summary instead of overwriting it with an empty string.
     }
 
     db.Notes.Add(note);
@@ -318,7 +319,8 @@ app.MapPut("/notes/{id}", async (
             note.Summary = summarizeResult?.Summary ?? "";
         }
     } catch {
-        note.Summary = "";
+        // AI summary is best-effort. On failure, preserve any existing
+        // summary instead of overwriting it with an empty string.
     }
 
     await db.SaveChangesAsync();
