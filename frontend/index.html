@@ -41,7 +41,6 @@
 </nav>
     <div class="auth-card">
         <div class="auth-logo">
-            <div class="auth-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 100 100" fill="none" aria-hidden="true"><path d="M18 8 C17 8 15 9 15 11 L14 78 C14 80 16 82 18 82 L68 83 C70 83 72 81 72 79 L73 28 L52 7 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 7 L51 27 L73 28" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 40 C26 38 29 37 32 39 C35 41 34 45 37 44 C40 43 39 39 43 38 C46 37 48 39 49 41" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.85"/><path d="M24 54 C27 52 30 53 33 55 C36 57 38 54 41 53" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.55"/><path d="M24 66 L40 65" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.35"/></svg></div>
             <h1>Jot It</h1>
             <p>Your notes, organized and easy to find.</p>
         </div>
@@ -59,7 +58,13 @@
             </div>
             <div class="input-group">
                 <label for="login-password">Password</label>
-                <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                <div class="password-field">
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="password-toggle btn" aria-label="Show password" aria-pressed="false" onclick="togglePassword(this)">
+                        <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-6.5 0-10-7-10-7a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                </div>
             </div>
             <button id="login-btn" type="submit" class="btn-primary btn">Sign In</button>
         </form>
@@ -76,7 +81,13 @@
             </div>
             <div class="input-group">
                 <label for="reg-pass">Password</label>
-                <input type="password" id="reg-pass" class="form-input" placeholder="Min. 6 characters" required autocomplete="new-password">
+                <div class="password-field">
+                    <input type="password" id="reg-pass" class="form-input" placeholder="Min. 6 characters" required autocomplete="new-password">
+                    <button type="button" class="password-toggle btn" aria-label="Show password" aria-pressed="false" onclick="togglePassword(this)">
+                        <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-6.5 0-10-7-10-7a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                </div>
             </div>
             <button id="register-btn" type="submit" class="btn-primary btn">Create Account</button>
             <div id="reg-error" class="auth-error hidden"></div>
@@ -330,14 +341,14 @@
         <div class="color-picker-row">
             <span class="color-picker-label">Color</span>
             <div class="color-swatches" id="color-swatches">
-                <button class="color-swatch active" data-color="" style="background:#6B7280" title="Default"></button>
-                <button class="color-swatch" data-color="#6C8EF5" style="background:#6C8EF5" title="Blue"></button>
-                <button class="color-swatch" data-color="#3DD68C" style="background:#3DD68C" title="Green"></button>
-                <button class="color-swatch" data-color="#F5A623" style="background:#F5A623" title="Amber"></button>
-                <button class="color-swatch" data-color="#C084FC" style="background:#C084FC" title="Purple"></button>
-                <button class="color-swatch" data-color="#F87171" style="background:#F87171" title="Red"></button>
-                <button class="color-swatch" data-color="#38BDF8" style="background:#38BDF8" title="Sky"></button>
-                <button class="color-swatch" data-color="#FB923C" style="background:#FB923C" title="Orange"></button>
+                <button class="color-swatch active" data-color="" style="background:#71767E" title="Default"></button>
+                <button class="color-swatch" data-color="#5C7291" style="background:#5C7291" title="Slate Blue"></button>
+                <button class="color-swatch" data-color="#5C9B7A" style="background:#5C9B7A" title="Sage"></button>
+                <button class="color-swatch" data-color="#C79A54" style="background:#C79A54" title="Gold"></button>
+                <button class="color-swatch" data-color="#8E7CB0" style="background:#8E7CB0" title="Mauve"></button>
+                <button class="color-swatch" data-color="#B57070" style="background:#B57070" title="Clay"></button>
+                <button class="color-swatch" data-color="#6494A8" style="background:#6494A8" title="Teal"></button>
+                <button class="color-swatch" data-color="#C08457" style="background:#C08457" title="Terracotta"></button>
             </div>
         </div>
     </div>
