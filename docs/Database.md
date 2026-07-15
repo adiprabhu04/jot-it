@@ -158,13 +158,16 @@ semantic search, RAG, related notes, flashcards, and the knowledge graph.
 | `NoteId` | `Guid` | FK → `notes.Id` |
 | `ChunkIndex` | `int` | Position of the chunk within the note |
 | `Content` | `string` | The chunk text (for grounding/snippets) |
-| `Vector` | `vector` | pgvector embedding |
+| `Vector` | `vector(384)` | pgvector embedding (384-dim = bge-small) |
 | `Model` | `string` | Embedding model id (provenance) |
 | `TokenCount` | `int?` | Optional, for cost/telemetry |
+| `ContentHash` | `string` | Chunk-level hash for dedupe / skip |
 | `CreatedAt` | `DateTime` | Timestamp |
 
-An ANN index (HNSW/IVFFlat) is added on `Vector`. The embedding model is
-**not yet chosen** — see [AI.md](./AI.md).
+An **HNSW** index (`vector_cosine_ops`) is added on `Vector`. The
+embedding model is **`BAAI/bge-small-en-v1.5`, self-hosted, 384-dim** —
+see [DECISIONS.md](./DECISIONS.md) D-11 and the full design in
+[KNOWLEDGE_ENGINE.md](./KNOWLEDGE_ENGINE.md).
 
 ### conversations 🔭 (Planned — V2)
 A chat session for "Chat with notes" (RAG).
@@ -270,6 +273,10 @@ AI-inferred (from embedding similarity) or user-created.
 - **notes** — add nullable `FolderId` (FK → `folders.Id`); migrate
   `ImageData` to an object-storage reference (`ImageUrl`) instead of
   inline base64; add a generated full-text `SearchVector` (see above).
+- **notes (embedding control)** — add `ContentHash`, `EmbeddingStatus`
+  (`pending`/`processing`/`ready`/`failed`), `EmbeddedAt`, and
+  `EmbeddingModel` to drive async, dirty-checked embedding ingestion.
+  See [KNOWLEDGE_ENGINE.md](./KNOWLEDGE_ENGINE.md) §3.
 
 None of these modifications are applied yet; they are recorded here so
 future work stays consistent with this schema.

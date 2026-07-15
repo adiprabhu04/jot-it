@@ -121,8 +121,9 @@ compounds instead of being rebuilt:
 
 **Dependencies**
 - Phase 1 (UI surfaces: search, chat panel, related notes).
-- pgvector enabled on Neon; embedding model selected (open decision — see
-  [AI.md](./AI.md) and [DECISIONS.md](./DECISIONS.md)).
+- pgvector enabled on Neon; embedding model = **bge-small self-hosted,
+  384-dim** (see [DECISIONS.md](./DECISIONS.md) D-11 and the design in
+  [KNOWLEDGE_ENGINE.md](./KNOWLEDGE_ENGINE.md)).
 
 **Success criteria**
 - Semantic search returns relevant results ranked by meaning, per-user

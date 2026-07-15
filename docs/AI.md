@@ -107,16 +107,12 @@ is designed once and consumed everywhere.
   **pgvector**, linked to the note/chunk and scoped to the user, with the
   embedding **model id recorded** for provenance and re-index safety
   (see [DATABASE.md](./Database.md)).
-- **Provider — OPEN DECISION:** not yet chosen. Candidates:
-  - **Local** (e.g., `sentence-transformers` inside the FastAPI service)
-    — self-contained, no new vendor, no per-call cost, keeps note content
-    in-house.
-  - **Hosted** (e.g., OpenAI `text-embedding-3-small`, Cohere) — higher
-    quality, but adds a vendor and cost, and sends content out.
-  Groq does **not** provide an embeddings API, so it is not a candidate
-  for this step. The final choice is recorded in
-  [DECISIONS.md](./DECISIONS.md) when made; downstream docs must not
-  assume a specific provider until then.
+- **Model — DECIDED:** **`BAAI/bge-small-en-v1.5`, self-hosted
+  (ONNX-quantized) in the FastAPI service, 384-dim.** Kept in-house for
+  privacy and $0 marginal cost; fallback `all-MiniLM-L6-v2` (same 384
+  dims) if memory-constrained. Groq has no embeddings API. See
+  [DECISIONS.md](./DECISIONS.md) D-11 and the full design +
+  model comparison in [KNOWLEDGE_ENGINE.md](./KNOWLEDGE_ENGINE.md).
 - **Re-indexing:** changing the embedding model requires re-embedding;
   `/embeddings/reindex` and `/embeddings/status` support this
   (see [API.md](./API.md)).

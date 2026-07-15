@@ -110,7 +110,8 @@
   extractive-only (lower quality).
 - **Tradeoffs:** a hosted LLM dependency for best quality; the fallback
   bounds the risk. Note: **Groq has no embeddings API**, so the V2
-  embedding provider is a separate, open decision (see D-11).
+  embedding model is a separate decision, settled in D-11
+  (bge-small, self-hosted).
 
 ## D-8 · Web frontend: Vanilla JS (framework-free) ✅ → modularized in V2 🔭
 
@@ -157,24 +158,33 @@
   shorter access-token lifetime, rate-limit auth, and enforce a password
   policy ([SRS.md](./SRS.md) NFR-11–NFR-12).
 
-## D-11 · Embedding provider 🔭 (OPEN DECISION)
+## D-11 · Embedding model: bge-small self-hosted 🔭 (Planned — V2, DECIDED)
 
-- **Decision:** *not yet made.* The embedding model/provider for V2
-  semantic search and RAG is deliberately deferred until Phase 3.
-- **Reason to defer:** the choice trades privacy, quality, and cost, and
-  should be made when the retrieval work actually begins rather than
-  guessed now.
+- **Decision:** **`BAAI/bge-small-en-v1.5`, self-hosted (ONNX-quantized)
+  inside the FastAPI AI service, 384-dim.** This fixes the pgvector
+  column to `vector(384)` and the HNSW index dimension (see
+  [KNOWLEDGE_ENGINE.md](./KNOWLEDGE_ENGINE.md) and [DATABASE.md](./Database.md)).
+- **Reason:** best retrieval quality for its size, at 384 dims (compact
+  vectors → cheaper storage/index); $0 marginal cost; note content never
+  leaves the infrastructure (privacy, [SRS.md](./SRS.md) NFR-6/NFR-9);
+  reuses the existing Python AI service; strong portfolio signal
+  (self-hosted embeddings + pgvector RAG). ONNX-int8 keeps memory/latency
+  within Render's tier.
 - **Alternatives considered:**
-  - **Local** (`sentence-transformers` in the FastAPI service) — no
-    vendor, no per-call cost, content stays in-house; needs compute.
-  - **OpenAI `text-embedding-3-small`** — strong quality, low cost,
-    hosted; sends content out.
-  - **Cohere embeddings** — competitive hosted option.
+  - **`all-MiniLM-L6-v2`** (384-dim, self-hosted) — lighter/faster,
+    slightly lower retrieval quality. Kept as a **drop-in fallback** if
+    Render memory is tight (same dimension, no schema change).
+  - **OpenAI `text-embedding-3-small`** — strong, cheap, hosted, but
+    **1536-dim** (4× index cost, schema change) and sends content to a
+    vendor. Fallback only if self-hosting proves infeasible — and it must
+    be chosen before M1 because it changes the vector dimension.
+  - **Cohere Embed v3** — competitive hosted option; same privacy/vendor
+    tradeoff.
   - Groq is **excluded** — no embeddings API.
-- **Tradeoffs to weigh:** privacy (in-house vs. third-party), quality,
-  latency, and cost. Once chosen, record the decision here and update
-  [AI.md](./AI.md) and [DATABASE.md](./Database.md). Until then, no
-  document may assume a specific provider.
+- **Tradeoffs:** self-hosting adds a model to serve in the AI container
+  (mitigated by quantized ONNX). Accepted for the privacy, cost, and
+  portfolio wins. Model swaps stay safe via the `Model` provenance column
+  + dual-write reindex.
 
 ## D-12 · Vector store: pgvector in PostgreSQL 🔭 (Planned — V2)
 

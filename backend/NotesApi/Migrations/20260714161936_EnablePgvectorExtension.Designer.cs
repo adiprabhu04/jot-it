@@ -2,18 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Pgvector;
 
 #nullable disable
 
 namespace NotesApi.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    partial class NotesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260714161936_EnablePgvectorExtension")]
+    partial class EnablePgvectorExtension
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,52 +23,6 @@ namespace NotesApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Embedding", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ChunkIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ContentHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("NoteId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("TokenCount")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Vector>("Vector")
-                        .IsRequired()
-                        .HasColumnType("vector(384)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NoteId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Embeddings");
-                });
 
             modelBuilder.Entity("Note", b =>
                 {
@@ -85,21 +41,8 @@ namespace NotesApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ContentHash")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("EmbeddedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("EmbeddingModel")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EmbeddingStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("ImageData")
                         .HasColumnType("text");
@@ -191,15 +134,6 @@ namespace NotesApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Embedding", b =>
-                {
-                    b.HasOne("Note", null)
-                        .WithMany()
-                        .HasForeignKey("NoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Note", b =>

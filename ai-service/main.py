@@ -12,6 +12,8 @@ import io
 import os
 import gc
 
+from embeddings import get_provider, chunk_note, build_embed_text
+
 app = FastAPI(title="Notely OCR Service")
 
 app.add_middleware(
@@ -239,6 +241,60 @@ def health_check():
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+
+# ── Knowledge Engine: embedding generation (M1) ──────────────────────
+# Internal, service-to-service only (called by the backend, like
+# /summarize and /extract-text). Not a public client API. No retrieval.
+
+@app.post("/embed")
+async def embed(request: dict):
+    """Embed raw texts. type = "passage" (default) | "query"."""
+    texts = request.get("texts") or []
+    kind = str(request.get("type") or "passage").lower()
+    provider = get_provider()
+    try:
+        vectors = (provider.embed_queries(texts) if kind == "query"
+                   else provider.embed_passages(texts))
+    except Exception as e:
+        print(f"Embed error: {type(e).__name__}: {e}")
+        raise HTTPException(status_code=503, detail="Embedding model unavailable")
+    return {"model": provider.model_id, "dim": provider.dim, "vectors": vectors}
+
+
+@app.post("/embed-note")
+async def embed_note(request: dict):
+    """Chunk a note and embed each chunk (passage embeddings) for storage.
+
+    Body: {title, content}. Returns per-chunk content + 384-dim vector.
+    The backend persists these; this service holds no state.
+    """
+    title = request.get("title") or ""
+    content = request.get("content") or ""
+    provider = get_provider()
+
+    chunks = chunk_note(title, content)
+    if not chunks:
+        return {"model": provider.model_id, "dim": provider.dim, "chunks": []}
+
+    try:
+        embed_texts = [build_embed_text(title, c["content"]) for c in chunks]
+        vectors = provider.embed_passages(embed_texts)
+    except Exception as e:
+        print(f"Embed-note error: {type(e).__name__}: {e}")
+        raise HTTPException(status_code=503, detail="Embedding model unavailable")
+
+    out = [
+        {
+            "index": c["index"],
+            "content": c["content"],
+            "tokenCount": c["tokenCount"],
+            "vector": v,
+        }
+        for c, v in zip(chunks, vectors)
+    ]
+    print(f"Embedded note: {len(out)} chunk(s), model={provider.model_id}")
+    return {"model": provider.model_id, "dim": provider.dim, "chunks": out}
 
 
 @app.post("/extract-text")
