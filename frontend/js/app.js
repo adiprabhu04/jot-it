@@ -194,6 +194,25 @@ import { exportAsCSV, exportAsPDF, exportNoteAsPDF, exportNoteAsCSV } from './ex
         }
     }
 
+    function togglePassword(btn) {
+        const wrap = btn.closest('.password-field');
+        if (!wrap) return;
+        const input = wrap.querySelector('input');
+        if (!input) return;
+        const reveal = input.type === 'password';
+        // Preserve caret/selection across the type change
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        input.type = reveal ? 'text' : 'password';
+        btn.classList.toggle('is-visible', reveal);
+        btn.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+        btn.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+        input.focus();
+        if (start !== null) {
+            try { input.setSelectionRange(start, end); } catch (_) { /* type may not support selection */ }
+        }
+    }
+
     async function api(endpoint, method = 'GET', body = null) {
         const opts = {
             method,
@@ -2287,6 +2306,7 @@ Object.assign(window, {
   switchScanTab,
   toggleAuth,
   toggleModalPin,
+  togglePassword,
   togglePin,
   toggleTemplates,
   toggleTheme,

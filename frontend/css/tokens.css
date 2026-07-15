@@ -1,55 +1,130 @@
         :root {
-            /* Dark mode (default) */
-            --bg: #0A0A0F;
-            --surface: #111118;
-            --surface-secondary: #111118;
-            --surface-2: #18181F;
-            --border: #252530;
-            --border-subtle: #252530;
-            --border-light: #2E2E3A;
-            --text: #F0F0F5;
-            --text-secondary: #8888A0;
-            --text-tertiary: #55556A;
+            /* ============================================================
+               Jot It — Design Tokens (V2)
+               Neutral cinematic base (aligned to landing.html) with a
+               single restrained blue accent reserved for interactive and
+               AI moments. Dark is the default theme. Names are preserved
+               from v1; new tokens are additive.
+               ============================================================ */
+
+            /* ── Surfaces (neutral: near-black → elevated grey) ── */
+            --bg: #0A0A0A;
+            --surface: #121414;
+            --surface-secondary: #121414;
+            --surface-2: #1A1C1C;
+            --surface-3: #1E2020;
+            --surface-4: #282A2B;
+            --chip: #333535;
+
+            /* ── Borders ── */
+            --border: #262626;
+            --border-subtle: #202020;
+            --border-light: #303030;   /* emphasized hairline */
+            --border-strong: #444748;  /* landing strong border */
+
+            /* ── Text ── */
+            --text: #E5E5E5;
+            --text-secondary: #A8ABAB;
+            --text-tertiary: #6E7172;
+            --dim: #8E9192;
+
+            /* ── Accent (restrained — interactive + AI only) ── */
             --accent: #5B6EF5;
             --accent-rgb: 91, 110, 245;
             --accent-hover: #4A5DE4;
-            --accent-dark: #ffffff;
+            --accent-dark: #ffffff;    /* ink on accent fills */
+
+            /* ── Neutral primary action (landing off-white button) ── */
+            --btn-light: #EDEDED;
+            --btn-light-ink: #0A0A0A;
+
+            /* ── Secondary decorative accents (used sparingly) ── */
             --cyan: #06B6D4;
             --purple: #A855F7;
+
+            /* ── Semantic (kept muted in use) ── */
             --success: #22C55E;
             --warning: #F59E0B;
             --error: #EF4444;
             --info: #3B82F6;
-            /* Card / glass variables */
-            --glass-bg: #111118;
-            --glass-border: #252530;
+
+            /* ── Note colors — muted, professional palette ── */
+            --note-slate:  #71767E;
+            --note-blue:   #5C7291;
+            --note-green:  #5C9B7A;
+            --note-amber:  #C79A54;
+            --note-purple: #8E7CB0;
+            --note-red:    #B57070;
+            --note-sky:    #6494A8;
+            --note-orange: #C08457;
+
+            /* ── Glass / card ── */
+            --glass-bg: #121414;
+            --glass-border: #262626;
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+            /* ── Elevation ── */
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
             --shadow-md: 0 2px 8px rgba(0,0,0,0.4);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
             --shadow-fab: 0 4px 16px rgba(91,110,245,0.4);
+
+            /* ── Radius ── */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 20px;
+
+            /* ── Layout ── */
             --nav-h: 70px;
             --header-h: 70px;
+
+            /* ── Type / motion ── */
+            --mono: ui-monospace, 'SF Mono', 'Liberation Mono', Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="light"] {
-            --bg: #F0F0F5;
+            /* ── Surfaces ── */
+            --bg: #F4F4F4;
             --surface: #FFFFFF;
-            --surface-secondary: #F5F5FA;
-            --surface-2: #F5F5FA;
-            --border: #E0E0EA;
-            --border-subtle: #E0E0EA;
-            --border-light: #EBEBF5;
-            --text: #0A0A14;
-            --text-secondary: #555565;
-            --text-tertiary: #8888A0;
+            --surface-secondary: #FAFAFA;
+            --surface-2: #EFEFEF;
+            --surface-3: #E8E8E8;
+            --surface-4: #DEDEDE;
+            --chip: #D4D4D4;
+
+            /* ── Borders ── */
+            --border: #E4E4E4;
+            --border-subtle: #ECECEC;
+            --border-light: #DADADA;
+            --border-strong: #C6C6C6;
+
+            /* ── Text ── */
+            --text: #171717;
+            --text-secondary: #575757;
+            --text-tertiary: #8A8A8A;
+            --dim: #6B6B6B;
+
             --accent-dark: #ffffff;
+
+            /* ── Neutral primary action (dark button on light) ── */
+            --btn-light: #171717;
+            --btn-light-ink: #F4F4F4;
+
+            /* ── Note colors — same muted hues, tuned for light ── */
+            --note-slate:  #6B7078;
+            --note-blue:   #566C89;
+            --note-green:  #4F8A6B;
+            --note-amber:  #B08A45;
+            --note-purple: #7E6CA0;
+            --note-red:    #A85F5F;
+            --note-sky:    #57869A;
+            --note-orange: #B07548;
+
+            /* ── Glass / card ── */
             --glass-bg: #FFFFFF;
-            --glass-border: #E0E0EA;
+            --glass-border: #E4E4E4;
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
             --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
