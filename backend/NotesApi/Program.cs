@@ -7,6 +7,8 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Pgvector;
+using Pgvector.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -86,8 +88,14 @@ else
     connectionString = databaseUrl;
 }
 
+// pgvector: o.UseVector() registers the EF type mapping and the underlying
+// Npgsql vector type handler (EF builds the data source with the plugin).
 builder.Services.AddDbContext<NotesDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString, o => o.UseVector()));
+
+// Knowledge Engine (M1): embedding client + background ingestion worker.
+builder.Services.AddScoped<IEmbeddingClient, AiEmbeddingClient>();
+builder.Services.AddHostedService<EmbeddingWorker>();
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 if (string.IsNullOrEmpty(jwtKey) || jwtKey.Length < 32)
@@ -256,6 +264,11 @@ app.MapPost("/notes", async (
         UserId = userId
     };
 
+    // Knowledge Engine (M1): queue the new note for embedding. The
+    // EmbeddingWorker picks it up asynchronously — the write is not blocked.
+    note.ContentHash = EmbeddingHelpers.ComputeContentHash(note.Title, note.Content);
+    note.EmbeddingStatus = "pending";
+
     try {
         var aiServiceBase = Environment.GetEnvironmentVariable("AI_SERVICE_URL")
             ?? "http://localhost:8000";
@@ -305,6 +318,16 @@ app.MapPut("/notes/{id}", async (
     note.Tags = request.Tags;
     note.ReminderAt = request.ReminderAt;
     note.UpdatedAt = DateTime.UtcNow;
+
+    // Knowledge Engine (M1): only re-queue for embedding when the embedded
+    // text (title+content) actually changed. Pin/color/category/tag edits
+    // leave the hash unchanged and are skipped — no wasted re-embedding.
+    var newContentHash = EmbeddingHelpers.ComputeContentHash(note.Title, note.Content);
+    if (newContentHash != note.ContentHash)
+    {
+        note.ContentHash = newContentHash;
+        note.EmbeddingStatus = "pending";
+    }
 
     try {
         var aiServiceBase = Environment.GetEnvironmentVariable("AI_SERVICE_URL")

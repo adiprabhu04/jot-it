@@ -109,8 +109,11 @@ The API returns standard HTTP status codes:
 > built. Paths, payloads, and names may be refined when the relevant
 > [ROADMAP.md](./Roadmap.md) phase begins. These are intentionally
 > consistent with [ARCHITECTURE.md](./Architecture.md),
-> [DATABASE.md](./Database.md), and [AI.md](./AI.md); do not add
-> implementation details that contradict those documents.
+> [DATABASE.md](./Database.md), [AI.md](./AI.md), and the
+> [Knowledge Engine design](./KNOWLEDGE_ENGINE.md); do not add
+> implementation details that contradict those documents. The
+> `/search/*`, `/chat/*`, and `/embeddings/*` endpoints below are all
+> consumers of the one retrieval substrate described there.
 
 All planned endpoints are JWT-authenticated and user-scoped, following
 the same conventions as v1.
